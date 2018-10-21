@@ -25,7 +25,11 @@ Se va a utilizar como lenguaje de programación Python y Flask como microservici
 
 
 ### Referencias 
-A espera de determinar el proyecto
+API de Twitter: https://developer.twitter.com/en/docs
+Python: https://www.python.org/
+Flask: http://flask.pocoo.org/
 
 
 
+### Licencia
+Este software se desarrollará bajo la licencia GNU General Public License v3.0 
