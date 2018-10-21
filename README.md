@@ -16,7 +16,16 @@ Basándonos en estos usos anteriores, puede ser interesante conocer y hacer un a
 En este proyecto, llevaremos a cabo justo este análisis, haciendo un estudio de las interacciones y los comentarios relativos a la Universidad de Granada que constantemente son publicados en esta red social. La finalidad del proyecto es encontrar opiniones, bulos, fallos y tendencias relacionadas con la misma, como pueden ser los fallos del sistema informático, o la falta de información que pueda surgir respecto a alguna temática concreta (dudas generalizadas). De esta forma, se intenta dar más visibilidad a las opiniones y problemas de los estudiantes, fomentando la detección de errores del sistema más rápidamente y con el menor número de consecuencias posibles.   
 
 
+### Arquitectura 
+Se va a utilizar una arquitectura basada en microservicios. De este modo, podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como puede ser la versatilidad y las facilidades de integración. 
+
+
+### Framework y lenguaje a utilizar
+Se va a utilizar como lenguaje de programación Python y Flask como microservicio. 
+
+
 ### Referencias 
 A espera de determinar el proyecto
+
 
 
