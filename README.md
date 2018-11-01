@@ -45,6 +45,9 @@ Los microservicios que se van a utilizar son los siguientes:.
 
 Para la comunicación entre los microservicios, se utilizará un broker. En este caso, el broker a utilizar será [RabbitMQ](https://www.rabbitmq.com/).
 
+A continuación, en la siguiente imagen, se puede ver un pequeño esquema de los microservicios a utilizar.
+![Esquema de los microservicios](images/esquemaMicroservicios.png)
+
 
 ### Framework y lenguaje a utilizar
 Se va a utilizar como lenguaje de programación Python y Flask como microservicio. 
