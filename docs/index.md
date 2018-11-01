@@ -1,23 +1,49 @@
 # Proyecto Cloud Computing 
-## Andrea Morales Garzón
+## Autora: Andrea Morales Garzón
 
 ### Prácticas de la asignatura Cloud Computing del Máster de Ingeniería Informática para el curso 2018/2019
 
 ## Proyecto a desarrollar
-Análisis de opiniones de la Universidad de Granada en Twitter
+Estudio de las condiciones meteorológicas en Granada a través de la información facilitada por la Agencia Estatal Española de Meteorología ([AEMET](http://www.aemet.es/es/portada))
 
 
-### Descripción
-Hoy en día Twitter es mucho más que una red social en la que compartir opiniones o expresarse públicamente respecto a un tema. 
-Con los años, se ha convertido en una herramienta cada vez más utilizada, como puede ser a nivel empresarial o nivel científico, convirtiéndose así en un foco de información mundial. Se ha utilizado por ejemplo, para acabar con rumores relacionados con temas de salud y enfermedades, y también para detectar posibles brotes de epidemias y contagios. A nivel empresarial también ha sido utilizada como retroalimentación hacia las empresas, teniendo en cuenta opiniones de los usuarios, y detectando así fallos y anomalías en sus productos.
+### Descripción del proyecto 
 
-Basándonos en estos usos anteriores, puede ser interesante conocer y hacer un análisis de las interacciones relacionadas con cuentas y sus instituciones asociadas para así ver opiniones, fallos generalizados, o incluso fomentar la detección de bulos publicados acerca de la misma, con el fin de utilizar dicha recopilación de información para mejorar el sistema. 
+En este proyecto, se pretende hacer un pequeño análisis de la información actualizada que nos proporciona la [API](https://opendata.aemet.es/centrodedescargas/inicio) de la **Agencia Estatal Española de Meteorología**. De esta forma, se pretende procesar la información de la misma, mostrando aquella más trascendental para los usuarios de Granada en distintas plataformas. 
 
-En este proyecto, llevaremos a cabo justo este análisis, haciendo un estudio de las interacciones y los comentarios relativos a la Universidad de Granada que constantemente son publicados en esta red social. La finalidad del proyecto es encontrar opiniones, bulos, fallos y tendencias relacionadas con la misma, como pueden ser los fallos del sistema informático, o la falta de información que pueda surgir respecto a alguna temática concreta (dudas generalizadas). De esta forma, se intenta dar más visibilidad a las opiniones y problemas de los estudiantes, fomentando la detección de errores del sistema más rápidamente y con el menor número de consecuencias posibles.   
+A través de la API de dicha plataforma, se va a acceder a la información más actualizada, y se irá almacenando, de entre dicha información, aquella que en términos generales interesa más a los usuarios. 
+
+
+Se pretende abordar dicho análisis de información en distintos ámbitos. Por una parte, la posibilidad de acceder a la temperatura actual, los centímetros cúbicos registrados, o la temperatura más alta/baja detectada durante ese día. En segundo lugar, proporcionar distintos análisis semanales y mensuales a partir de la información obtenida a partir de los datos actualizados que se van proporcionando a lo largo del tiempo. Este último análisis tiene su interés, ya que las estructuras de datos facilitadas a nivel semanal/mensual son menos específicas en cuanto a la información mostrada diariamente, y puede que haya aspectos de la información diaria de interés para el usuario a nivel semanal o mensual, y que actualmente vea restringido su acceso a dichos datos. 
+
+
+Los usuarios podrán acceder a toda la información que se analice mediante dos formas:
+* A través de **Twitter**: se publicarán diversos tweets con la información más importante que se ha ido recabando. 
+* A través de un bot de **Telegram** también se podrá acceder a la información más relevante. 
+
+
+De esta forma, se pretende facilitar al usuario la consulta de la información más trascendental de una forma sencilla y rápida a través de plataformas utilizadas diariamente por millones de usuarios, como es el caso de las redes sociales mencionadas anteriormente. 
+
 
 
 ### Arquitectura 
-Se va a utilizar una arquitectura basada en microservicios. De este modo, podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como puede ser la versatilidad y las facilidades de integración. 
+Se va a utilizar una arquitectura basada en microservicios en sustitución a una arquitectura monolítica. De este modo podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como puede ser la versatilidad, la autonomía y las facilidades de integración. 
+
+Los microservicios que se van a utilizar son los siguientes:.
+* Un microservicio que se encargue de **acceder a la API de la AEMET y se encargue de procesar la información obtenida**. La API de la AEMET funciona con distintos ficheros JSON, dependiendo de las características a consultar: datos mensuales, datos de observación actualizados, etc... Se escogeran aquellos que sean de interés para el proyecto, que en principio serán los *datos de observación* y los *valores climatológicos*.
+
+* Un microservicio para **almacenar toda la información a manejar en una base de datos**. Debido a que el lenguaje principal que se va a utilizar va a ser Python, escogeremos una Base de Datos que funcione bien con dicho lenguaje. De entre las diversas [alternativas](https://www.quora.com/What-is-the-best-database-suitable-with-Python-for-web-applications) encontradas, en principio, se utilizará la base de datos NoSQL MongoDB. Se ha decidido esta base de datos por dos razones principales. La primera de ellas, por su facilidad de trabajo con Python (utilizaremos [pymongo](http://api.mongodb.com/python/3.6.0/tutorial.html) para acceder a un cliente de MongoDB y trabajar desde ahí), y en segundo lugar por ser una base de datos con la que ya he trabajado previamente. 
+
+* Un microservicio para realizar el **análisis de datos**. En este microservicio, se realizará un análisis de los valores medidos a lo largo del día o la semana que puedan ser de interés. Por ejemplo, como se comentaba anteriormente, poder adquirir valores máximos y mínimos diarios en lo que se lleva de día. 
+
+* Quedaría por ver cómo publicar la información. En este caso, estamos hablando de dos microservicios distintos, cada uno encargado de publicar la información a través de una red social diferente. Tendremos un **microservicio que se encargue de publicar tweets**, con información relevante obtenida (a través de [tweepy](http://www.tweepy.org/), y **otro microservicio diferente que consistirá en un bot de telegram** en el cuál podamos también poner a disposición del usuario aquellos datos que puedan ser de mayor importancia (en principio a través de [telebot](https://geekytheory.com/telegram-programando-un-bot-en-python). Se intentarán llevar a cabo ambos microservicios, pero en caso de haber falta de tiempo, se priorizará la publicación de la información a través de Twitter. 
+
+* Por último, existirá un **microservicio LOG**, con el que se comuniquen todos los microservicios anteriores, para informar de las acciones que se están llevando a cabo y almacenarse. 
+
+Para la comunicación entre los microservicios, se utilizará un broker. En este caso, el broker a utilizar será [RabbitMQ](https://www.rabbitmq.com/).
+
+A continuación, en la siguiente imagen, se puede ver un pequeño esquema de los microservicios a utilizar:
+![Esquema de los microservicios](images/esquemaMicroservicios.png)
 
 
 ### Framework y lenguaje a utilizar
@@ -25,9 +51,9 @@ Se va a utilizar como lenguaje de programación Python y Flask como microservici
 
 
 ### Referencias 
-[API Twitter](https://developer.twitter.com/en/docs)
-[Python](https://www.python.org)
-[Flask](http://flask.pocoo.org/)
+
+* [Python](https://www.python.org)
+* [Flask](http://flask.pocoo.org/)
 
 
 
