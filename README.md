@@ -18,8 +18,9 @@ Se pretende abordar dicho análisis de información en distintos ámbitos. Por u
 
 
 Los usuarios podrán acceder a toda la información que se analice mediante dos formas:
-* A través de [*Twitter*](https://twitter.com/?lang=es): se publicarán diversos tweets con la información más importante que se ha ido recabando. 
-* A través de un bot de *Telegram* también se podrá acceder a la información más relevante. 
+* A través de **Twitter**: se publicarán diversos tweets con la información más importante que se ha ido recabando. 
+* A través de un bot de **Telegram** también se podrá acceder a la información más relevante. 
+
 
 De esta forma, se pretende facilitar al usuario la consulta de la información más trascendental de una forma sencilla y rápida a través de plataformas utilizadas diariamente por millones de usuarios, como es el caso de las redes sociales mencionadas anteriormente. 
 
