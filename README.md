@@ -43,7 +43,7 @@ Los microservicios que se van a utilizar son los siguientes:.
 Para la comunicación entre los distintos microservicios, se realizará mediante brokers. En este caso, el broker a utilizar será [RabbitMQ](https://www.rabbitmq.com/).
 
 A continuación, en la siguiente imagen, se puede ver un pequeño esquema de los microservicios a utilizar:
-![Esquema de los microservicios](images/esquemaMicroservicios.png)
+![Esquema de los microservicios](docs/images/esquemaMicroservicios.png)
 
 
 De momento, estos son todos los microservicios y comunicaciones que se realizarán. En el futuro, con el avance del proyecto, se irán incorporando los distintos cambios que vayan surgiendo durante la implementación. 
