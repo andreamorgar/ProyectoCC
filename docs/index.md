@@ -27,7 +27,14 @@ De esta forma, se pretende facilitar al usuario la consulta de la información m
 
 
 ### Arquitectura 
-Se va a utilizar una arquitectura basada en microservicios en sustitución a una arquitectura monolítica. De este modo podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como puede ser la versatilidad, la autonomía y las facilidades de integración. 
+Se va a utilizar una arquitectura basada en microservicios en sustitución a una arquitectura monolítica. De este modo podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como pueden ser:
+* Versatilidad
+* Autonomía: podemos actualizar un microservicio sin que dependa de los demás
+* Facilidades de integración
+* Aislamiento de errores: un fallo en un microservicio afectará al funcionamiento del mismo, y no tiene por qué afectar a las demás funcionalidades. 
+* ...
+
+Tendremos así, una colección de distintos microservicios, donde cada uno se encargará de implementar una funcionalidad dentro de la totalidad del proyecto.
 
 Los microservicios que se van a utilizar son los siguientes:.
 * Un microservicio que se encargue de **acceder a la API de la AEMET y se encargue de procesar la información obtenida**. La API de la AEMET funciona con distintos ficheros JSON, dependiendo de las características a consultar: datos mensuales, datos de observación actualizados, etc... Se escogeran aquellos que sean de interés para el proyecto, que en principio serán los *datos de observación* y los *valores climatológicos*.
@@ -46,15 +53,15 @@ A continuación, en la siguiente imagen, se puede ver un pequeño esquema de los
 ![Esquema de los microservicios](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/esquemaMicroservicios.png)
 
 
+
 De momento, estos son todos los microservicios y comunicaciones que se realizarán. En el futuro, con el avance del proyecto, se irán incorporando los distintos cambios que vayan surgiendo durante la implementación. 
 
+#### Testeo y pruebas
+Cada microservicio se testeará de forma individual, previo a su despliegue en la nube. La realización de los tests se llevará a cabo mediante [TRAVIS](https://travis-ci.org/), y dichos tests se implementarán en Python (ya que es el lenguaje utilizado en el microservicio) con ayuda de la librería [unittest]https://docs.python.org/3/library/unittest.html). 
+
 ### Framework y lenguaje a utilizar
-Se va a utilizar como lenguaje de programación Python y Flask como microservicio. Además, el proyecto será desplegado en Azure. 
+Se va a utilizar como lenguaje de programación [Python](https://www.python.org) y [Flask](http://flask.pocoo.org/) como microservicio. Además, el proyecto será desplegado en Azure. 
 
 
-### Referencias 
-
-* [Python](https://www.python.org)
-* [Flask](http://flask.pocoo.org/)
-
-
+### Licencia
+Este software se desarrollará bajo la licencia GNU General Public License v3.0 
