@@ -46,8 +46,10 @@ A continuación, en la siguiente imagen, se puede ver un pequeño esquema de los
 ![Esquema de los microservicios](images/esquemaMicroservicios.png)
 
 
+De momento, estos son todos los microservicios y comunicaciones que se realizarán. En el futuro, con el avance del proyecto, se irán incorporando los distintos cambios que vayan surgiendo durante la implementación. 
+
 ### Framework y lenguaje a utilizar
-Se va a utilizar como lenguaje de programación Python y Flask como microservicio. 
+Se va a utilizar como lenguaje de programación Python y Flask como microservicio. Además, el proyecto será desplegado en Azure. 
 
 
 ### Referencias 
