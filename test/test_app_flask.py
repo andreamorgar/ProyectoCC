@@ -16,11 +16,11 @@ class FlaskTestCase(unittest.TestCase):
 
         # declaro los valores que me hacen falta
         self.city = "Salamanca"
-        self.temperature = "26"
+        self.temperature = 26
 
         self.city2 = "Granada"
-        self.temperature2 = "10"
-        self.post_temperature = "45"
+        self.temperature2 = 10
+        self.post_temperature = 45
 
     # --------------------------------------------------------------------------
     def tearDown(self):
