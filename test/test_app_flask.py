@@ -180,8 +180,6 @@ class FlaskTestCase(unittest.TestCase):
         my_dict["ID"]=2
         self.assertNotEqual(result.get_json(), my_dict)
 
-
-
         #And now, if we create a new Prediction, its correct these dictionary.
 
         data2 = {
@@ -266,7 +264,6 @@ class FlaskTestCase(unittest.TestCase):
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_post.content_type, "application/json")
         self.assertEqual(result_post.get_json(),{'prediction':post_dictionary})
-
 
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
