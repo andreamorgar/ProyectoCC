@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 predictions = []
 predictions_objects = []
-
+#
 
 @app.route('/')
 def get_home():
