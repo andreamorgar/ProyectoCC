@@ -28,7 +28,7 @@ class FlaskTestCase(unittest.TestCase):
 
     # --------------------------------------------------------------------------
     def test_app_run(self):
-        self.assertEqual(app_weather.app.debug, False)
+        self.assertEqual(app_weather.app.debug, False,"Comprobacion sobre app run correcta")
         pass
 
     # --------------------------------------------------------------------------
@@ -75,7 +75,8 @@ class FlaskTestCase(unittest.TestCase):
 
         # Compare dict to dict:
         # https://www.youtube.com/watch?v=kvux1SiRIJQ&t=217s
-        self.assertEqual(result.get_json(), {'predictions':app_weather.predictions})
+        self.assertEqual(result.get_json(), {'predictions':app_weather.predictions},
+        "Comprobación de que el contenido es correcto")
 
 
         # 2. Vamos a probar a meter una ruta incorrecta y ver si no funciona.
@@ -86,7 +87,8 @@ class FlaskTestCase(unittest.TestCase):
         # Comprobamos el tipo del contenido al que se está haciendo get.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
 
-        self.assertEqual(result.get_json(), {'error':'Not found'} ) # -------------repasar esto.
+        self.assertEqual(result.get_json(), {'error':'Not found'},
+        "Comprobación de que el contenido es correcto" ) # -------------repasar esto.
 
         pass
 
@@ -99,7 +101,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200, "El estado generado es 200")
         # Comprobamos el tipo del contenido al que se está haciendo get.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
-        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'} )
+        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'},
+        "Comprobación de que el contenido es correcto" )
 
         # We can try to access to another imaginary prediction, and again it is
         # generated an 404 error, because there is not information to show.
@@ -109,7 +112,8 @@ class FlaskTestCase(unittest.TestCase):
 
         # Comprobamos el tipo del contenido al que se está haciendo get.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
-        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'} )
+        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'},
+        "Comprobación de que el contenido es correcto" )
 
 
         # So, we have to add a prediction if we want to get results.
@@ -149,11 +153,13 @@ class FlaskTestCase(unittest.TestCase):
         # vector, so we can easily check if the information we have saved is
         # the same one we have saved before.
 
-        self.assertEqual(result.get_json(), app_weather.predictions[-1])
+        self.assertEqual(result.get_json(), app_weather.predictions[-1],
+        "Comprobación de que el contenido es correcto")
 
         # If we try to get the content again, the result must be the same
         result_again = self.app.get('/predictions/1')
-        self.assertEqual(result.get_json(), result_again.get_json())
+        self.assertEqual(result.get_json(), result_again.get_json(),
+        "Comprobación de que el contenido es el mismo al hacer otro get")
 
 
         # Create an Prediction object
@@ -174,12 +180,14 @@ class FlaskTestCase(unittest.TestCase):
             "date": datetime.datetime.now().strftime('%d-%m-%Y')
         }
 
-        self.assertEqual(result.get_json(), my_dict)
+        self.assertEqual(result.get_json(), my_dict,
+        "Comprobación de que el contenido es correcto")
 
         # If we change one value, for example: ID value, we can check that it
         # doesn't work:
         my_dict["ID"]=2
-        self.assertNotEqual(result.get_json(), my_dict)
+        self.assertNotEqual(result.get_json(), my_dict,
+        "Comprobación de que el contenido es correcto de nuevo,por si acaso")
 
         #And now, if we create a new Prediction, its correct these dictionary.
 
@@ -200,7 +208,8 @@ class FlaskTestCase(unittest.TestCase):
             "ID": len(app_weather.predictions),
             "date": datetime.datetime.now().strftime('%d-%m-%Y')
         }
-        self.assertEqual(result_new_put.get_json(), my_second_dict)
+        self.assertEqual(result_new_put.get_json(), my_second_dict,
+        "Comprobación de que el contenido es correcto")
 
         # In the same way, if we get this last prediction that we have added,
         # we'll get the same content
@@ -208,11 +217,13 @@ class FlaskTestCase(unittest.TestCase):
         result = self.app.get('/predictions/' +
                 str(len(app_weather.predictions)))
 
-        self.assertEqual(result.get_json(), app_weather.predictions[-1])
+        self.assertEqual(result.get_json(), app_weather.predictions[-1],
+        "Comprobación de que el contenido guardado es correcto")
 
 
         # At this moment we have 2 resources, we can test it:
-        self.assertEqual(len(app_weather.predictions),2)
+        self.assertEqual(len(app_weather.predictions),2,
+        "Comprobación de que el número de recursos actual es correcto")
 
         # print(app_weather.predictions)
 
@@ -221,14 +232,16 @@ class FlaskTestCase(unittest.TestCase):
         data=json.dumps({'ID':1}),headers=headers)
 
         # After doing delete, the size of the vector should have decreased
-        self.assertEqual(len(app_weather.predictions),1)
+        self.assertEqual(len(app_weather.predictions),1,
+        "Comprobación de que el número de recursos actual es correcto")
 
         # Now we have to prove that the content we deleted above is the right
         # one. We can check the content in the ''result'' var. This var should
         # have the content of the second dict (only)
         # Tenemos que tener una lista de diccionarios que contenga, como unico
         # diccionario ese que no hemos borrado
-        self.assertEqual(result_delete.get_json(), {'predictions':[my_second_dict]})
+        self.assertEqual(result_delete.get_json(), {'predictions':[my_second_dict]},
+        "Comprobación de que el borrado ha sido correcto")
 
 
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
@@ -242,7 +255,8 @@ class FlaskTestCase(unittest.TestCase):
         data=json.dumps({'ID':666}),headers=headers)
 
         # self.assert  Equal(result_delete.get_json(), {'predictions':[my_second_dict]})
-        self.assertEqual(result_delete.get_json(),{'predictions': app_weather.predictions})
+        self.assertEqual(result_delete.get_json(),{'predictions': app_weather.predictions},
+        "Comprobación de que el contenido devuelto es correcto")
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_delete.content_type, "application/json",
@@ -267,7 +281,8 @@ class FlaskTestCase(unittest.TestCase):
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_post.content_type, "application/json",
         "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'prediction':post_dictionary})
+        self.assertEqual(result_post.get_json(),{'prediction':post_dictionary},
+        "Comprobación de que el contenido es correcto")
 
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
@@ -280,7 +295,8 @@ class FlaskTestCase(unittest.TestCase):
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_post.content_type, "application/json",
         "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'predictions': app_weather.predictions})
+        self.assertEqual(result_post.get_json(),{'predictions': app_weather.predictions},
+        "Comprobación de que el contenido es correcto")
 
 
 
