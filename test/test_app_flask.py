@@ -65,7 +65,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_create_prediction(self):
 
         # 1. COMPROBACIÓN DE GET
-        result = self.app.get('http://127.0.0.1:5000/predictions')
+        result = self.app.get('/predictions')
         self.assertEqual(result.status_code, 200, "El estado generado es 200")
         self.assertEqual(result.content_type, "application/json")
 
