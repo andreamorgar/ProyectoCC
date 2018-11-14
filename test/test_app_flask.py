@@ -54,7 +54,7 @@ class FlaskTestCase(unittest.TestCase):
 
 
         # If we do another get, we have to get the same result
-        result_again = self.app.get('http://127.0.0.1:5000/')
+        result_again = self.app.get('/')
         self.assertEqual(result.get_json(), result_again.get_json(),
         "Si volvemos a hacer un get del contenido, sigue siendo el mismo")
 
@@ -79,7 +79,7 @@ class FlaskTestCase(unittest.TestCase):
 
 
         # 2. Vamos a probar a meter una ruta incorrecta y ver si no funciona.
-        result = self.app.get('http://127.0.0.1:5000/ruta_mala')
+        result = self.app.get('/ruta_mala')
 
         # Comprobamos que el código sea 200 para garantizar que es correcto.
         self.assertEqual(result.status_code, 404)
@@ -94,7 +94,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_get_prediction(self):
 
         # Initially, there is not predictions, so the structure is empty
-        result = self.app.get('http://127.0.0.1:5000/predictions/0')
+        result = self.app.get('/predictions/0')
         # Comprobamos que el código sea 200 para garantizar que es correcto.
         self.assertEqual(result.status_code, 200, "El estado generado es 200")
         # Comprobamos el tipo del contenido al que se está haciendo get.
@@ -103,7 +103,7 @@ class FlaskTestCase(unittest.TestCase):
 
         # We can try to access to another imaginary prediction, and again it is
         # generated an 404 error, because there is not information to show.
-        result = self.app.get('http://127.0.0.1:5000/predictions/1')
+        result = self.app.get('/predictions/1')
         # Comprobamos que el código sea 200 para garantizar que es correcto.
         self.assertEqual(result.status_code, 200,  "El estado generado es 200")
 
@@ -130,7 +130,7 @@ class FlaskTestCase(unittest.TestCase):
         # we'll have append an prediction)
         actual_len = len(app_weather.predictions)
         # We send a put with the data and headers above
-        result_put = self.app.put('http://127.0.0.1:5000/predictions',
+        result_put = self.app.put('/predictions',
         data=datos,headers=headers)
 
         # We check the status. If status is 200, it's ok
@@ -141,7 +141,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(len(app_weather.predictions),actual_len+1)
 
 
-        result = self.app.get('http://127.0.0.1:5000/predictions/1')
+        result = self.app.get('/predictions/1')
 
 
         # The object we have just created is saved in last one in Predictions
@@ -151,7 +151,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.get_json(), app_weather.predictions[-1])
 
         # If we try to get the content again, the result must be the same
-        result_again = self.app.get('http://127.0.0.1:5000/predictions/1')
+        result_again = self.app.get('/predictions/1')
         self.assertEqual(result.get_json(), result_again.get_json())
 
 
@@ -189,7 +189,7 @@ class FlaskTestCase(unittest.TestCase):
             "temperature": self.temperature2
         }
         datos2 = json.dumps(data2)
-        result_new_put = self.app.put('http://127.0.0.1:5000/predictions',
+        result_new_put = self.app.put('/predictions',
         data=datos2,headers=headers)
 
         # print(result_new_put.get_json())
@@ -206,7 +206,7 @@ class FlaskTestCase(unittest.TestCase):
         # In the same way, if we get this last prediction that we have added,
         # we'll get the same content
 
-        result = self.app.get('http://127.0.0.1:5000/predictions/' +
+        result = self.app.get('/predictions/' +
                 str(len(app_weather.predictions)))
 
         self.assertEqual(result.get_json(), app_weather.predictions[-1])
@@ -218,7 +218,7 @@ class FlaskTestCase(unittest.TestCase):
         # print(app_weather.predictions)
 
         #  DELETE:
-        result_delete = self.app.delete('http://127.0.0.1:5000/predictions',
+        result_delete = self.app.delete('/predictions',
         data=json.dumps({'ID':1}),headers=headers)
 
         # After doing delete, the size of the vector should have decreased
@@ -238,7 +238,7 @@ class FlaskTestCase(unittest.TestCase):
 
 
         # We are going to try to delete a resource that doesnt exists:
-        result_delete = self.app.delete('http://127.0.0.1:5000/predictions',
+        result_delete = self.app.delete('/predictions',
         data=json.dumps({'ID':666}),headers=headers)
 
         # self.assert  Equal(result_delete.get_json(), {'predictions':[my_second_dict]})
@@ -258,7 +258,7 @@ class FlaskTestCase(unittest.TestCase):
             "date": datetime.datetime.now().strftime('%d-%m-%Y')
         }
 
-        result_post = self.app.post('http://127.0.0.1:5000/predictions',
+        result_post = self.app.post('/predictions',
         data=json.dumps(post_dictionary),headers=headers)
 
         # We check status, must be MODIFIED
@@ -272,7 +272,7 @@ class FlaskTestCase(unittest.TestCase):
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
         post_dictionary['ID']=1
-        result_post = self.app.post('http://127.0.0.1:5000/predictions',
+        result_post = self.app.post('/predictions',
         data=json.dumps(post_dictionary),headers=headers)
 
         # We check status, must be OK, because we didnt modified anything
