@@ -145,7 +145,7 @@ class TestCase(unittest.TestCase):
 
         for i,elem in enumerate(self.pred.date):
             if i is not 2 and i is not 5:
-                self.assertTrue(0<=int(elem)<=9,,
+                self.assertTrue(0<=int(elem)<=9,
                 "Comprobación de que el atributo date tiene el formato correcto")
         pass
 
