@@ -268,7 +268,6 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result_post.get_json(),{'prediction':post_dictionary})
 
 
-
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
         post_dictionary['ID']=1
