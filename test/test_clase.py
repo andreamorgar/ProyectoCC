@@ -140,7 +140,7 @@ class TestCase(unittest.TestCase):
         # Comprobamos que la fecha está en un formato correcto: los separadores
         # en las posiciones correctas, y el resto de valores son números
 
-        self.assertFalse(self.pred.date[2]=='-' and self.pred.date [5]=='-',
+        self.assertTrue(self.pred.date[2]=='-' and self.pred.date [5]=='-',
         "Comprobación de que el atributo date tiene el formato correcto")
 
         for i,elem in enumerate(self.pred.date):
