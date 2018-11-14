@@ -45,10 +45,6 @@ class Prediction:
         self.ID = Prediction.ID
 
 
-    # def __setitem__(self,key,value):
-    #     assert type(value) is str
-    #     self.__dict__[key] = value
-
     def set_city(self,value):
         """ Method that allows to modify the value of the city
 

@@ -1,0 +1,95 @@
+Help on module weather_class:
+
+NAME
+    weather_class
+
+CLASSES
+    builtins.object
+        Prediction
+    
+    class Prediction(builtins.object)
+     |  Common base class for prediction taken from AEMET API
+     |  
+     |  Attributes:
+     |      city (str):           refers to the city when the prediction is taken
+     |      temperature (float):  refers to the temperature in the city we refered above
+     |      date (str):           actual date, when the predition is load to the database
+     |      ID (int):             identificator of the object prediction
+     |  
+     |  By default, initially the ID is 0, and, when a object from the class is
+     |  created, its ID value takes the next one avaiable.
+     |  
+     |  Methods defined here:
+     |  
+     |  __getitem__(self, key)
+     |      Method to get the value of an attribute of the class. For this
+     |      functionality, it works in the same way than  a dict object.
+     |      
+     |          Args:
+     |          key (str): refers to the name of the attribute we want to know
+     |          the value
+     |      
+     |          Returns:
+     |          Value associated to the attribute called 'key'
+     |  
+     |  __init__(self, city, temperature)
+     |      Args:
+     |      city (str): refers to the city where the predition is taken.
+     |      temperature (float): value of temperature for the city above.
+     |  
+     |  __len__(self)
+     |      Method to get the value of the number of attribute in the class.
+     |      
+     |      Args:
+     |      No args
+     |      
+     |      Returns:
+     |      An int value that represents the number of attributes in the class
+     |  
+     |  __repr__(self)
+     |      Method to get a string representation with the information in class.
+     |      
+     |      Args:
+     |      No args
+     |      
+     |      Returns:
+     |      A str with all the content of the attributes and their values.
+     |  
+     |  set_city(self, value)
+     |      Method that allows to modify the value of the city
+     |      
+     |      Args:
+     |      value (str): refers to the new value that the attribute city is
+     |      going to take
+     |      
+     |      Returns:
+     |      None
+     |  
+     |  set_temperature(self, value)
+     |      Method that allows to modify the value of the temperature
+     |      
+     |      Args:
+     |      value (str): refers to the new value that the attribute temperature
+     |      is going to take
+     |      
+     |      Returns:
+     |      None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  ID = 0
+
+FILE
+    /home/andreamorgar/ProyectoCC/weather_class.py
+
+
