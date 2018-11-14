@@ -67,7 +67,7 @@ class FlaskTestCase(unittest.TestCase):
         # 1. COMPROBACIÓN DE GET
         result = self.app.get('/predictions')
         self.assertEqual(result.status_code, 200, "El estado generado es 200")
-        self.assertEqual(result.content_type, "application/json")
+        self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
 
         # Inicialmente la lista de predicciones está vacía. Vamos a comprobar
         # que el resultado sea el que realmente se espera.
@@ -84,7 +84,7 @@ class FlaskTestCase(unittest.TestCase):
         # Comprobamos que el código sea 200 para garantizar que es correcto.
         self.assertEqual(result.status_code, 404)
         # Comprobamos el tipo del contenido al que se está haciendo get.
-        self.assertEqual(result.content_type, "application/json")
+        self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
 
         self.assertEqual(result.get_json(), {'error':'Not found'} ) # -------------repasar esto.
 
@@ -98,7 +98,7 @@ class FlaskTestCase(unittest.TestCase):
         # Comprobamos que el código sea 200 para garantizar que es correcto.
         self.assertEqual(result.status_code, 200, "El estado generado es 200")
         # Comprobamos el tipo del contenido al que se está haciendo get.
-        self.assertEqual(result.content_type, "application/json")
+        self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
         self.assertEqual(result.get_json(), {'error':'Nonexistent resource'} )
 
         # We can try to access to another imaginary prediction, and again it is
@@ -108,7 +108,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200,  "El estado generado es 200")
 
         # Comprobamos el tipo del contenido al que se está haciendo get.
-        self.assertEqual(result.content_type, "application/json")
+        self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
         self.assertEqual(result.get_json(), {'error':'Nonexistent resource'} )
 
 
@@ -136,7 +136,8 @@ class FlaskTestCase(unittest.TestCase):
         # We check the status. If status is 200, it's ok
         self.assertEqual(result_put.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_put.content_type, "application/json")
+        self.assertEqual(result_put.content_type, "application/json",
+        "Content-type es del tipo application/json")
         # We check we have a new value in the vector comparting lengths
         self.assertEqual(len(app_weather.predictions),actual_len+1)
 
@@ -232,7 +233,8 @@ class FlaskTestCase(unittest.TestCase):
 
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_delete.content_type, "application/json")
+        self.assertEqual(result_delete.content_type, "application/json",
+        "Content-type es del tipo application/json")
 
 
         # We are going to try to delete a resource that doesnt exists:
@@ -243,7 +245,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result_delete.get_json(),{'predictions': app_weather.predictions})
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_delete.content_type, "application/json")
+        self.assertEqual(result_delete.content_type, "application/json",
+        "Content-type es del tipo application/json")
 
 
         #  POST TO AN EXISTENT RESOURCE:
@@ -262,7 +265,8 @@ class FlaskTestCase(unittest.TestCase):
         # We check status, must be MODIFIED
         self.assertEqual(result_post.status_code, 201, "El estado generado es 201")
         # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_post.content_type, "application/json")
+        self.assertEqual(result_post.content_type, "application/json",
+        "Content-type es del tipo application/json")
         self.assertEqual(result_post.get_json(),{'prediction':post_dictionary})
 
         #  POST TO AN UNEXISTENT RESOURCE:
@@ -274,7 +278,8 @@ class FlaskTestCase(unittest.TestCase):
         # We check status, must be OK, because we didnt modified anything
         self.assertEqual(result_post.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_post.content_type, "application/json")
+        self.assertEqual(result_post.content_type, "application/json",
+        "Content-type es del tipo application/json")
         self.assertEqual(result_post.get_json(),{'predictions': app_weather.predictions})
 
 
