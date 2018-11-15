@@ -20,6 +20,7 @@ def get_home():
     # return jsonify({'status': "OK"})
 # Fist we are going to do a simple get.
 
+
 # we now have a get_predictions function that is associated with the
 # /todo/api/v1.0/predictions  URI, and only for the GET HTTP method
 

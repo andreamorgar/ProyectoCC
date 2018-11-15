@@ -67,9 +67,11 @@ Se va a utilizar como lenguaje de programación [Python](https://www.python.org)
 
 
 ### Despliegue
+Despliegue: https://agile-mountain-82339.herokuapp.com/
+
 Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido una serie de pasos, que se pueden encontrar [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_despliegue.md), donde se hace un breve repaso de todo el procedimiento que se ha seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes. También se puede apreciar en ese fichero todas las decisiones tomadas para llevar a cabo el procedimiento.
 
-Despliegue hecho en https://agile-mountain-82339.herokuapp.com/
+
 
 ### Licencia
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
