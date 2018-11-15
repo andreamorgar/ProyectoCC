@@ -8,6 +8,9 @@ Vamos a realizar un pequeño servicio rest, donde se podrá acceder e incorporar
 
 * "/predictions", que nos permitirá:
 - Visualizar (GET) una lista de las predicciones tomadas hasta el momento. Inicialmente esta ruta estará vacía.
+~~~
+$ curl -i https://agile-mountain-82339.herokuapp.com/predictions
+~~~
 - Añadir (PUT) una nueva predicción. A pesar de que se testea el funcionamiento correcto de esta funcionalidad, podríamos desde la terminal introducirlo manualmente, por ejemplo, mediante una orden como la siguiente:
 ~~~
 $ curl -i -H "Content-Type: application/json" -X PUT -d '{"city":"Malaga", "temperature":"16"}' https://agile-mountain-82339.herokuapp.com/predictions
