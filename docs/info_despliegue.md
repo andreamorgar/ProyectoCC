@@ -41,4 +41,4 @@ Las razones para su elección han sido:
 
 
 ## Procedimiento
-Por tanto, se ralizará un servicio web en Python con Flask, pasando los test desde Travis y desplegando a Heroku una vez pasados los tests. He documentado el proceso que he seguido para llevar a cabo estas acciones en un pequeño guión con la historia de pasos que he seguido para ello. Se puede ver [aquí]()
+Por tanto, se ralizará un servicio web en Python con Flask, pasando los test desde Travis y desplegando a Heroku una vez pasados los tests. He documentado el proceso que he seguido para llevar a cabo estas acciones en un pequeño guión con la historia de pasos que he seguido para ello. Se puede ver [aquí](https://github.com/andreamorgar/ejerciciosCC/blob/master/Objetivos/procedimiento_despliegue.md)
