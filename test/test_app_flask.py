@@ -98,21 +98,21 @@ class FlaskTestCase(unittest.TestCase):
         # Initially, there is not predictions, so the structure is empty
         result = self.app.get('/predictions/0')
         # Comprobamos que el código sea 200 para garantizar que es correcto.
-        self.assertEqual(result.status_code, 200, "El estado generado es 200")
+        self.assertEqual(result.status_code, 404, "El estado generado es 404")
         # Comprobamos el tipo del contenido al que se está haciendo get.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
-        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'},
+        self.assertEqual(result.get_json(), {'error':'Not found'},
         "Comprobación de que el contenido es correcto" )
 
         # We can try to access to another imaginary prediction, and again it is
         # generated an 404 error, because there is not information to show.
         result = self.app.get('/predictions/1')
         # Comprobamos que el código sea 200 para garantizar que es correcto.
-        self.assertEqual(result.status_code, 200,  "El estado generado es 200")
+        self.assertEqual(result.status_code, 404,  "El estado generado es 404")
 
         # Comprobamos el tipo del contenido al que se está haciendo get.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
-        self.assertEqual(result.get_json(), {'error':'Nonexistent resource'},
+        self.assertEqual(result.get_json(), {'error':'Not found'},
         "Comprobación de que el contenido es correcto" )
 
 

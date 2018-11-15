@@ -33,7 +33,7 @@ def get_prediction(prediction_id):
     if request.method == 'GET':
         prediction = [prediction for prediction in predictions if prediction['ID'] == prediction_id]
         if len(prediction) == 0:
-            return jsonify({'error': 'Nonexistent resource'})
+            abort(404)
 
         return jsonify(predictions[prediction_id-1])
 
