@@ -284,6 +284,10 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result_post.get_json(),{'prediction':post_dictionary},
         "Comprobación de que el contenido es correcto")
 
+        # Como ahora es el único elemento en la lista, repasamos que sea correcto.
+        self.assertEqual(app_weather.predictions[0]["temperature"],
+        post_dictionary["temperature"], "Actualizado valor en el vector de predicciones")
+
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
         post_dictionary['ID']=1
