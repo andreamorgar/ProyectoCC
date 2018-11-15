@@ -16,7 +16,7 @@ predictions_objects = []
 
 @app.route('/')
 def get_home():
-    return jsonify({'status': 'OK'})
+    return jsonify(status='OK')
     # return jsonify({'status': "OK"})
 # Fist we are going to do a simple get.
 
