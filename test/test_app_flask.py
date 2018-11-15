@@ -295,7 +295,7 @@ class FlaskTestCase(unittest.TestCase):
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_post.content_type, "application/json",
         "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'eror':'Not found'},
+        self.assertEqual(result_post.get_json(),{'error':'Not found'},
         "Comprobación de que el contenido es correcto")
 
 
