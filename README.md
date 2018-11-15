@@ -66,8 +66,8 @@ Se va a utilizar como lenguaje de programación [Python](https://www.python.org)
 
 
 ### Despliegue
-Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido todas las indicaciones que se pueden encontrar en el fichero, donde se hace un breve repaso de todos los pasos que se han seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes.
- 
+Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido todas las indicaciones que se pueden encontrar en el fichero, donde se hace un breve repaso de todos los pasos que se han seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes. 
+
 despliegue https://agile-mountain-82339.herokuapp.com/
 
 ### Licencia
