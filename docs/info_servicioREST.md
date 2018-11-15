@@ -4,7 +4,7 @@
 Vamos a realizar un pequeño servicio rest, donde se podrá acceder e incorporar distinta información meteorológica para distintas localizaciones. De esta forma, podremos acceder a una serie de predicciones tomadas, donde para cada una de ellas tendremos un valor de temperatura y la localización asociada a dicha predicción. También almacenaremos información como puede ser un ID, que nos permita gestionar las consultas a las predicciones, y un valor fecha que indique la fecha en la que se registra dicha predicción.
 
 #### RUTAS UTILIZADAS:
-* En primer lugar, tendremos una ruta raíz "/". En esta ruta se mostrará un simple {STATUS:OK} para ver que el servicio funciona correctamente.
+* En primer lugar, tendremos una ruta raíz "/". En esta ruta se mostrará un simple {status : ok} para ver que el servicio funciona correctamente.
 
 * "/predictions", que nos permitirá:
 - Visualizar (GET) una lista de las predicciones tomadas hasta el momento. Inicialmente esta ruta estará vacía.
@@ -20,7 +20,7 @@ Vamos a realizar un pequeño servicio rest, donde se podrá acceder e incorporar
 
 * "/predictions/<id>", que permitirá consultar una predicción en concreto introduciendo su ID.
 
-
+En todos los casos se devolverá contenido en forma de fichero json.
 
 ### Ficheros utilizados
 Para la implementación se han utiizado dos ficheros:
@@ -38,7 +38,9 @@ Se utilizan dos ficheros distintos para realizar el testeo, uno para cada ficher
 * test_app_flask.py: fichero para testear el funcionamiento del servicio, con cobertura 100%, tal y como podemos ver:
 ![Resultado covertura app_flask](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/images/coverageflask.png)
 
-Para testear con python, hemos hecho uso de [unittest](https://docs.python.org/3/library/unittest.html), ya que cubre todo lo que necesitamos testear y estaba familiarizada con su funcionamiento, ya que lo he utilizado previamente.
+Tal y como se puede ver en las capturas anteriores, se ha testeado todo la funcionalidad del servicio. Además, se ha hecho especial hincapié en comprobar que el estado, content-type y contenido devuelvo por las peticiones realizadas es el correcto.  
+
+Para testear con python, hemos hecho uso de [unittest](https://docs.python.org/3/library/unittest.html), ya que cubre todo lo que necesitamos testear y estaba familiarizada con su funcionamiento, ya que lo he utilizado previamente. 
 
 ### Anotaciones finales
 
