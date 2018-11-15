@@ -33,7 +33,20 @@ En todos los casos se devolverá contenido en forma de fichero json.
 Para la implementación se han utiizado dos ficheros:
 
 * app_flask.py: contiene la funcionalidad del servicio comentada en la sección anterior.
-* weather_class.py: fichero con la especificación de la clase Prediction, la estructura de datos utilizada para los recursos. Su documentación se puede ver también [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/weather_docs.txt)
+* weather_class.py: fichero con la especificación de la clase Prediction, la estructura de datos utilizada para los recursos. Su documentación se puede ver también [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/weather_docs.txt).
+
+### Estructura de datos para el recurso
+En el apartado anterior se ha mencionado que estamos utilizando un fichero que define la estructura de datos de los recursos con los que vamos a trabajar. Se trata de una clase a la que hemos llamado Prediction, la cuál representa una predicción meteorológica de la temperatura en una ciudad. Tiene cuatro atributos básicos.
+
+* Atributo _city_: hace referencia a la ciudad sobre la que se ha tomado la predicción
+* Atributo _temperature_: hace referencia a la temperatura existente en la ciudad _city_ en el momento en el que se toma la predicción
+* Atributo _date_: hace referencia a la fecha en la que se registra la predicción tomada.
+* Atributo _ID_: es el identificador del recurso, que se genera automáticamente al crear el objeto de la clase.
+
+En cuanto a los métodos implementados para la clase, son los básicos para el funcionamiento de la misma
+* Métodos que permitan modificar la temperatura (_temperature_) y la ciudad (_city_) de la clase-
+* Métodos para acceder a los atributos de la clase
+* Método para representar el objeto de la clase. 
 
 
 ### Testeo del servicio
