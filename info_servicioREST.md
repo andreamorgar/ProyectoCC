@@ -32,8 +32,11 @@ Para la implementación se han utiizado dos ficheros:
 ### Testeo del servicio
 Se utilizan dos ficheros distintos para realizar el testeo, uno para cada fichero:
 
-* test_class.py: fichero para testear el funcionamiento de la clase, con cobertura 100%, tal y como podemos ver [aquí]()
-* test_app_flask.py: fichero para testear el funcionamiento del servicio, con cobertura 100%, tal y como podemos ver [aquí]()
+* test_class.py: fichero para testear el funcionamiento de la clase, con cobertura 100%, tal y como podemos ver:
+![Resultado covertura weather_class](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/images/coverageclase.png)
+
+* test_app_flask.py: fichero para testear el funcionamiento del servicio, con cobertura 100%, tal y como podemos ver:
+![Resultado covertura app_flask](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/images/coverageflask.png)
 
 Para testear con python, hemos hecho uso de [unittest](https://docs.python.org/3/library/unittest.html), ya que cubre todo lo que necesitamos testear y estaba familiarizada con su funcionamiento, ya que lo he utilizado previamente.
 
