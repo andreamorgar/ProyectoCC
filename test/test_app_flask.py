@@ -107,10 +107,11 @@ class FlaskTestCase(unittest.TestCase):
         # We can try to access to another imaginary prediction, and again it is
         # generated an 404 error, because there is not information to show.
         result = self.app.get('/predictions/1')
-        # Comprobamos que el código sea 200 para garantizar que es correcto.
+        
+        # We have to check the status code.
         self.assertEqual(result.status_code, 404,  "El estado generado es 404")
 
-        # Comprobamos el tipo del contenido al que se está haciendo get.
+        # We have to check if content-type is correct.
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
         self.assertEqual(result.get_json(), {'error':'Not found'},
         "Comprobación de que el contenido es correcto" )
@@ -162,13 +163,10 @@ class FlaskTestCase(unittest.TestCase):
         "Comprobación de que el contenido es el mismo al hacer otro get")
 
 
-        # Create an Prediction object
-        # self.object_prediction = weather_class.Prediction(self.city, self.temperature)
 
-        # Duda: no puedo crear un objeto para comprobar que funciona porque al
-        # estar usando IDs que se asignan solos, si creo un objeto, me pondría
-        # un ID más que el valor que intento comparar (me pondría ID=2 en este
-        # caso).
+        # If we create another object of class Prediction, to compare to the content
+        # that we have just created, the ID value will not be the same, because
+        # they are unique.
 
         # That's the reason why I'll compare with a dict which has the
         # same content
@@ -183,7 +181,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.get_json(), my_dict,
         "Comprobación de que el contenido es correcto")
 
-        # If we change one value, for example: ID value, we can check that it
+        # If we change one value, for example: ID value, we can check it
         # doesn't work:
         my_dict["ID"]=2
         self.assertNotEqual(result.get_json(), my_dict,
@@ -199,8 +197,6 @@ class FlaskTestCase(unittest.TestCase):
         result_new_put = self.app.put('/predictions',
         data=datos2,headers=headers)
 
-        # print(result_new_put.get_json())
-        # print(my_dict)
 
         my_second_dict = {
             "city": self.city2,
@@ -284,9 +280,14 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result_post.get_json(),{'prediction':post_dictionary},
         "Comprobación de que el contenido es correcto")
 
-        # Como ahora es el único elemento en la lista, repasamos que sea correcto.
+
+        # Now the resource is the object in the pos 0, so we can check we
+        # have in the vector the new value for the temperature attribute.
         self.assertEqual(app_weather.predictions[0]["temperature"],
         post_dictionary["temperature"], "Actualizado valor en el vector de predicciones")
+
+        self.assertEqual(app_weather.predictions[0]["temperature"],
+        45, "Actualizado valor en el vector de predicciones")
 
         #  POST TO AN UNEXISTENT RESOURCE:
         # We try to modify a resource that doesnt exist
