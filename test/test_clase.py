@@ -33,7 +33,6 @@ class TestCase(unittest.TestCase):
     # --------------------------------------------------------------------------
     def test_create_object(self):
 
-
         # Comprobamos que el parámetro city devuelve lo que tiene que devolver
         self.assertEqual(self.pred["city"],self.city,
         "Comprobación de que el atributo city se ha asignado correctamente")
