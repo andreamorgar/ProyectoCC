@@ -291,11 +291,11 @@ class FlaskTestCase(unittest.TestCase):
         data=json.dumps(post_dictionary),headers=headers)
 
         # We check status, must be OK, because we didnt modified anything
-        self.assertEqual(result_post.status_code, 200, "El estado generado es 200")
+        self.assertEqual(result_post.status_code, 404, "El estado generado es 404")
         # We check MIME, that has to be json because we send info as json type.
         self.assertEqual(result_post.content_type, "application/json",
         "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'predictions': app_weather.predictions},
+        self.assertEqual(result_post.get_json(),{'eror':'Not found'},
         "Comprobación de que el contenido es correcto")
 
 

@@ -93,7 +93,7 @@ def create_prediction():
         # called  "not found ". In that case, the response is OK, because
         # the resource doesnt exists, but the request was correct
         if pos == -1:
-            return jsonify({'predictions': predictions}),200
+            return abort(404)
 
         return jsonify({'prediction': predictions[pos]}),201
 
