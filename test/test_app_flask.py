@@ -240,7 +240,7 @@ class FlaskTestCase(unittest.TestCase):
         # have the content of the second dict (only)
         # Tenemos que tener una lista de diccionarios que contenga, como unico
         # diccionario ese que no hemos borrado
-        self.assertEqual(result_delete.get_json(), {'predictions':[my_second_dict]},
+        self.assertEqual(result_delete.get_json(),{'msg': "Deleted"},
         "Comprobación de que el borrado ha sido correcto")
 
 
@@ -255,7 +255,7 @@ class FlaskTestCase(unittest.TestCase):
         data=json.dumps({'ID':666}),headers=headers)
 
         # self.assert  Equal(result_delete.get_json(), {'predictions':[my_second_dict]})
-        self.assertEqual(result_delete.get_json(),{'predictions': app_weather.predictions},
+        self.assertEqual(result_delete.get_json(),{'msg': "Deleted"},
         "Comprobación de que el contenido devuelto es correcto")
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.

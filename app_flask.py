@@ -112,12 +112,11 @@ def create_prediction():
         # send  an OK response, because its problem from the HITO
             pass
         if pos == -1:
-            return jsonify({'predictions': predictions})
-
+            return jsonify({'msg': "Deleted"})
         del predictions[pos]
         del predictions_objects[pos]
 
-        return jsonify({'predictions': predictions})
+        return jsonify({'msg': "Deleted"})
 
 
 
