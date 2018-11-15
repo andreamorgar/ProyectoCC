@@ -10,13 +10,16 @@ Vamos a realizar un pequeño servicio rest, donde se podrá acceder e incorporar
 - Visualizar (GET) una lista de las predicciones tomadas hasta el momento. Inicialmente esta ruta estará vacía.
 - Añadir (PUT) una nueva predicción. A pesar de que se testea el funcionamiento correcto de esta funcionalidad, podríamos desde la terminal introducirlo manualmente, por ejemplo, mediante una orden como la siguiente:
 ~~~
-"$ curl -i -H "Content-Type: application/json" -X PUT -d '{"city":"Malaga", "temperature":"16", "ID":1}' https://agile-mountain-82339.herokuapp.com/predictions"
+$ curl -i -H "Content-Type: application/json" -X PUT -d '{"city":"Malaga", "temperature":"16"}' https://agile-mountain-82339.herokuapp.com/predictions
 ~~~
 - Modificar (POST) una predicción concreta, en función del ID introducido:
-"$ curl -i -H "Content-Type: application/json" -X POST -d '{"city":"Malaga", "temperature":"40", "ID":1}' https://agile-mountain-82339.herokuapp.com/predictions"
-
+~~~
+$ curl -i -H "Content-Type: application/json" -X POST -d '{"city":"Malaga", "temperature":"40", "ID":1}' https://agile-mountain-82339.herokuapp.com/predictions
+~~~
 - Borrar (DELETE) una predicción concreta introduciendo el ID correspondiente:
-"$ curl -i -H "Content-Type: application/json" -X DELETE -d '{"ID":1}' https://agile-mountain-82339.herokuapp.com/predictions"
+~~~
+$ curl -i -H "Content-Type: application/json" -X DELETE -d '{"ID":1}' https://agile-mountain-82339.herokuapp.com/predictions
+~~~
 
 
 * "/predictions/<id>", que permitirá consultar una predicción en concreto introduciendo su ID.
