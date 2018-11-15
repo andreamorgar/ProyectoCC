@@ -9,8 +9,9 @@ Vamos a realizar un pequeño servicio rest, donde se podrá acceder e incorporar
 * "/predictions", que nos permitirá:
 - Visualizar (GET) una lista de las predicciones tomadas hasta el momento. Inicialmente esta ruta estará vacía.
 - Añadir (PUT) una nueva predicción. A pesar de que se testea el funcionamiento correcto de esta funcionalidad, podríamos desde la terminal introducirlo manualmente, por ejemplo, mediante una orden como la siguiente:
+~~~
 "$ curl -i -H "Content-Type: application/json" -X PUT -d '{"city":"Malaga", "temperature":"16", "ID":1}' https://agile-mountain-82339.herokuapp.com/predictions"
-
+~~~
 - Modificar (POST) una predicción concreta, en función del ID introducido:
 "$ curl -i -H "Content-Type: application/json" -X POST -d '{"city":"Malaga", "temperature":"40", "ID":1}' https://agile-mountain-82339.herokuapp.com/predictions"
 
@@ -40,7 +41,7 @@ Se utilizan dos ficheros distintos para realizar el testeo, uno para cada ficher
 
 Tal y como se puede ver en las capturas anteriores, se ha testeado todo la funcionalidad del servicio. Además, se ha hecho especial hincapié en comprobar que el estado, content-type y contenido devuelvo por las peticiones realizadas es el correcto.  
 
-Para testear con python, hemos hecho uso de [unittest](https://docs.python.org/3/library/unittest.html), ya que cubre todo lo que necesitamos testear y estaba familiarizada con su funcionamiento, ya que lo he utilizado previamente. 
+Para testear con python, hemos hecho uso de [unittest](https://docs.python.org/3/library/unittest.html), ya que cubre todo lo que necesitamos testear y estaba familiarizada con su funcionamiento, ya que lo he utilizado previamente.
 
 ### Anotaciones finales
 
