@@ -5,6 +5,7 @@ from flask import request
 from flask import abort
 import weather_class as weather
 import json
+import os
 
 
 app = Flask(__name__)
