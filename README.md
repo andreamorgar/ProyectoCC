@@ -89,6 +89,8 @@ MV: 137.117.174.154
 
 Hecho por @adrianmorente, puede consultarse en [este fichero](./docs/comprobacion_provision.md).
 
+### Comprobación del provisionamiento de otro compañero en mi máquina.
+Se ha comprobado que el provisionamiento realizado por @adrianmorente funciona de manera correcta. Puede consultarse [aquí](./docs/comprobacion_otra_provision.md).
 
 ### Licencia
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
