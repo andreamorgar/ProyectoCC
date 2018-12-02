@@ -68,6 +68,7 @@ Despliegue: https://agile-mountain-82339.herokuapp.com/
 
 Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido una serie de pasos, que se pueden encontrar [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_despliegue.md), donde se hace un breve repaso de todo el procedimiento que se ha seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes. También se puede apreciar en ese fichero todas las decisiones tomadas para llevar a cabo el procedimiento.
 
+---
 ### Provisionamiento de máquina virtuales
 
 En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual (primero a nivel local y posteriormente en Azure), con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
@@ -80,7 +81,6 @@ Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master
 
 MV: 137.117.174.154
 
-#### Comprobación del provisionamiento
 
 ### Comprobación del provisionamiento en otra máquina
 
@@ -88,6 +88,6 @@ Hecho por @adrianmorente, puede consultarse en [este fichero](./docs/comprobacio
 
 ### Comprobación del provisionamiento de otro compañero en mi máquina
 Se ha comprobado que el provisionamiento realizado por @adrianmorente funciona de manera correcta. Puede consultarse [aquí](./docs/comprobacion_otra_provision.md).
-
+---
 ### Licencia
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
