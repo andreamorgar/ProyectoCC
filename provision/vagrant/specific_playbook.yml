@@ -13,3 +13,10 @@
         state: latest
         requirements: /home/vagrant/ProyectoCC/requirements.txt
         executable: pip3
+
+    - name: Redirigir puertos
+      become: true
+      lineinfile:
+        path=/etc/rc.local
+        insertbefore='exit 0'
+        line="sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000"
