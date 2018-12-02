@@ -75,11 +75,13 @@ Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](ht
 
 ### Provisionamiento de máquina virtuales
 
-En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual en Azure, con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
+En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual (primero a nivel local y posteriormente en Azure), con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
 
-1. Uso de *Vagrant* y *Ansible* para provisionar una máquina virtual desde local. Más información [aquí]()
+1. Uso de *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
 
-2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*. Más información [aquí]()
+2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*.
+
+Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/README.md)
 
 MV: 137.117.174.154
 
