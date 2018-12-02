@@ -1,3 +1,20 @@
+## Provisionamiento de máquina virtuales
+---
+
+En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual en Azure, con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
+
+1. Uso de *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
+
+2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*.
+
+A continuación, se documentan los pasos seguidos para conseguir los dos objetivos recién comentados.
+
+
+
+### Instalación de Vagrant
+
+
+### Instalación de Ansible
 1. Instalar ansible
 pip install paramiko PyYAML jinja2 httplib2 ansible
 
