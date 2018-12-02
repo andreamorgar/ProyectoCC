@@ -17,3 +17,7 @@ Por otro lado, la segunda parte del provisionamiento clona el código de este re
 Como el primer script importa al segundo, basta con ejecutar el primero, que en mi máquina virtual de Azure genera la siguiente salida, notando que todos los pasos han sido bien realizados:
 
 <p align="center"><img alt="Comando de creación de un grupo de recursos virtuales en Azure" width="500px" src="./images/comprobacion-ansible-playbook.png" /></p>
+
+A continuación, veamos una comprobación de la puesta en ejecución manual del servicio. Aunque la aplicación se habilita en el puerto 5000, como hemos comentado antes, Ansible ordena una redirección del puerto 5000 al 80 para la máquina virtual, por lo que las solicitudes HTTP al puerto 80 son atendidas por dicho servicio:
+
+<p align="center"><img alt="Comando de creación de un grupo de recursos virtuales en Azure" width="650px" src="./images/comprobacion-ejecucion.png" /></p>
