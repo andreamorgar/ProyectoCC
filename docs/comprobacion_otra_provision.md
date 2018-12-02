@@ -19,8 +19,8 @@ A continuación, realizamos el provisionamiento, tal y como puede verse en la si
 <p align="center"><img alt="Salida obtenida al provisionar mi máquina virtual" width="500px" src="./images/provisionar.png" /></p>
 
 
-Si nos fijamos en la imagen anterior, el provisionamiento se ha realizado de manera correcta. De hecho, podemos volver a intentar comprobar que está instalado *Node.js*, como se muestra a continuación.
-<p align="center"><img alt="Provisionamiento correcto" width="500px" src="./images/provisionar.png" /></p>
+Si nos fijamos en la imagen anterior, el provisionamiento se ha realizado de manera correcta. De hecho, podemos volver a intentar comprobar que está instalado *Node.js*, como se muestra a continuación. Podemos ver, que efectivamente ahora sí está instalado en el sistema y que podemos iniciar el servicio.
+<p align="center"><img alt="Provisionamiento correcto" width="500px" src="./images/provisionamientoComprobado.png" /></p>
 
 
 Por último, vamos a ejecutar el servicio, el cuál funciona correctamente, tal y como se puede apreciar en la siguiente imagen.
