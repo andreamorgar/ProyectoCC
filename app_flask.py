@@ -7,6 +7,8 @@ import weather_class as weather
 import json
 import os
 
+from predictionDB import getDocument, pushDocument, updateDocument
+from predictionDB import get_all_predictions, delete_document
 
 app = Flask(__name__)
 
@@ -21,29 +23,38 @@ def get_home():
     # return jsonify({'status': "OK"})
 # Fist we are going to do a simple get.
 
-
-# we now have a get_predictions function that is associated with the
-# /todo/api/v1.0/predictions  URI, and only for the GET HTTP method
-
-# ------------------------------------------------------------------------------
+ # ------------------------------------------------------------------------------
 
 # Now let's write the second version of the GET method for our predictions resource.
 # If you look at the table above this will be the one that is used to return the
 # data of a single prediction:
-@app.route('/predictions/<int:prediction_id>', methods=['GET'])
+@app.route('/predictions/<int:prediction_id>', methods=['GET']) #funciona
 def get_prediction(prediction_id):
     if request.method == 'GET':
-        prediction = [prediction for prediction in predictions if prediction['ID'] == prediction_id]
-        if len(prediction) == 0:
+        # We want to find in the collection the document with the ID equal to
+
+        result = getDocument(prediction_id)
+        if result is None:
             abort(404)
 
-        return jsonify(predictions[prediction_id-1])
+        # dict_result= result.__getitem__(0)
+        result.pop('_id')
+        # print(result)
 
-
+        return jsonify(result)
 # ------------------------------------------------------------------------------
 
-def get_predictions():
-    return jsonify({'predictions': predictions})
+def get_predictions(): # funciona
+    cursor = get_all_predictions()
+    actual_list_of_preds = []
+
+    for document in cursor:
+        next_dict = document
+        next_dict.pop('_id')
+        actual_list_of_preds.append(next_dict)
+        # print(next_dict)
+
+    return jsonify({'predictions': actual_list_of_preds })
 
 # ------------------------------------------------------------------------------
 # Method with POST
@@ -63,62 +74,55 @@ def create_prediction():
         # in the curl
         prediction = weather.Prediction(request.json['city'],request.json['temperature'] )
 
-        # We need to add the object as a dict, for an easily convertion to json
-        predictions.append(prediction.__dict__)
-        predictions_objects.append(prediction)
+        # We push the new prediction to the Database
+        record = {
+            "ID": prediction['ID'],
+            "city": prediction['city'],
+            "date": prediction['date'],
+            "temperature": prediction['temperature']
+        }
+        pushDocument(record)
 
-        # print(prediction)
         return jsonify(prediction.__dict__)
-        # return jsonify({'prediction': prediction.__dict__}),200
 
     # --------------------------------------------------------------------------
-    elif request.method == 'POST':
+    elif request.method == 'POST': #funciona
         id = request.json['ID']
         city = request.json['city']
         temperature = request.json['temperature']
 
-        # Search for the prediction with the ID introduced
-        pos = -1
-        for i, pred in enumerate(predictions):
-            if pred['ID'] == id:
-                pos = i
-                predictions_objects[pos].set_city(city)
-                predictions_objects[pos].set_temperature(temperature)
-
-                # predictions[i]['city'] = city
-                # predictions[i]['temperature'] = temperature
-
-        # We have to be sure of have send an ID existent. In other case, we
-        # abort to notificate the problem
-
-        # We abort this instruction and we send the error to the function
-        # called  "not found ". In that case, the response is OK, because
-        # the resource doesnt exists, but the request was correct
-        if pos == -1:
+        pred = getDocument(id)
+        if pred is None:
             return abort(404)
 
-        return jsonify({'prediction': predictions[pos]}),201
+        record = {
+            "city": city,
+            "temperature": temperature
+        }
 
-        # return jsonify({'prediction': predictions[pos]})
+        # dict_result= pred.__getitem__(0)
+        updateDocument(pred,record)
+        updated_pred = getDocument(id)
+        updated_pred.pop('_id')
 
+        return jsonify({'prediction': updated_pred}),201
+        # return jsonify(updated_pred),201
 
+    # --------------------------------------------------------------------------
     elif request.method == 'DELETE':
         # Search for the prediction with the ID introduced
         id = request.json['ID']
-        pos = -1
-        for i, pred in enumerate(predictions):
-            if pred['ID'] == id:
-                pos = i
-        # We have to be sure of have send an ID existent. In other case, we
-        # abort to notificate the problem. If the resource doesnt exists, we
-        # send  an OK response, because its problem from the HITO
-            pass
-        if pos == -1:
+        not_wanted_query = getDocument(id)
+
+        if not_wanted_query is None:
             return jsonify({'msg': "Deleted"})
-        del predictions[pos]
-        del predictions_objects[pos]
+
+
+        delete_document(not_wanted_query)
+
 
         return jsonify({'msg': "Deleted"})
+
 
 
 

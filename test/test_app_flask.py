@@ -6,6 +6,9 @@ import tempfile
 import json
 import datetime
 
+from predictionDB import get_all_predictions, get_number_documents
+from predictionDB import delete_all_documents
+
 class FlaskTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -16,23 +19,26 @@ class FlaskTestCase(unittest.TestCase):
 
         # declaro los valores que me hacen falta
         self.city = "Salamanca"
-        self.temperature = 26
+        self.temperature = "26"
 
         self.city2 = "Granada"
-        self.temperature2 = 10
-        self.post_temperature = 45
+        self.temperature2 = "10"
+        self.post_temperature = "45"
 
+        # To test the database, we are going to try it with a clean
+        # database
+        delete_all_documents()
     # --------------------------------------------------------------------------
     def tearDown(self):
         pass
 
     # --------------------------------------------------------------------------
-    def test_app_run(self):
-        self.assertEqual(app_weather.app.debug, False,"Comprobacion sobre app run correcta")
+    def test_1_app_run(self):
+        self.assertEqual(app_weather.app.debug, False)
         pass
 
     # --------------------------------------------------------------------------
-    def test_get_home(self):
+    def test_2_get_home(self):
         # Hacemos una petición a la ruta inicial. Primero vamos a probar
         # metiendo la ruta de forma correcta.
         result = self.app.get('/')
@@ -62,12 +68,12 @@ class FlaskTestCase(unittest.TestCase):
         pass
 
     # --------------------------------------------------------------------------
-    def test_create_prediction(self):
+    def test_3_create_prediction(self):
 
         # 1. COMPROBACIÓN DE GET
-        result = self.app.get('/predictions')
-        self.assertEqual(result.status_code, 200, "El estado generado es 200")
-        self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
+        result = self.app.get('http://127.0.0.1:5000/predictions')
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content_type, "application/json")
 
         # Inicialmente la lista de predicciones está vacía. Vamos a comprobar
         # que el resultado sea el que realmente se espera.
@@ -75,9 +81,17 @@ class FlaskTestCase(unittest.TestCase):
 
         # Compare dict to dict:
         # https://www.youtube.com/watch?v=kvux1SiRIJQ&t=217s
-        self.assertEqual(result.get_json(), {'predictions':app_weather.predictions},
-        "Comprobación de que el contenido es correcto")
 
+        cursor = get_all_predictions()
+        actual_list_of_preds = []
+
+        for document in cursor:
+            next_dict = document
+            next_dict.pop('_id')
+            actual_list_of_preds.append(next_dict)
+
+        self.assertEqual(result.get_json(), {'predictions':actual_list_of_preds},
+        "Comprobación de que el contenido es correcto")
 
         # 2. Vamos a probar a meter una ruta incorrecta y ver si no funciona.
         result = self.app.get('/ruta_mala')
@@ -88,12 +102,13 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
 
         self.assertEqual(result.get_json(), {'error':'Not found'},
-        "Comprobación de que el contenido es correcto" ) # -------------repasar esto.
+        "Comprobación de que el contenido es correcto" )
 
         pass
 
 
-    def test_get_prediction(self):
+    def test_4_get_prediction(self):
+
 
         # Initially, there is not predictions, so the structure is empty
         result = self.app.get('/predictions/0')
@@ -104,10 +119,21 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.get_json(), {'error':'Not found'},
         "Comprobación de que el contenido es correcto" )
 
+
+        # We can try to access to another imaginary prediction, and again it is
+        # generated an 404 error, because there is not information to show.
+
+        # When we didnt have any Database, we didnt have persistent data. So,
+        # by the time we started the service, we didnt have any prediction inside.
+        # Now, with the database included, when we start the application, we
+        # already have data, and we have to prove it. To test that the functionality
+        # is correct with nonexistent data, we are going to try to access to a very
+        # high number of id.
+
         # We can try to access to another imaginary prediction, and again it is
         # generated an 404 error, because there is not information to show.
         result = self.app.get('/predictions/1')
-        
+
         # We have to check the status code.
         self.assertEqual(result.status_code, 404,  "El estado generado es 404")
 
@@ -115,7 +141,6 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result.content_type, "application/json", "Content-type es del tipo application/json")
         self.assertEqual(result.get_json(), {'error':'Not found'},
         "Comprobación de que el contenido es correcto" )
-
 
         # So, we have to add a prediction if we want to get results.
         # Firstly,create a dictionary called data with the values we want to put
@@ -133,7 +158,7 @@ class FlaskTestCase(unittest.TestCase):
         # We are going to save this value, because can be intereseting to
         # prove how it increase in one point after doing a correct put (because
         # we'll have append an prediction)
-        actual_len = len(app_weather.predictions)
+        actual_len = get_number_documents()
         # We send a put with the data and headers above
         result_put = self.app.put('/predictions',
         data=datos,headers=headers)
@@ -144,7 +169,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(result_put.content_type, "application/json",
         "Content-type es del tipo application/json")
         # We check we have a new value in the vector comparting lengths
-        self.assertEqual(len(app_weather.predictions),actual_len+1)
+        self.assertEqual(get_number_documents(),actual_len+1)
 
 
         result = self.app.get('/predictions/1')
@@ -154,7 +179,15 @@ class FlaskTestCase(unittest.TestCase):
         # vector, so we can easily check if the information we have saved is
         # the same one we have saved before.
 
-        self.assertEqual(result.get_json(), app_weather.predictions[-1],
+        cursor = get_all_predictions()
+        actual_list_of_preds = []
+
+        for document in cursor:
+            next_dict = document
+            next_dict.pop('_id')
+            actual_list_of_preds.append(next_dict)
+
+        self.assertEqual(result.get_json(), actual_list_of_preds[-1],
         "Comprobación de que el contenido es correcto")
 
         # If we try to get the content again, the result must be the same
@@ -163,10 +196,13 @@ class FlaskTestCase(unittest.TestCase):
         "Comprobación de que el contenido es el mismo al hacer otro get")
 
 
+        # Create an Prediction object
+        # self.object_prediction = weather_class.Prediction(self.city, self.temperature)
 
-        # If we create another object of class Prediction, to compare to the content
-        # that we have just created, the ID value will not be the same, because
-        # they are unique.
+        # Duda: no puedo crear un objeto para comprobar que funciona porque al
+        # estar usando IDs que se asignan solos, si creo un objeto, me pondría
+        # un ID más que el valor que intento comparar (me pondría ID=2 en este
+        # caso).
 
         # That's the reason why I'll compare with a dict which has the
         # same content
@@ -174,7 +210,7 @@ class FlaskTestCase(unittest.TestCase):
         my_dict = {
             "city": self.city,
             "temperature": self.temperature,
-            "ID": len(app_weather.predictions),
+            "ID": get_number_documents(),
             "date": datetime.datetime.now().strftime('%d-%m-%Y')
         }
 
@@ -186,6 +222,7 @@ class FlaskTestCase(unittest.TestCase):
         my_dict["ID"]=2
         self.assertNotEqual(result.get_json(), my_dict,
         "Comprobación de que el contenido es correcto de nuevo,por si acaso")
+
 
         #And now, if we create a new Prediction, its correct these dictionary.
 
@@ -201,7 +238,7 @@ class FlaskTestCase(unittest.TestCase):
         my_second_dict = {
             "city": self.city2,
             "temperature": self.temperature2,
-            "ID": len(app_weather.predictions),
+            "ID": get_number_documents(),
             "date": datetime.datetime.now().strftime('%d-%m-%Y')
         }
         self.assertEqual(result_new_put.get_json(), my_second_dict,
@@ -211,24 +248,86 @@ class FlaskTestCase(unittest.TestCase):
         # we'll get the same content
 
         result = self.app.get('/predictions/' +
-                str(len(app_weather.predictions)))
+                str(get_number_documents()))
 
-        self.assertEqual(result.get_json(), app_weather.predictions[-1],
+        cursor = get_all_predictions()
+        actual_list_of_preds = []
+
+        for document in cursor:
+            next_dict = document
+            next_dict.pop('_id')
+            actual_list_of_preds.append(next_dict)
+
+        self.assertEqual(result.get_json(), actual_list_of_preds[-1],
         "Comprobación de que el contenido guardado es correcto")
 
 
         # At this moment we have 2 resources, we can test it:
-        self.assertEqual(len(app_weather.predictions),2,
+        self.assertEqual(get_number_documents(),2,
         "Comprobación de que el número de recursos actual es correcto")
 
-        # print(app_weather.predictions)
+
+
+        # POST
+        post_dictionary = {
+            "city": self.city2,
+            "temperature": self.post_temperature,
+            "ID": 2,
+            "date": datetime.datetime.now().strftime('%d-%m-%Y')
+        }
+
+        result_post = self.app.post('/predictions',
+        data=json.dumps(post_dictionary),headers=headers)
+
+        # We check status, must be MODIFIED
+        self.assertEqual(result_post.status_code, 201, "El estado generado es 201")
+        # We check MIME, that has to be json because we send info as json type.
+        self.assertEqual(result_post.content_type, "application/json",
+        "Content-type es del tipo application/json")
+        self.assertEqual(result_post.get_json(),{'prediction':post_dictionary},
+        "Comprobación de que el contenido es correcto")
+
+        # Now we want to make sure that we have, in the second document of the
+        # DataBase, the correct information
+        self.assertEqual(get_all_predictions().__getitem__(1)["temperature"],
+        post_dictionary["temperature"], "Actualizado valor en el vector de predicciones")
+
+        #  POST TO AN UNEXISTENT RESOURCE:
+        # We try to modify a resource that doesnt exist
+        post_dictionary['ID']=1111
+        result_post = self.app.post('/predictions',
+        data=json.dumps(post_dictionary),headers=headers)
+
+        # We check status, must be OK, because 404 because resource doesnt exist
+        self.assertEqual(result_post.status_code, 404)
+        # We check MIME, that has to be json because we send info as json type.
+        self.assertEqual(result_post.content_type, "application/json")
+
+
+        cursor = get_all_predictions()
+        actual_list_of_preds = []
+
+        for document in cursor:
+            next_dict = document
+            next_dict.pop('_id')
+            actual_list_of_preds.append(next_dict)
+
+        self.assertEqual(result_post.get_json(),{'error': 'Not found'})
 
         #  DELETE:
         result_delete = self.app.delete('/predictions',
         data=json.dumps({'ID':1}),headers=headers)
 
+        cursor = get_all_predictions()
+        actual_list_of_preds = []
+
+        for document in cursor:
+            next_dict = document
+            next_dict.pop('_id')
+            actual_list_of_preds.append(next_dict)
+
         # After doing delete, the size of the vector should have decreased
-        self.assertEqual(len(app_weather.predictions),1,
+        self.assertEqual(get_number_documents(),1,
         "Comprobación de que el número de recursos actual es correcto")
 
         # Now we have to prove that the content we deleted above is the right
@@ -238,7 +337,6 @@ class FlaskTestCase(unittest.TestCase):
         # diccionario ese que no hemos borrado
         self.assertEqual(result_delete.get_json(),{'msg': "Deleted"},
         "Comprobación de que el borrado ha sido correcto")
-
 
         self.assertEqual(result_delete.status_code, 200, "El estado generado es 200")
         # We check MIME, that has to be json because we send info as json type.
@@ -259,51 +357,11 @@ class FlaskTestCase(unittest.TestCase):
         "Content-type es del tipo application/json")
 
 
-        #  POST TO AN EXISTENT RESOURCE:
-        # Now we are going to modify the resource that we have still in the
-        # vector.
-        post_dictionary = {
-            "city": self.city2,
-            "temperature": self.post_temperature,
-            "ID": 2,
-            "date": datetime.datetime.now().strftime('%d-%m-%Y')
-        }
-
-        result_post = self.app.post('/predictions',
-        data=json.dumps(post_dictionary),headers=headers)
-
-        # We check status, must be MODIFIED
-        self.assertEqual(result_post.status_code, 201, "El estado generado es 201")
-        # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_post.content_type, "application/json",
-        "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'prediction':post_dictionary},
-        "Comprobación de que el contenido es correcto")
-
-
-        # Now the resource is the object in the pos 0, so we can check we
-        # have in the vector the new value for the temperature attribute.
-        self.assertEqual(app_weather.predictions[0]["temperature"],
-        post_dictionary["temperature"], "Actualizado valor en el vector de predicciones")
-
-        self.assertEqual(app_weather.predictions[0]["temperature"],
-        45, "Actualizado valor en el vector de predicciones")
-
-        #  POST TO AN UNEXISTENT RESOURCE:
-        # We try to modify a resource that doesnt exist
-        post_dictionary['ID']=1
-        result_post = self.app.post('/predictions',
-        data=json.dumps(post_dictionary),headers=headers)
-
-        # We check status, must be OK, because we didnt modified anything
-        self.assertEqual(result_post.status_code, 404, "El estado generado es 404")
-        # We check MIME, that has to be json because we send info as json type.
-        self.assertEqual(result_post.content_type, "application/json",
-        "Content-type es del tipo application/json")
-        self.assertEqual(result_post.get_json(),{'error':'Not found'},
-        "Comprobación de que el contenido es correcto")
-
-
+        # https://coverage.readthedocs.io/en/coverage-4.2/excluding.html
+        # To test the database, we are going to try it with a clean
+        # database
+        delete_all_documents()
+        pass
 
         # https://coverage.readthedocs.io/en/coverage-4.2/excluding.html
 
