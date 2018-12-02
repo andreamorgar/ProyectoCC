@@ -1,0 +1,22 @@
+---
+- hosts: all
+  tasks:
+    - name: Clone repo
+      become: False
+      git:
+        repo: https://github.com/andreamorgar/ProyectoCC.git
+        clone: yes
+        dest: ProyectoCC
+
+    - name: Install requirements
+      pip:
+        state: latest
+        requirements: /home/andreamg/ProyectoCC/requirements.txt
+        executable: pip3
+
+    - name: Redirigir puertos
+      become: true
+      lineinfile:
+        path=/etc/rc.local
+        insertbefore='exit 0'
+        line="sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000"
