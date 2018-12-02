@@ -11,23 +11,49 @@ A continuación, se documentan los pasos seguidos para conseguir los dos objetiv
 
 
 
-### Instalación de Vagrant
+### *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
+---
+#### Instalación de Vagrant
+En primer lugar, vamos a trabajar con máquinas virtuales locales. Para ello, necesitamos instalar una herramienta que nos permita gestionar máquinas virtuales, de forma que podamos arrancarlas, provisionarlas y destruirlas fácilmente.
+
+Por ello, se ha hecho uso de [Vagrant](https://www.vagrantup.com/). Se ha utilizado esta herramienta ya que, como vimos en el seminario de Ansible impartido en la asignatura, Vagrant permite configurar máquinas virtuales de una manera sencilla, además de ser muy fácil de cambiar esa configuración para trabajar con máquinas virtuales en la nube.
+
+El primer paso por tanto, es instalar la herramienta. Para ello, hemos seguido los pasos vistos [aquí](https://howtoprogram.xyz/2016/07/23/install-vagrant-ubuntu-16-04/). Para un correcto funcionamiento de la herramienta, es esencial tener en cuenta dos aspectos:
+- Necesitamos una herramienta como VirtualBox, donde podamos gestionar las máquinas virtuales que se están creando y acceder a las mismas.
+
+- Hay que tener cuidado con la versión de Vagrant que instalamos. Si instalamos la herramienta por línea de órdenes tal y como se indica en el enlace de descarga anterior, la versión que se descarga por defecto es *Vagrant 1.8.1*. Suponiendo que queremos trabajar con *VirtualBox* (como es mi caso), es importante saber que Vagrant no trabaja con las últimas versiones de *VirtualBox*, por lo que debemos actualizar, como mínimo, a la versión 2.0.2. Para ello, se pueden seguir los pasos vistos [aquí](https://github.com/openebs/openebs/issues/32).
 
 
-### Instalación de Ansible
-1. Instalar ansible
-pip install paramiko PyYAML jinja2 httplib2 ansible
+#### Creación de una máquina virtual con Vagrant
+Una vez que tenemos Vagrant correctamente instalado, nos situamos en un directorio sobre el que trabajar. En mi caso, todo este proceso lo he realizado desde mi repositorio de ejercicios, por lo que una vez situada en la carpeta correspondiente, ejecutamos lo siguiente.
+~~~
+$ vagrant init
+~~~
+Con esta orden, estamos inicializando el directorio actual, de forma que sea un entorno *Vagrant*. Una vez ejecutada dicha orden, se crea un archivo *VagrantFile* en caso de que no exista anteriormente.
+Este fichero recién creado, tenemos que modificarlo para adaptarlo a aquello que queramos hacer. En nuestro caso, buscamos dos cosas:
+- **Especificar la máquina que queremos crear**. Para ello, podemos buscar [aquí](https://app.vagrantup.com/boxes/search?utf8=%E2%9C%93&sort=downloads&provider=&q=ubuntu) el nombre asociado al sistema operativo que queremos que tenga la máquina virtual que vamos a crear. Este nombre, será el que debemos asociar a "config.vm.box" en el fichero VagrantFile. En mi caso, he especificado que la máquina que quiero crear tenga como sistema operativo *Debian 9*. Se ha elegido este sistema operativo por diversas razones. Las dos más importantes son, en primer lugar, que cuenta con una versión de Python3 ya instalada, sobre la cuál podemos trabajar directamente. En segundo lugar, porque además de lo anterior, se indica que es un sistema operativo oficial, y no uno facilitado por algún usuario de la plataforma. 
 
-2. Me ha dicho que dentro de mi entorno no tengo la versión más actualizda de pip, así que la actualizo. pip install --upgrade pip
-
-3. Instalo virtualbox, pero me da problemas pq me pide que quite la seguridad de mi SO. Por eso, sigo los pasos aqui:
-https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/. Faltan pasos 5,6,y 7 (?))))
+- **Indicar el provisionamiento para dicha máquina**: para ello, le indicamos el fichero *playbook* que queremos ejecutar, el cuál contiene el provisionamiento que queremos que tenga la máquina virtual que hemos especificado anteriormente. Como vemos en el contenido del fichero VagrantFile (mostrado a continuación), ya estamos haciendo uso de Ansible para poder llevar a cabo dicha tarea.
 
 
+**Contenido del fichero VagrantFile:**
+~~~
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/contrib-stretch64"
+  config.vm.hostname = "ubuntuAndrea"
 
-https://app.vagrantup.com/boxes/search?utf8=%E2%9C%93&sort=downloads&provider=&q=ubuntu
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "v"
+    ansible.playbook = "playbook.yml"
+  end
+end
+~~~
 
-Instalar Vagrant https://howtoprogram.xyz/2016/07/23/install-vagrant-ubuntu-16-04/
+
+
+
+
+Instalar Vagrant
 
 
 sudo apt-get update
@@ -46,6 +72,25 @@ Entramos a esa carpeta y hacemos vagrant init
 Vamos a crear una máquina virtual por defecto, del nombre que nosotros queramos. En este caso voy a utilizar la versión LTS de ubuntu server 16.04, y vamos a escribir en VagrantFile de la misma forma que lo vimos en el seminario. Es decir, estamos creando una máquina default.
 
 Con vagrant estamos configurando la maquina virtual que vamos a utilizar inicialmente.
+
+
+
+
+
+
+
+
+
+### Instalación de Ansible
+1. Instalar ansible
+pip install paramiko PyYAML jinja2 httplib2 ansible
+
+2. Me ha dicho que dentro de mi entorno no tengo la versión más actualizda de pip, así que la actualizo. pip install --upgrade pip
+
+3. Instalo virtualbox, pero me da problemas pq me pide que quite la seguridad de mi SO. Por eso, sigo los pasos aqui:
+https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/. Faltan pasos 5,6,y 7 (?))))
+
+
 
 
 
