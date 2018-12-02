@@ -12,8 +12,9 @@ A continuación, se documentan los pasos seguidos para conseguir los dos objetiv
 
 ---
 ## *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
+### Instalación de las herramientas necesarias
 
-### Instalación de Vagrant
+#### Instalación de Vagrant
 En primer lugar, vamos a trabajar con máquinas virtuales locales. Para ello, necesitamos instalar una herramienta que nos permita gestionar máquinas virtuales, de forma que podamos arrancarlas, provisionarlas y destruirlas fácilmente.
 
 Por ello, se ha hecho uso de [Vagrant](https://www.vagrantup.com/). Se ha utilizado esta herramienta ya que, como vimos en el seminario de Ansible impartido en la asignatura, Vagrant permite configurar máquinas virtuales de una manera sencilla, además de ser muy fácil de cambiar esa configuración para trabajar con máquinas virtuales en la nube.
@@ -24,15 +25,60 @@ El primer paso por tanto, es instalar la herramienta. Para ello, hemos seguido l
 - Hay que tener cuidado con la versión de Vagrant que instalamos. Si instalamos la herramienta por línea de órdenes tal y como se indica en el enlace de descarga anterior, la versión que se descarga por defecto es *Vagrant 1.8.1*. Suponiendo que queremos trabajar con *VirtualBox* (como es mi caso), es importante saber que Vagrant no trabaja con las últimas versiones de *VirtualBox*, por lo que debemos actualizar, como mínimo, a la versión 2.0.2. Para ello, se pueden seguir los pasos vistos [aquí](https://github.com/openebs/openebs/issues/32).
 
 
+#### Instalación de Ansible
+El primer paso es instalar ansible en la máquina con la que estemos trabajando. Para poder disponer de ansible podemos instalarla desde dos formas principales:
+- Utilizar el gestor de paquetes *apt-get*, tal y como se puede ver indicado [aquí](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-16-04).
+- Instalarlo mediante *pip*. En este ejercicio, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip)
+
+En la siguiente imagen podemos ver cómo se ha llevado a cabo la instalación de ansible, versión 2.7.2.
+![Instalación de Ansible](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/instalacionAnsible.png)
+
+
+
 ### Creación de una máquina virtual con Vagrant
 Una vez que tenemos Vagrant correctamente instalado, nos situamos en un directorio sobre el que trabajar. En mi caso, todo este proceso lo he realizado desde mi repositorio de ejercicios, por lo que una vez situada en la carpeta correspondiente, ejecutamos lo siguiente.
 ~~~
 $ vagrant init
 ~~~
 Con esta orden, estamos inicializando el directorio actual, de forma que sea un entorno *Vagrant*. Una vez ejecutada dicha orden, se crea un archivo *VagrantFile* en caso de que no exista anteriormente.
-Este fichero recién creado, tenemos que modificarlo para adaptarlo a aquello que queramos hacer. En nuestro caso, buscamos dos cosas:
-- **Especificar la máquina que queremos crear**. Para ello, podemos buscar [aquí](https://app.vagrantup.com/boxes/search?utf8=%E2%9C%93&sort=downloads&provider=&q=ubuntu) el nombre asociado al sistema operativo que queremos que tenga la máquina virtual que vamos a crear. Este nombre, será el que debemos asociar a "config.vm.box" en el fichero VagrantFile. En mi caso, he especificado que la máquina que quiero crear tenga como sistema operativo *Debian 9*. Se ha elegido este sistema operativo por diversas razones. Las dos más importantes son, en primer lugar, que cuenta con una versión de Python3 ya instalada, sobre la cuál podemos trabajar directamente. En segundo lugar, porque además de lo anterior, se indica que es un sistema operativo oficial, y no uno facilitado por algún usuario de la plataforma.
+Este fichero recién creado, tenemos que modificarlo para adaptarlo a aquello que queramos hacer.
 
+En primer lugar, **especificamos la máquina que queremos crear**. Para ello, podemos buscar [aquí](https://app.vagrantup.com/boxes/search?utf8=%E2%9C%93&sort=downloads&provider=&q=ubuntu) el nombre asociado al sistema operativo que queremos que tenga la máquina virtual que vamos a crear. Este nombre, será el que debemos asociar a "config.vm.box" en el fichero VagrantFile. En mi caso, he especificado que la máquina que quiero crear tenga como sistema operativo *Debian 9*. Se ha elegido este sistema operativo por diversas razones. Las dos más importantes son, en primer lugar, que cuenta con una versión de Python3 ya instalada, sobre la cuál podemos trabajar directamente. En segundo lugar, porque además de lo anterior, se indica que es un sistema operativo oficial, y no uno facilitado por algún usuario de la plataforma. En este punto, el contenido del fichero VagrantFile sería el que se muestra a continuación.
+
+**Contenido del fichero *VagrantFile* hasta el momento:**
+~~~
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/contrib-stretch64"
+  config.vm.hostname = "ubuntuAndrea"
+
+end
+~~~
+
+Por tanto, vamos a crear la máquina. Para ello ejecutamos la siguiente orden:
+~~~
+$ vagrant up
+~~~
+Una vez finalice la creación de dicha máquina, podemos abrir *VirtualBox*, y comprobar que, efectivamente se ha creado dicha máquina. Lo podemos ver en la siguiente imagen.
+![Creación de la máquina virtual con Vagrant](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/hito3/mv.png)
+
+
+Como podemos observar en el fichero de VagrantFile anteriormente mostrado, en este punto aún no hemos realizado ningún provisionamiento con *Ansible*.
+Sin embargo, para ver si la máquina virtual que hemos creado a través de *Vagrant* está operativa, podemos hacer un simple **ping**, y de esta forma comprobarlo. En la siguiente figura, podemos ver cómo realmente funciona. En la primera orden ejecutada, podemos ver cómo estamos haciendo ping a todas las máquinas virtuales. En nuestro caso, tenemos únicamente una, por lo tanto la orden ejecutada es equivalente a hacer ping directamente de nuestra máquina. Lo hacemos también, y vemos como efectivamente obtenemos igual resultado.
+
+![Ping a la máquina que hemos creado](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/hito3/ping.png)
+
+
+Además, podemos acceder a la máquina mediante ssh, tal y como se puede ver a continuación. Como podemos observar en la imagen, hemos podido conectarnos de forma correcta mediante SSH. Además, he ejecutado algunas órdenes para poder conocer mejor el estado en el que se encuentra la máquina:
+- En primer lugar, podemos comprobar que el sistema operativo de la máquina es el que queríamos, mediante la ejecución del comando **hostnamectl**. Podemos ver también, que se ha creado con el nombre que especificamos en el fichero *VagrantFile*.
+
+- Por otra parte, podemos ver cómo las utilidades que pretendemos instalar con el provisionamiento (como **git** o **pip3**), no están. Esto nos servirá para que, cuando ejecutemos la orden asociada al provisionamiento, veamos cómo realmente hemos hecho un provisionamiento correcto.
+
+![Acceso por ssh a la máquina que hemos creado](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/hito3/pruebaSSH.png).
+
+
+
+---
+### provision
 - **Indicar el provisionamiento para dicha máquina**: para ello, le indicamos el fichero *playbook* que queremos ejecutar, el cuál contiene el provisionamiento que queremos que tenga la máquina virtual que hemos especificado anteriormente. Como vemos en el contenido del fichero VagrantFile (mostrado a continuación), ya estamos haciendo uso de Ansible para poder llevar a cabo dicha tarea.
 
 
@@ -49,20 +95,19 @@ Vagrant.configure("2") do |config|
 end
 ~~~
 
+Una vez completado el fichero *VagrantFile*, podemos crear la máquina virtual con la siguiente orden:
+~~~
+$ vagrant up
+~~~
 
 
 
-
-Instalar Vagrant
-
-
+<!-- Instalar Vagrant
 sudo apt-get update
 sudo apt-get install vagrant
 vagrant -- version  (sale vagrant 1.8.1)
-
-
 Nos vamos a ejercicios (mi carpeta de github) desde local, y abrimos una nueva carpeta, que se va a llamar tema3.
-Entramos a esa carpeta y hacemos vagrant init
+Entramos a esa carpeta y hacemos vagrant init -->
 
 
 
@@ -81,25 +126,19 @@ Con vagrant estamos configurando la maquina virtual que vamos a utilizar inicial
 
 
 
-### Instalación de Ansible
+<!--### Instalación de Ansible
 1. Instalar ansible
 pip install paramiko PyYAML jinja2 httplib2 ansible
 
 2. Me ha dicho que dentro de mi entorno no tengo la versión más actualizda de pip, así que la actualizo. pip install --upgrade pip
 
 3. Instalo virtualbox, pero me da problemas pq me pide que quite la seguridad de mi SO. Por eso, sigo los pasos aqui:
-https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/. Faltan pasos 5,6,y 7 (?))))
+https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/. Faltan pasos 5,6,y 7 (?))))-->
 
 
 
 
 
-### Instalación de Ansible
-El primer paso es instalar ansible en la máquina con la que estemos trabajando. Para poder disponer de ansible podemos instalarla desde dos formas principales:
-- Utilizar el gestor de paquetes *apt-get*, tal y como se puede ver indicado [aquí](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-16-04).
-- Instalarlo mediante *pip*. En este ejercicio, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip)
-
-En la siguiente imagen podemos ver cómo se ha llevado a cabo la instalación de ansible, versión 2.7.2. (AQUI IMAGEN DE instalacionansible.png)
 
 ### Fichero de ansible.cfg
 - Primero indicamos a false que no se haga la comprobación de claves del host, para evitar los problemas de Man in The Middle, que SSH no haga la comprobación de clave, y podamos entrar con diferentes nombres y mac.
@@ -109,12 +148,6 @@ En la siguiente imagen podemos ver cómo se ha llevado a cabo la instalación de
 Los aspectos importantes de este fichero son:
 - Indicar el puerto
 - Indicar bien la ruta hacia la máquina y private_key
-
-### Funcionamiento de la MV
-Para ver si la máquina virtual que hemos creado a través de Vagrant está operativa, podemos hacer un simple ping, y de esta forma comprobarlo. En la siguiente figura, podemos ver cómo realmente funciona. Sin embargo, en la primera orden ejecutada, podemos ver cómo estamos haciendo ping a todas las máquinas virtuales. En nuestro caso, tenemos únicamente una, por lo tanto la orden ejecutada es equivalente a hacer ping directamente de nuestra máquina. Lo hacemos también, y vemos como efectivamente obtenemos igual resultado.
-
-![Ping a la máquina](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/pingMaquina.png)
-
 
 
 ### Provisionamiento
