@@ -85,5 +85,10 @@ MV: 137.117.174.154
 
 #### Comprobación del provisionamiento
 
+### Comprobación del provisionamiento en otra máquina
+
+Hecho por @adrianmorente, puede consultarse en [este fichero](./docs/comprobacion_provision.md).
+
+
 ### Licencia
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
