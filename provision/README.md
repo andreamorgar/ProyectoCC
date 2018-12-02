@@ -3,12 +3,9 @@
 
 En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual en Azure, con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
 
-1. Uso de *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
+1. Uso de *Vagrant* y *Ansible* para provisionar una máquina virtual desde local. Más información [aquí]()
 
-2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*.
-
-A continuación, se documentan los pasos seguidos para conseguir los dos objetivos recién comentados.
-
+2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*. Más información [aquí]()
 
 ---
 ## *Vagrant* y *Ansible* para provisionar una máquina virtual desde local.
@@ -31,7 +28,7 @@ El primer paso es instalar ansible en la máquina con la que estemos trabajando.
 - Instalarlo mediante *pip*. En este ejercicio, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip)
 
 En la siguiente imagen podemos ver cómo se ha llevado a cabo la instalación de ansible, versión 2.7.2.
-![Instalación de Ansible](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/instalacionAnsible2.png) 
+![Instalación de Ansible](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/instalacionAnsible2.png)
 
 
 
