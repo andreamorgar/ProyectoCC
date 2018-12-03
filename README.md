@@ -7,7 +7,22 @@
 Estudio de las condiciones meteorológicas en Granada a través de la información facilitada por la Agencia Estatal Española de Meteorología ([AEMET](http://www.aemet.es/es/portada))
 
 
-### Descripción del proyecto
+
+**Contenido**
+- [Descripción del proyecto](#id1)
+- [Arquitectura](#id2)
+- [Testeo y pruebas](#id3)
+- [Framework y lenguaje a utilizar](#id4)
+- [Desplegar el proyecto](#id5)
+- [Provisionamiento de máquinas virtuales](#id6)
+- [Comprobación del provisionamiento en otra máquina](#id7)
+- [Comprobación del provisionamiento de otro compañero](#id8)
+- [Últimos avances en el proyecto](#id9)
+- [Licencia](#id10)
+
+
+
+### Descripción del proyecto <a name="id1"></a>
 
 En este proyecto, se pretende hacer un pequeño análisis de la información actualizada que nos proporciona la [API](https://opendata.aemet.es/centrodedescargas/inicio) de la **Agencia Estatal Española de Meteorología**. De esta forma, se pretende procesar la información de la misma, mostrando aquella más trascendental para los usuarios de Granada en distintas plataformas.
 
@@ -26,7 +41,7 @@ De esta forma, se pretende facilitar al usuario la consulta de la información m
 
 
 
-### Arquitectura
+### Arquitectura <a name="id2"></a>
 Se va a utilizar una arquitectura basada en microservicios en sustitución a una arquitectura monolítica. De este modo podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como pueden ser:
 * Versatilidad
 * Autonomía: podemos actualizar un microservicio sin que dependa de los demás
@@ -55,21 +70,23 @@ Puede consultar más información acerca de la arquitectura [aquí](./docs/info_
 
 
 
-#### Testeo y pruebas
+### Testeo y pruebas <a name="id3"></a>
 Cada microservicio se testeará de forma individual, antes de desplegarlo en la nube. La realización de los tests se llevará a cabo mediante [TRAVIS](https://travis-ci.org/), y dichos tests se implementarán en Python (ya que es el lenguaje utilizado en el microservicio) con ayuda de la librería [unittest](https://docs.python.org/3/library/unittest.html).
 
-### Framework y lenguaje a utilizar
+
+### Framework y lenguaje a utilizar <a name="id4"></a>
 Se va a utilizar como lenguaje de programación [Python](https://www.python.org) y [Flask](http://flask.pocoo.org/) como microservicio. Además, el proyecto será desplegado en Azure.
 
 
 
-### Desplegar el proyecto
+### Desplegar el proyecto <a name="id5"></a>
+
 Despliegue: https://agile-mountain-82339.herokuapp.com/
 
 Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido una serie de pasos, que se pueden encontrar [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_despliegue.md), donde se hace un breve repaso de todo el procedimiento que se ha seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes. También se puede apreciar en ese fichero todas las decisiones tomadas para llevar a cabo el procedimiento.
 
 ---
-### Provisionamiento de máquina virtuales
+### Provisionamiento de máquina virtuales <a name="id6"></a>
 
 En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual (primero a nivel local y posteriormente en Azure), con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
 
@@ -82,21 +99,21 @@ Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master
 MV: 137.117.174.154
 
 
-### Comprobación del provisionamiento en otra máquina
+### Comprobación del provisionamiento en otra máquina <a name="id7"></a>
 
 Hecho por @adrianmorente, puede consultarse en [este fichero](./docs/comprobacion_provision.md).
 
-### Comprobación del provisionamiento de otro compañero en mi máquina
+### Comprobación del provisionamiento de otro compañero en mi máquina <a name="id8"></a>
 Se ha comprobado que el provisionamiento realizado por @adrianmorente funciona de manera correcta. Puede consultarse [aquí](./docs/comprobacion_otra_provision.md).
 
 ---
 
 
-### Últimos avances en el proyecto
+### Últimos avances en el proyecto <a name="id9"></a>
 Para el hito 3, se ha avanzado el proyecto añadiendo persistencia a los datos que utiliza el servicio. Para ello, se ha añadido una base de datos con [mLab](https://mlab.com/). A la documentación de esta avance en el proyecto se puede acceder [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_avance_basedatos.md).
 
 Por supuesto, se han añadido todos los tests necesarios para asegurar el funcionamiento correcto de esta nueva funcionalidad.
 
 ---
-### Licencia
+### Licencia <a name="id10"></a>
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
