@@ -199,7 +199,7 @@ $ ansible-playbook -i ansible_hosts -b playbook.yml
 ~~~
 
 Podemos ver, en la siguiente imagen, como algunas de las funcionalidades que no se instalan por defecto en la imagen utilizada, se han instalado. Además, se ha clonado el proyecto desde Github de forma correcta, lo que nos indica que se ha realizado la provisión de manera adecuada.
-![Comprobación Provisionamiento máquina virtual de Azure](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/compr_prov_azure.png)
+![Comprobación Provisionamiento máquina virtual de Azure](./images/compr_prov_azure.png)
 
 
 A continuación, podemos ver cómo efectivamente funciona. Además, si nos fijamos, está funcionando a través del puerto 80, tal y como se requiere en las especificaciones de este hito.
