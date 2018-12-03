@@ -146,7 +146,7 @@ Finalmente, nos quedaría por comprobar si finalmente se ha realizado el provisi
 En primer lugar, mediante SSH, nos situamos en el repositorio local del proyecto (en la máquina virtual), y encendemos el servicio. Desde otra terminal, volvemos a conectarnos a la máquina virtual mediante SSH y realizamos una petición al mismo. Podemos ver que funciona de manera correcta en la siguiente imagen.
 
 
-![Funcionamiento del servicio](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/ejecucion_servicio.png)
+![Funcionamiento del servicio](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/ejecucion_servicio.png)
 
 
 
@@ -178,7 +178,7 @@ $ az vm open-port --resource-group myResourceGroup --name ubuntuAndrea --port 80
 Por último, debemos realizar un pequeño cambio, y es que la IP, por defecto, se configura de manera dinámica. Debemos especificar, en la configuración de la máquina en Azure, que queremos que sea estática para que no varíe cada vez que se inicie la máquina.
 
 Con esto, tendríamos ya creada una máquina virtual con Ubuntu Server. Podemos ver en la siguiente imagen cómo efectivamente se ha creado dicha máquina.
-![Creación de una máquina virtual](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/maquina_azure.png)
+![Creación de una máquina virtual](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/maquina_azure.png)
 
 
 ### Provisionamiento de la máquina virtual
@@ -199,9 +199,9 @@ $ ansible-playbook -i ansible_hosts -b playbook.yml
 ~~~
 
 Podemos ver, en la siguiente imagen, como algunas de las funcionalidades que no se instalan por defecto en la imagen utilizada, se han instalado. Además, se ha clonado el proyecto desde Github de forma correcta, lo que nos indica que se ha realizado la provisión de manera adecuada.
-![Comprobación Provisionamiento máquina virtual de Azure](./images/compr_prov_azure.png)
+![Comprobación Provisionamiento máquina virtual de Azure](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/compr_prov_azure.png)
 
 
 A continuación, podemos ver cómo efectivamente funciona. Además, si nos fijamos, está funcionando a través del puerto 80, tal y como se requiere en las especificaciones de este hito.
 
-![Prueba del servicio en la máquina virtual de Azure](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/prueba_azure.png)
+![Prueba del servicio en la máquina virtual de Azure](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/prueba_azure.png)
