@@ -27,7 +27,7 @@ El primer paso por tanto, es instalar la herramienta. Para ello, hemos seguido l
 El primer paso es instalar ansible en la máquina con la que estemos trabajando. Para poder disponer de ansible podemos instalarla desde dos formas principales:
 - Utilizar el gestor de paquetes *apt-get*, tal y como se puede ver indicado [aquí](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-16-04).
 
-- Instalar Ansible mediante *pip*. En este caso, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip)
+- Instalar Ansible mediante *pip*. En este caso, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip).
 
 
 
@@ -85,12 +85,12 @@ Además, podemos acceder a la máquina mediante ssh, tal y como se puede ver a c
 ---
 #### Provisionamiento de la máquina virtual
 
-Vamos a instalar en la máquina virtual todo aquello que necesitemos. Para ello, podemos consultar la guía oficial [aquí](https://docs.ansible.com/ansible/2.7/scenario_guides/guide_vagrant.html), concretamente el apartado Vagrant Setup. Aquí se muestra un ejemplo de cómo podemos modificar el fichero VagrantFile para provisionar una única máquina. Para ello, haremos uso de Ansible.
+Vamos a instalar en la máquina virtual todo aquello que necesitemos. Para ello, podemos consultar la guía oficial [aquí](https://docs.ansible.com/ansible/2.7/scenario_guides/guide_vagrant.html), concretamente el apartado *Vagrant Setup*. Aquí se muestra un ejemplo de cómo podemos modificar el fichero VagrantFile para provisionar una única máquina. Para ello, haremos uso de Ansible.
 
 Para poder llevar a cabo el provisionamiento con Ansible, necesitaremos dos ficheros:
 - Fichero [ansible.cfg](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/vagrant/ansible.cfg), en el que indicademos dos aspectos principales. En primer lugar, ponemos a False la comprobación de claves del host, para evitar problemas como Man in the Middle, tal y como se explicón en el seminario de Ansible. En segundo lugar, le estamos especificando cuál es el fichero (ansible_hosts) con el que vamos a trabajar y definir las máquinas en cuestión.
 
-- Fichero [ansible_hosts](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/vagrant/ansible_hosts), donde hacemos dos cosas principales. Por una parte, establecemos el puerto (en nuestro caso el 2222) y establecemos la clave SSH con la que vamos a trabajar. En segundo lugar, establecemos la IP y el usuario que tendrá la máquina (en nuestro caso lo hemos llamado vagrant).
+- Fichero [ansible_hosts](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/vagrant/ansible_hosts), donde hacemos dos cosas principales. Por una parte, establecemos el puerto (en nuestro caso el 2222) y establecemos la clave SSH con la que vamos a trabajar. En segundo lugar, establecemos la IP y el usuario que tendrá la máquina (en nuestro caso lo hemos llamado *vagrant*).
 
 
 Por otra parte, en el fichero *VagrantFile*, debemos **indicar el provisionamiento para dicha máquina**. Para ello, le indicamos el fichero *playbook* que queremos ejecutar, el cuál contiene el provisionamiento que queremos que tenga la máquina virtual que hemos especificado anteriormente. Como vemos en el contenido del fichero *VagrantFile* (mostrado a continuación), ya estamos haciendo uso de Ansible para poder llevar a cabo dicha tarea.
@@ -110,8 +110,8 @@ end
 
 
 Podemos destacar, del fichero anterior, tres aspectos principales:
-- La sección de provisionamiento hace referencia a un playbook de ansible al que en el fichero *VagrantFile* hemos llamado *playbook.yml*. Podemos ver el contenido y la funcionalidad de este fichero [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_playbook.md)
-- Vagrant ejecutará el fichero de provisionamiento  que hemos definido una vez que la máquina virtual arranca y tiene acceso a SSH (o bien cuando ejecutemos explícitamente el provisionamiento)
+- La sección de provisionamiento hace referencia a un playbook de ansible al que en el fichero *VagrantFile* hemos llamado *playbook.yml*. Podemos ver el contenido y la funcionalidad de este fichero [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_playbook.md).
+- Vagrant ejecutará el fichero de provisionamiento  que hemos definido una vez que la máquina virtual arranca y tiene acceso a SSH (o bien cuando ejecutemos explícitamente el provisionamiento).
 - El hecho de tener activada la opción verbose va a provocar que se nos muestre más información del comando del Ansible playbook que utilicemos. Todavía no sabemos qué nos mostrará, entonces la voy a dejar de momento, y más adelante ya veremos si se quita del fichero o no.
 
 
@@ -119,7 +119,7 @@ Una vez completado el fichero *VagrantFile*, podemos provisionar la máquina vir
 ~~~
 $ vagrant provision
 ~~~
-Ejecutamos dicha orden para provisionar la máquina que previamente hemos creado, y podemos comprobar que efectivamente se ha llevado a cabo el provisionamiento en la siguiente imagen. Como la información que se muestra por la terminal es muy extensa, solo se muestra el resultado final, donde se observa que ha finalizado de forma correcta.
+Ejecutamos dicha orden para provisionar la máquina que previamente hemos creado, y podemos comprobar que efectivamente se ha llevado a cabo el provisionamiento en la siguiente imagen. Como la información que se muestra por la terminal es muy extensa, solo voy a mostrar el resultado final, donde se observa que ha finalizado de forma correcta.
 
 ![Acceso por ssh a la máquina que hemos creado](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/hito3/provision.png)
 
@@ -154,7 +154,7 @@ En primer lugar, mediante SSH, nos situamos en el repositorio local del proyecto
 ## *Ansible* para provisionar una máquina virtual en Azure
 
 ### Instalación de las herramientas necesarias
-En primer lugar, nos instalamos el cliente de Azure tal y como viene indicado en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest). Una vez que lo instalemos, ya podremos crear la máquina virtual desde la terminal.
+En primer lugar, nos instalamos el cliente de Azure tal y como viene indicado en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest). Una vez que lo instalemos, ya podremos crear la máquina virtual desde la terminal. El realizarlo desde la terminal simplifica mucho el proceso, además de ser mucho más rápido, ya que podemos directamente especificar todo lo que queremos en nuestra máquina virtual, en lugar de ir recorriendo una gran cantidad de pasos sobre los que al final no se realiza ninguna modificación.
 
 
 ### Creación de la máquina virtual
@@ -163,7 +163,7 @@ Para crear una máquina virtual, se han seguido los pasos indicados en la docume
 
 2. Una orden para poder crear una máquina virtual. En ella especificamos varios aspectos: el grupo de recursos, el usuario que existirá en dicha máquina, especificar que se utilice clave SSH y por último, la imagen de SO que queremos utilizar. En este caso, se ha cogido Ubuntu Server, ya que era la que inicialmente se pretendía utilizar (ya se ha comentado anteriormente).
 
-3. Una orden para poder hacer uso del puerto 80, tal y como viene indicado en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/nsg-quickstart). Además, si recordamos,  la aplicación se programó para ejecutarse inicialmente en el puerto 5000. Si queremos que se ejecute en este puerto, deberíamos ejecutar de nuevo esta orden, pero esta vez para el puerto 5000.
+3. Una orden para poder hacer uso del puerto 80, tal y como viene indicado en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/nsg-quickstart). Además, si recordamos,  la aplicación se programó para ejecutarse inicialmente en el puerto 5000. Si queremos que se ejecute en este puerto, deberíamos ejecutar de nuevo la orden correspondiente, pero esta vez para el puerto 5000.
 
 Para ello, ejecutamos lo siguiente:
 ~~~
@@ -174,15 +174,15 @@ $ az vm open-port --resource-group myResourceGroup --name ubuntuAndrea --port 80
 
 Por último, debemos realizar un pequeño cambio, y es que la IP, por defecto, se configura de manera dinámica. Debemos especificar, en la configuración de la máquina en Azure, que queremos que sea estática para que no varíe cada vez que se inicie la máquina.
 
-Con esto, tendríamos ya creada una máquina virtual con Ubuntu Server. Podemos ver en la siguiente imagen cómo efectivamente se ha creado dicha máquina.
+Con esto, tendríamos ya creada la máquina virtual con las especificaciones anteriores. Podemos ver en la siguiente imagen cómo efectivamente se ha creado dicha máquina.
 ![Creación de una máquina virtual](https://raw.githubusercontent.com/andreamorgar/ProyectoCC/master/docs/images/maquina_azure.png)
 
 
 ### Provisionamiento de la máquina virtual
 
-Una vez que tenemos la máquina creada, procedemos a provisionarla. El proceso llevado a cabo para la creación del playbook, es igual al caso de Vagrant, anteriormente documentado, por lo que para mayor detalle, podemos consultar directamente dicha documentación, a la que podemos acceder por [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_playbook.md).
+Una vez que tenemos la máquina creada, procedemos a provisionarla. El proceso llevado a cabo para la creación del playbook, es igual al caso de Vagrant, anteriormente documentado, por lo que para mayor detalle, podemos consultar directamente dicha documentación, a la que podemos acceder desde [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_playbook.md).
 
-Las modificaciones para poder provisionar en Azure se encuentran en el fichero  [ansible_hosts](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/azure/ansible_hosts).
+En realidad, las modificaciones llevadas a cabo para poder provisionar la máquina virtual en Azure se encuentran en el fichero  [ansible_hosts](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/azure/ansible_hosts).
 
 En él, debemos realizar los siguientes cambios:
 - Modificar el puerto al 22, para poder hacer uso de SSH.

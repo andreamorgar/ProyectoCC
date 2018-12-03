@@ -77,7 +77,7 @@ En este documento se detallan los distintos pasos seguidos hasta conseguir provi
 
 2. Uso de *Ansible* para provisionar una máquina virtual en la plataforma *Azure*.
 
-Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/README.md)
+Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/README.md).
 
 MV: 137.117.174.154
 
