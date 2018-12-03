@@ -20,15 +20,15 @@ predictions_objects = []
 @app.route('/')
 def get_home():
     return jsonify(status='OK')
-    # return jsonify({'status': "OK"})
-# Fist we are going to do a simple get.
+
+
 
  # ------------------------------------------------------------------------------
 
 # Now let's write the second version of the GET method for our predictions resource.
 # If you look at the table above this will be the one that is used to return the
 # data of a single prediction:
-@app.route('/predictions/<int:prediction_id>', methods=['GET']) #funciona
+@app.route('/predictions/<int:prediction_id>', methods=['GET'])
 def get_prediction(prediction_id):
     if request.method == 'GET':
         # We want to find in the collection the document with the ID equal to
@@ -37,22 +37,27 @@ def get_prediction(prediction_id):
         if result is None:
             abort(404)
 
-        # dict_result= result.__getitem__(0)
         result.pop('_id')
-        # print(result)
+
 
         return jsonify(result)
 # ------------------------------------------------------------------------------
 
-def get_predictions(): # funciona
+def get_predictions():
+
+    #first we get all the documents of the database by an empty search
     cursor = get_all_predictions()
     actual_list_of_preds = []
 
+    # We have to look in every document to the cursor to get a list of the
+    # documents (we can't just print a cursor type)
     for document in cursor:
         next_dict = document
         next_dict.pop('_id')
+        # we add the next document to the list of documents that we are
+        # going to print
         actual_list_of_preds.append(next_dict)
-        # print(next_dict)
+
 
     return jsonify({'predictions': actual_list_of_preds })
 
@@ -86,27 +91,36 @@ def create_prediction():
         return jsonify(prediction.__dict__)
 
     # --------------------------------------------------------------------------
-    elif request.method == 'POST': #funciona
+    elif request.method == 'POST':
+
+        # We get from the request the value of the attributes we want to update
         id = request.json['ID']
         city = request.json['city']
         temperature = request.json['temperature']
 
         pred = getDocument(id)
+        # If the document we are looking for doesn't exist, we abort the update
         if pred is None:
             return abort(404)
 
+        # We have to build a dictionary with the changes we want to submit
         record = {
             "city": city,
             "temperature": temperature
         }
 
-        # dict_result= pred.__getitem__(0)
+        # We update the document of the database
         updateDocument(pred,record)
+
+        # We access to the database to get the updated document
         updated_pred = getDocument(id)
+
+        # We are going to show the content of the query, so we have to ommit the
+        # id that the database add to our query
         updated_pred.pop('_id')
 
         return jsonify({'prediction': updated_pred}),201
-        # return jsonify(updated_pred),201
+
 
     # --------------------------------------------------------------------------
     elif request.method == 'DELETE':
@@ -114,10 +128,12 @@ def create_prediction():
         id = request.json['ID']
         not_wanted_query = getDocument(id)
 
+        # If the document we are looking for doesn't exist, we do nothing
         if not_wanted_query is None:
             return jsonify({'msg': "Deleted"})
 
-
+        # If the document we are looking for exists, we can delete it with the
+        # function delete_document.
         delete_document(not_wanted_query)
 
 
