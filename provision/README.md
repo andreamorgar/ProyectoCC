@@ -29,10 +29,7 @@ El primer paso es instalar ansible en la máquina con la que estemos trabajando.
 
 - Instalar Ansible mediante *pip*. En este caso, vamos a seguir esta segunda forma, ya que como se vio en el seminario de Ansible de la asignatura, el instalar Ansible mediante *pip* tiene sus ventajas. Esto se debe a que te instala, de forma automática, otros modulos necesarios, como por ejemplo para trabajar con YAML (lo necesitaremos más tarde). Podemos ver cómo realizar la instalación [aquí](https://docs.ansible.com/ansible/2.7/installation_guide/intro_installation.html#latest-releases-via-pip)
 
-<!--En la siguiente imagen podemos ver cómo se ha llevado a cabo la instalación de ansible, versión 2.7.2.
-![Instalación de Ansible](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/instalacionAnsible2.png)-->
 
----
 
 ### Creación de una máquina virtual con Vagrant
 
