@@ -46,9 +46,7 @@ class FlaskTestCase(unittest.TestCase):
         # Esta es la razón por la que hay que poner ahí una b:
         # https://stackoverflow.com/questions/6269765/what-does-the-b-character-do-in-front-of-a-string-literal
 
-        # ALTERNATIVAS EQUIVALENTES:
-        # self.assertEqual((result.data).decode('utf-8'), 'My project page :)' )
-        # self.assertEqual(result.data, b'My project page :)' )
+
         self.assertEqual(result.get_json(), {'status':'OK'},
          "Comprobación de quedevuelve status OK")
 
@@ -79,8 +77,6 @@ class FlaskTestCase(unittest.TestCase):
         # que el resultado sea el que realmente se espera.
         # text_result = result.get_data(as_text=True)
 
-        # Compare dict to dict:
-        # https://www.youtube.com/watch?v=kvux1SiRIJQ&t=217s
 
         cursor = get_all_predictions()
         actual_list_of_preds = []
@@ -196,8 +192,6 @@ class FlaskTestCase(unittest.TestCase):
         "Comprobación de que el contenido es el mismo al hacer otro get")
 
 
-        # Create an Prediction object
-        # self.object_prediction = weather_class.Prediction(self.city, self.temperature)
 
         # Duda: no puedo crear un objeto para comprobar que funciona porque al
         # estar usando IDs que se asignan solos, si creo un objeto, me pondría
