@@ -11,7 +11,7 @@
     - name: Install requirements
       pip:
         state: latest
-        requirements: /home/vagrant/ProyectoCC/requirements.txt
+        requirements: ~/ProyectoCC/requirements.txt
         executable: pip3
 
     - name: Redirigir puertos

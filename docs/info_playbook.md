@@ -16,6 +16,9 @@ En primer lugar, el archivo playbook.yml va a representar únicamente a aquellas
 
 - **python-setuptools**: necesario para poder ejecutar los requirements. Este paquete fue añadido posteriormente, ya que uno de los errores obtenidos al intentar provisionar la máquina indicaba la necesidad de disponer de este paquete.
 
+- **upgrade pip**: al probar el funcionamiento del playbook en la máquina de Azure, se sugiere que los mensajes de Warning actualizar a la última versión de Pip. Por ello, se ha añadido esta última orden al playbook.
+
+
 Hasta aquí tendríamos todas las utilidades generales necesarias que deben existir en la máquina virtual de forma que podamos ejecutar nuestra aplicación.
 
 
@@ -39,7 +42,7 @@ Nos quedaría por resolver cómo llevar a cabo la inclusión del playbook con el
 ![Preferible usar import_playbook](https://raw.githubusercontent.com/andreamorgar/ejerciciosCC/master/images/razonImport.png)
 
 
-Por tanto, el contenido final de nuestro playbook principal quedaría de la siguiente manera.
+Por tanto, el contenido final de nuestro playbook principal quedaría de la siguiente manera. Como se puede observar, este playbook principal, importa al playbook con la configuración específica relativa a mi proyecto, por lo tanto, es suficiente con llamar a este fichero desde *VagrantFile*. 
 
 ~~~
 ---
@@ -48,15 +51,19 @@ Por tanto, el contenido final de nuestro playbook principal quedaría de la sigu
   gather_facts: False
   tasks:
     - name: Install base packages
-      apt: name={{ item }} state=present
-      with_items:
-        - git
-        - python-pip
-        - python3-pip
-        - python-setuptools
+      apt:
+        name: ['git', 'python-pip', 'python3-pip', 'python-setuptools']
+        state: present
       tags:
         - packages
+
+    - name: Upgrade pip
+      pip: name=pip state=latest
+      tags:
+        - packages
+
 - import_playbook: specific_playbook.yml
+
 ~~~
 
 #### Fichero specific_playbook.yml

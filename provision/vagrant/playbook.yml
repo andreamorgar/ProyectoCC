@@ -9,8 +9,10 @@
         state: present
       tags:
         - packages
+        
     - name: Redirigir puertos
       become: true
-      become_method: sudo
-      command: iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000
-- import_playbook: specific_playbook.yml
+      lineinfile:
+        path=/etc/rc.local
+        insertbefore='exit 0'
+        line="sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000"
