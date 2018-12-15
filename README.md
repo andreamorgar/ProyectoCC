@@ -15,8 +15,6 @@ Estudio de las condiciones meteorológicas en Granada a través de la informaci�
 - [Framework y lenguaje a utilizar](#id4)
 - [Desplegar el proyecto](#id5)
 - [Provisionamiento de máquinas virtuales](#id6)
-- [Comprobación del provisionamiento en otra máquina](#id7)
-- [Comprobación del provisionamiento de otro compañero](#id8)
 - [Últimos avances en el proyecto](#id9)
 - [Licencia](#id10)
 
@@ -99,11 +97,11 @@ Más información [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master
 MV: 137.117.174.154
 
 
-### Comprobación del provisionamiento en otra máquina <a name="id7"></a>
+#### Comprobación del provisionamiento en otra máquina <a name="id7"></a>
 
 Hecho por @adrianmorente, puede consultarse en [este fichero](./docs/comprobacion_provision.md).
 
-### Comprobación del provisionamiento de otro compañero en mi máquina <a name="id8"></a>
+#### Comprobación del provisionamiento de otro compañero en mi máquina <a name="id8"></a>
 Se ha comprobado que el provisionamiento realizado por @adrianmorente funciona de manera correcta. Puede consultarse [aquí](./docs/comprobacion_otra_provision.md).
 
 ---
