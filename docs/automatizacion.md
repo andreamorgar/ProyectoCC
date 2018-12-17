@@ -217,9 +217,26 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
 
   Como se vio en el Seminario de Azure impartido en la asignatura, podemos realizar este tipo de filtros con la herramienta **jq**. Como el parámetro que estamos buscando tiene el nombre *publicIps*, podemos realizar filtrar toda la salida de la orden anterior, quedándonos únicamente con el valor asociado a dicha variable. A continuación se muestra la orden necesaria para realizar dicha acción.
   ~~~
-  $ az vm show -d --resource-group myResourceGroupAndrea --name mvAndrea | jq -r '.publicIps'
+  $ az vm show -d --resource-group <grupo-recursos> --name <nombre-maquina> | jq -r '.publicIps'
   ~~~
   Almacenando este valor en una variable del script, tendríamos ya el valor correspondiente a la IP pública de nuestra máquina.
+
+
+5. Por último, faltaría **añadir al script la línea que se corresponde con la ejecución del playbook**, al cuál hay que asignarle de alguna forma la IP que acabamos de obtener.
+
+  En un principio, se intentó utilizar variables con ansible, de forma que pudiésemos especificar, desde fuera de *ansible_hosts*, el valor que debe tomar el host (en otras palabras, asignar como variable el valor de la IP). Sin embargo, la [documentación de Ansible acerca del uso de variables](https://docs.ansible.com/ansible/2.4/playbooks_variables.html#passing-variables-on-the-command-line) no es muy extensa, y no terminé de entender cómo llevarlo a cabo de esta manera.
+
+  <u> **Solución**</u>: se siguió la forma que se puede ver [aquí](https://stackoverflow.com/questions/44592141/ansible-ad-hoc-command-with-direct-host-specified-no-hosts-matched), donde se propone pasar la IP como valor al parámetro *inventory*, que se asigna con la opción **-i** del comando **ansible-playbook**.  Sin embargo, de esta forma, aún no se consigue hacer funcionar el provisionamiento, ya que ansible no es capaz de establecer conexión mediante SSH de manera correcta, no pudiendo completar el provisionamiento. Tal y como viene resuelto [aquí](https://github.com/ansible/ansible/issues/19584), podemos ver que el problema es que no estamos indicando de ninguna de las maneras el usuario remoto con el cuál llevar a cabo el procedimiento.
+
+  Almacenando la IP en una variable llamada *mv_ip*, la orden quedaría como se puede ver a continuación:
+  ~~~
+  $ ansible-playbook -i "$mv_ip," -b playbook.yml --user <usuario>
+  ~~~
+
+  Por último, tal y como se puede ver en la fotografía, se lleva a cabo el provisionamiento, y de manera seguida, se puede arrancar la aplicación, utilizando la IP que es mostrada por el script [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). Debido a la gran cantidad de información que muestra el provisionamiento, solamente se mostrará el final de dicho procedimiento.
+
+  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito_4_acopio.png" /></p>
+
 
 
 Necesitamos saber la IP, para pasarsela al playbook de ansible ** Para ello, podemos usar [esto](https://github.com/Azure/azure-cli/issues/2677), y
@@ -228,7 +245,11 @@ máquina. Podemos usar jq, tal y como viene [aquí](https://stedolan.github.io/j
 4. Ya faltaría ejecutar el playbook de ansible pasándole los parámetros y tal.
 
 
-intento de uso de variables en ansible [aqui](https://docs.ansible.com/ansible/2.4/playbooks_variables.html#passing-variables-on-the-command-line)
+
+
+
+## Otros enlaces útiles
+
 
 Modificar ip a estática [aquí](https://docs.microsoft.com/ga-ie/azure/virtual-network/virtual-network-network-interface-addresses)
 
@@ -240,5 +261,5 @@ ansible -i [aqui](https://docs.ansible.com/ansible/2.4/ansible-playbook.html)
 
 -----
 
-Nos sale un error y [aqui](https://github.com/ansible/ansible/issues/19584) dice que es pq no especificamos el usuario  
+Nos sale un error y [aqui]() dice que es pq no especificamos el usuario  
 [aqui](https://stackoverflow.com/questions/46907067/ansiblefailed-to-connect-to-the-host-via-ssh-warning-permanently-added-10-90) también viene algo para eso
