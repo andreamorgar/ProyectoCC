@@ -31,13 +31,13 @@ $ az account list-locations
 
 Sin embargo, como es de esperar, de esta forma se nos facilita un listado con todas las regiones disponibles de Azure, y nosotros no buscamos eso, sino simplemente queremos saber aquellas que nos interesan. Para ello, podemos usar la funcionalidad **jq** y filtrar esa lista, de forma que obtengamos únicamente lo que nos interesa. En la siguiente imagen, podemos ver cómo sería la salida obtenida, filtrando por urope (en lugar de Europe, ya que no sabemos si la primera letra estará en mayúscula o en minúscula).
 
-<p align="center"><img alt="Regiones con el nombre Europe" width="500px" src="./images/hito4_listar_europe.png" /></p>
+<p align="center"><img alt="Regiones con el nombre Europe" width="900px" src="./images/hito4_listar_europe.png" /></p>
 
 Con la orden anterior, obtenemos información para aquellas localizaciones en cuyo nombre aparece Europe, pero de las que comentamos anteriormente, sólo es el caso de las dos primeras (norte y oeste de Europa). Realizando el mismo filtrado de información para UK y Francia (filtrando por ''*UK*'' y ''*rance* '' en lugar de *France* o *france* por la misma razón ya comentada), podemos obtener toda la información necesaria para poder crear grupos de recursos en estas localizaciones. Podemos ver, que además del nombre asociado a dichas regiones, obtenemos otros datos, como puede ser la localización del centro de datos en función de sus valores de latitud y de longitud.
 
-<p align="center"><img alt="Regiones con el nombre UK" width="500px" src="./images/hito4_listarUK.png" /></p>
+<p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_listarUK.png" /></p>
 
-<p align="center"><img alt="Regiones con el nombre France" width="500px" src="./images/hito4_listarFrancia.png" /></p>
+<p align="center"><img alt="Regiones con el nombre France" width="900px" src="./images/hito4_listarFrancia.png" /></p>
 
 De esta forma, obtenemos los nombres que debemos utilizar para hacer referencia a dichas regiones.
 * **Norte de Europa**: northeurope
