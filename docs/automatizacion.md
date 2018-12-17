@@ -14,6 +14,24 @@ $ sudo apt-get install azure-cli
 
 Una vez realizada la instalación, ya podemos crear una máquina virtual en la nube. Lo primero que tenemos que realizar, es la elección de la imagen que queramos utilizar, la cual contendrá, tanto el sistema operativo, como cualquier otra utilidad con la que queramos trabajar.
 
+### Escoger la imagen
+El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
+
+~~~
+$ az vm image list
+~~~
+
+Si nos interesa por ejemplo, conocer únicamente las distribuciones de Ubuntu disponibles, podemos filtrar esta lista para ello, mediante la orden que se muestra a continuación
+
+~~~
+$ az vm image list | jq '.[] | select( .offer | contains("buntu"))'
+~~~
+
+Si ejecutamos dicha línea, se obtiene como salida lo siguiente.
+<p align="center"><img alt="Salida de la lista filtrada de imágenes" width="900px" src="./images/hito4_listar_imagenes.png" /></p>
+
+
+
 
 ### Escoger la localización
 Azure tiene una gran cantidad de regiones globales, manteniendo así la resistencia de sus datos. Se entiende por región a un conjunto de centros de datos, que se encuentran dentro de una zona perimetrada (caracterizada por la latencia). Estos centros de datos, se conectan a través de una red a nivel de región, la cuál es de baja latencia.  En la siguiente imagen, obtenida de la [documentación oficial de Azure](https://azure.microsoft.com/es-es/global-infrastructure/regions/), se puede consultar toda esta información.
@@ -90,6 +108,20 @@ Para poder realizar las mediciones para una localización concreta, debemos segu
 
 <u> **Apache Bench** </u>
 
+<!--
+## 3. Realizar peticiones con Apache Bench (AB)
+
+https://blog.diacode.com/testeando-el-rendimiento-de-tu-aplicacion-con-apache-bench
+
+https://kuntalchandra.wordpress.com/2015/10/10/install-apache-bench-ubuntu-14-04/
+
+Para realizar peticiones:
+~~~
+$ ab -g results.tsv -n 100 -c 20 http://137.117.174.154/
+~~~
+-->
+
+
 Es una herramienta sencilla, utilizada para medir el rendimiento de servidores web.
 Se ha elegido esta herramienta, por su facilidad y rapidez de uso, ya que podemos usarla de forma rápida y simple para medir la latencia de nuestra aplicación, simplemente con la orden **ab**.
 
@@ -136,50 +168,61 @@ Como se puede observar en la tabla, **la región con la que se tiene menor laten
 
 
 
-### Escoger la imagen
-El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
-
-~~~
-$ az vm image list
-~~~
-
-Si nos interesa por ejemplo, conocer únicamente las distribuciones de Ubuntu disponibles, podemos filtrar esta lista para ello, mediante la orden que se muestra a continuación
-
-~~~
-$ az vm image list | jq '.[] | select( .offer | contains("buntu"))'
-~~~
-
-Si ejecutamos dicha línea, se obtiene como salida lo siguiente.
-<p align="center"><img alt="Salida de la lista filtrada de imágenes" width="500px" src="./images/hito4_listar_imagenes.png" /></p>
-
-
-
 
 Para conocer la IP, que tiene que ir en el script de ansible:
 https://github.com/Azure/azure-cli/issues/2677
 
 
-## 3. Realizar peticiones con Apache Bench (AB)
 
-https://blog.diacode.com/testeando-el-rendimiento-de-tu-aplicacion-con-apache-bench
+## 3. Script de creación de máquinas virtuales y aprovisionamiento
 
-https://kuntalchandra.wordpress.com/2015/10/10/install-apache-bench-ubuntu-14-04/
+Por último, una vez que ya hemos decidido la región y la imagen que queremos utilizar, faltaría automatizar todo el proceso en un script, al que hemos llamado [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). En este script, se llevará a cabo tanto la creación del grupo de recursos y máquina virtual, como el aprovisionamiento de todo aquello necesario para poder arrancar nuestro servicio en la máquina que se ha creado.
 
-Para realizar peticiones:
+Por tanto, en el script se llevarán a cabo los siguientes pasos:
+
+1. **Creación del grupo de recursos a utilizar**, asignando como localización la que se decidió en el apartado anterior (Centro de Francia). Para ello, podemos utilizar la siguiente orden:
 ~~~
-$ ab -g results.tsv -n 100 -c 20 http://137.117.174.154/
+$ az group create --name <nombre-grupo-recursos> --location francecentral
 ~~~
 
+2. **Crear la máquina virtual con ese grupo de recursos**, con un usuario y con acceso a ssh, de la misma forma que se ha explicado a lo largo del documento. Además, se establecerá la IP estática por defecto (ya que se establecerá de forma dinámica cada vez que encendamos la máquina si no lo especificamos).
+~~~
+$ az vm create --resource-group <nombre-grupo-recursos> --admin-username <usuario> --name <nombre-maquina> --image <imagen> --generate-ssh-keys --public-ip-address-allocation static
+~~~
+
+3. Como ya sabemos, debemos **abrir el puerto 80 para poder ejecutar nuestra aplicación en dicho puerto**, ya que esta acción no se lleva a cabo por defecto.
+~~~
+$ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquina> --port 80
+~~~
+
+4. Por último, faltaría **provisionar la máquina que recién hemos creado.** Como ya vimos en el hito anterior, para ello, debemos indicar el host sobre el cuál queremos provisionar. Por tanto, antes de nada, tenemos que obtener de alguna forma la IP de la máquina que se ha creado en los pasos anteriores. Para ello, hay varias formas:
+
+  - Filtrar la salida de la creación de la máquina virtual, la cuál facilita en un parámetro la IP pública asignada a dicha máquina.
+
+  2. Obtener la IP de la máquina del listado de todas las máquinas virtuales que tenemos en nuestra cuenta.
+
+  3. **Obtener la IP de los detalles de la máquina que acabamos de crear**. Esta última forma, ha sido la finalmente escogida, por las facilidades que proporciona, ya que:
+
+    - <u> Permite obtener la IP de la máquina siempre y de manera persistente</u>, sin necesidad de mostrar todas las máquinas del usuario (que pueden ser muchas, y es una orden que tarda en ejecutarse).
+
+    - <u> No obliga a tener que crear la máquina para poder leer el valor de IP</u> (que puede estar bien si se acierta a la primera y no se quiere manipular nada más en el script, porque en cualquier otro caso tendríamos que estar creando y eliminando máquinas virtuales para poder manipular la variable que estamos asignando).
+
+  Estos detalles de la máquina, se pueden obtener mediante la ejecución de la siguiente orden, donde, como podemos ver, se debe especificar tanto el nombre de la máquina como el del grupo de recursos que se ha asignado a dicha máquina.
+
+  ~~~
+  $ az vm show -d --resource-group <grupo-recursos> --name <nombre-maquina>
+  ~~~
+
+  Sin embargo, la salida que se genera con dicha orden no contiene únicamente la IP, sino muchos más aspectos como puede ser el nombre de la máquina, MAC, información del administración, información de las claves SSH, información acerca del grupo de recursos, etc. A nosotros, concretamente, únicamente nos hace falta conocer el valor de la dirección IP pública que se ha asignado a dicha máquina, por lo que debemos filtrar esa búsqueda.
+
+  Como se vio en el Seminario de Azure impartido en la asignatura, podemos realizar este tipo de filtros con la herramienta **jq**. Como el parámetro que estamos buscando tiene el nombre *publicIps*, podemos realizar filtrar toda la salida de la orden anterior, quedándonos únicamente con el valor asociado a dicha variable. A continuación se muestra la orden necesaria para realizar dicha acción.
+  ~~~
+  $ az vm show -d --resource-group myResourceGroupAndrea --name mvAndrea | jq -r '.publicIps'
+  ~~~
+  Almacenando este valor en una variable del script, tendríamos ya el valor correspondiente a la IP pública de nuestra máquina.
 
 
----
-
-
-## acopio.sh
-
-1. Tenemos que crear el grupo de recursos a utilizar
-2. Crear la máquina virtual con ese grupo de recursos
-3. Necesitamos saber la IP, para pasarsela al playbook de ansible **Duda: hacemos un nuevo playbook, o modificamos el de provisionamiento? Porque ahora cambiará ya que le estamos pasando variables...**. Para ello, podemos usar [esto](https://github.com/Azure/azure-cli/issues/2677), y
+Necesitamos saber la IP, para pasarsela al playbook de ansible ** Para ello, podemos usar [esto](https://github.com/Azure/azure-cli/issues/2677), y
 además tenemos que filtrar la búsqueda en función del nombre de usuario que le ponemos a nuestra
 máquina. Podemos usar jq, tal y como viene [aquí](https://stedolan.github.io/jq/manual/#Basicfilters)
 4. Ya faltaría ejecutar el playbook de ansible pasándole los parámetros y tal.
