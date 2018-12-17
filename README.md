@@ -10,11 +10,13 @@ Estudio de las condiciones meteorológicas en Granada a través de la informaci�
 
 **Contenido**
 - [Descripción del proyecto](#id1)
-- [Arquitectura](#id2)
-- [Testeo y pruebas](#id3)
-- [Framework y lenguaje a utilizar](#id4)
+  - [Arquitectura](#id2)
+  - [Testeo y pruebas](#id3)
+  - [Framework y lenguaje a utilizar](#id4)
 - [Desplegar el proyecto](#id5)
 - [Provisionamiento de máquinas virtuales](#id6)
+  - [Comprobación del provisionamiento en otra máquina](#id7)
+  - [Comprobación del provisionamiento de otro compañero en mi máquina](#id8)
   - [Avance en el proyecto](#id9)
 - [Automatización de la creación de máquinas virtuales](#id10)  
 - [Licencia](#id11)
@@ -40,7 +42,7 @@ De esta forma, se pretende facilitar al usuario la consulta de la información m
 
 
 
-### Arquitectura <a name="id2"></a>
+#### Arquitectura <a name="id2"></a>
 Se va a utilizar una arquitectura basada en microservicios en sustitución a una arquitectura monolítica. De este modo podremos realizar y modificar cambios en el software de forma sencilla e independiente, aprovechando las ventajas que nos aporta este tipo de arquitecturas, como pueden ser:
 * Versatilidad
 * Autonomía: podemos actualizar un microservicio sin que dependa de los demás
@@ -69,12 +71,15 @@ Puede consultar más información acerca de la arquitectura [aquí](./docs/info_
 
 
 
-### Testeo y pruebas <a name="id3"></a>
+#### Testeo y pruebas <a name="id3"></a>
 Cada microservicio se testeará de forma individual, antes de desplegarlo en la nube. La realización de los tests se llevará a cabo mediante [TRAVIS](https://travis-ci.org/), y dichos tests se implementarán en Python (ya que es el lenguaje utilizado en el microservicio) con ayuda de la librería [unittest](https://docs.python.org/3/library/unittest.html).
 
 
-### Framework y lenguaje a utilizar <a name="id4"></a>
+#### Framework y lenguaje a utilizar <a name="id4"></a>
 Se va a utilizar como lenguaje de programación [Python](https://www.python.org) y [Flask](http://flask.pocoo.org/) como microservicio. Además, el proyecto será desplegado en Azure.
+
+
+---
 
 
 
@@ -85,6 +90,7 @@ Despliegue: https://agile-mountain-82339.herokuapp.com/
 Se ha realizado un despliegue del servicio web, realizada en el PaaS [Heroku](https://www.heroku.com/). Para ello se han seguido una serie de pasos, que se pueden encontrar [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_despliegue.md), donde se hace un breve repaso de todo el procedimiento que se ha seguido desde el funcionamiento del servicio en _localhost_ hasta su despliegue en Heroku con las comprobaciones correspondientes. También se puede apreciar en ese fichero todas las decisiones tomadas para llevar a cabo el procedimiento.
 
 ---
+
 ### Provisionamiento de máquina virtuales <a name="id6"></a>
 
 En este documento se detallan los distintos pasos seguidos hasta conseguir provisionar una máquina virtual (primero a nivel local y posteriormente en Azure), con todo lo necesario para poder ejecutar en ella nuestro proyecto. Para ello, se seguirán los siguientes pasos:
