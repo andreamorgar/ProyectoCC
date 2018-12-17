@@ -129,7 +129,7 @@ Por supuesto, se han añadido todos los tests necesarios para asegurar el funcio
 
 Para este hito, vamos a realizar un avance en el proyecto, que consiste en añadir la utilidad de logs a nuestra aplicación.
 
-Para ello, vamos a utilizar la librería **logging** de Python, que nos permitirá poder gestionar los distintos mensajes que se deban enviar en nuestra aplicación. Se puede consultar más información acerca del avance [aquí]().
+Para ello, vamos a utilizar la librería **logging** de Python, que nos permitirá poder gestionar los distintos mensajes que se deban enviar en nuestra aplicación. Se puede consultar más información acerca del avance [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_avance_logs.md).
 
 ---
 
