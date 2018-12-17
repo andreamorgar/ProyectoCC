@@ -123,7 +123,7 @@ Por supuesto, se han añadido todos los tests necesarios para asegurar el funcio
 
 ### Automatización de la creación de máquinas virtuales desde línea de órdenes <a name="id10"></a>
 
-
+Se puede acceder a la documentación en [este fichero](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).
 
 #### Últimos avances en el proyecto  <a name="id11"></a>
 
