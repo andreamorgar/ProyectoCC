@@ -238,12 +238,11 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
   <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito_4_acopio.png" /></p>
 
 
-
+<!--
 Necesitamos saber la IP, para pasarsela al playbook de ansible ** Para ello, podemos usar [esto](https://github.com/Azure/azure-cli/issues/2677), y
 además tenemos que filtrar la búsqueda en función del nombre de usuario que le ponemos a nuestra
 máquina. Podemos usar jq, tal y como viene [aquí](https://stedolan.github.io/jq/manual/#Basicfilters)
 4. Ya faltaría ejecutar el playbook de ansible pasándole los parámetros y tal.
-
 
 
 
@@ -262,4 +261,4 @@ ansible -i [aqui](https://docs.ansible.com/ansible/2.4/ansible-playbook.html)
 -----
 
 Nos sale un error y [aqui]() dice que es pq no especificamos el usuario  
-[aqui](https://stackoverflow.com/questions/46907067/ansiblefailed-to-connect-to-the-host-via-ssh-warning-permanently-added-10-90) también viene algo para eso
+[aqui](https://stackoverflow.com/questions/46907067/ansiblefailed-to-connect-to-the-host-via-ssh-warning-permanently-added-10-90) también viene algo para eso -->
