@@ -199,9 +199,9 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
 
   - Filtrar la salida de la creación de la máquina virtual, la cuál facilita en un parámetro la IP pública asignada a dicha máquina.
 
-  2. Obtener la IP de la máquina del listado de todas las máquinas virtuales que tenemos en nuestra cuenta.
+  - Obtener la IP de la máquina del listado de todas las máquinas virtuales que tenemos en nuestra cuenta.
 
-  3. **Obtener la IP de los detalles de la máquina que acabamos de crear**. Esta última forma, ha sido la finalmente escogida, por las facilidades que proporciona, ya que:
+  - **Obtener la IP de los detalles de la máquina que acabamos de crear**. Esta última forma, ha sido la finalmente escogida, por las facilidades que proporciona, ya que:
 
     - <u> Permite obtener la IP de la máquina siempre y de manera persistente</u>, sin necesidad de mostrar todas las máquinas del usuario (que pueden ser muchas, y es una orden que tarda en ejecutarse).
 
