@@ -6,11 +6,21 @@ from flask import abort
 import weather_class as weather
 import json
 import os
+import logging
+
+import datetime
+
 
 from predictionDB import getDocument, pushDocument, updateDocument
 from predictionDB import get_all_predictions, delete_document
 
 app = Flask(__name__)
+
+# Definimos el nombre del fichero de logs.
+log_filename = str(datetime.datetime.now().strftime('%d-%m-%Y')) + '.log'
+logger = logging.getLogger('flask-app')
+
+logging.basicConfig(filename=log_filename, filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 predictions = []
@@ -33,12 +43,17 @@ def get_prediction(prediction_id):
     if request.method == 'GET':
         # We want to find in the collection the document with the ID equal to
 
+
+
+
         result = getDocument(prediction_id)
         if result is None:
             abort(404)
 
         result.pop('_id')
-
+        # we set the format of the log message we want to use
+        logging.basicConfig(filename=log_filename, filemode='a', format='%(name)s - %(levelname)s - %(message)s')
+        logger.warning('GET request')
 
         return jsonify(result)
 # ------------------------------------------------------------------------------
@@ -150,7 +165,10 @@ def not_found(error):
 
 # ------------------------------------------------------------------------------
 if __name__ == '__main__':
-
+    # logger.info('Starting service at port %s ...', port)
+    logger.info('Starting service....')
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port,debug=True)
+
+    logger.info('Flask app have just started!')
     # app.run(debug=True) # pragma: no cover
