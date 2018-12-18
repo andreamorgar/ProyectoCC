@@ -172,7 +172,7 @@ $ az vm create --resource-group <nombre-grupo-recurso> --admin-username andreamg
 
   Además, activamos el puerto 80, que como sabemos es necesario para poder arrancar el servicio:
   ~~~
-  $ az vm open-port --resource-group resourceGroupAndrea --name vmAndrea --port 80
+  $ az vm open-port --resource-group <nombre-grupo-recurso> --name <nombre-maquina> --port 80
   ~~~
 
 3. Provisionamos la máquina de la forma que venimos haciendo desde el hito 3, y arrancamos nuestra aplicación para poder realizar peticiones.
@@ -244,14 +244,14 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
   Estos detalles de la máquina, se pueden obtener mediante la ejecución de la siguiente orden, donde, como podemos ver, se debe especificar tanto el nombre de la máquina como el del grupo de recursos que se ha asignado a dicha máquina.
 
   ~~~
-  $ az vm show -d --resource-group <grupo-recursos> --name <nombre-maquina>
+  $ az vm show -d --resource-group <nombre-grupo-recursos> --name <nombre-maquina>
   ~~~
 
   Sin embargo, la salida que se genera con dicha orden no contiene únicamente la IP, sino muchos más aspectos como puede ser el nombre de la máquina, MAC, información del administración, información de las claves SSH, información acerca del grupo de recursos, etc. A nosotros, concretamente, únicamente nos hace falta conocer el valor de la dirección IP pública que se ha asignado a dicha máquina, por lo que debemos filtrar esa búsqueda.
 
   Como se vio en el Seminario de Azure impartido en la asignatura, podemos realizar este tipo de filtros con la herramienta **jq**. Como el parámetro que estamos buscando tiene el nombre *publicIps*, podemos realizar filtrar toda la salida de la orden anterior, quedándonos únicamente con el valor asociado a dicha variable. A continuación se muestra la orden necesaria para realizar dicha acción.
   ~~~
-  $ az vm show -d --resource-group <grupo-recursos> --name <nombre-maquina> | jq -r '.publicIps'
+  $ az vm show -d --resource-group <nombre-grupo-recursos> --name <nombre-maquina> | jq -r '.publicIps'
   ~~~
   Almacenando este valor en una variable del script, tendríamos ya el valor correspondiente a la IP pública de nuestra máquina.
 
@@ -267,12 +267,12 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
   $ ansible-playbook -i "$mv_ip," -b playbook.yml --user <usuario>
   ~~~
 
-  Por último, tal y como se puede ver en la fotografía, se lleva a cabo el provisionamiento, y de manera seguida, se puede arrancar la aplicación, utilizando la IP que es mostrada por el script [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). Debido a la gran cantidad de información que muestra la ejecución del script (se muestra mucha información acerca de la máquina virtual creada), solamente se mostrará el final de dicho procedimiento, donde se puede apreciar cómo se detecta la IP(40.89.191.234) y el provisionamiento para dicho host
+  Por último, tal y como se puede ver en la fotografía, se lleva a cabo el provisionamiento, y de manera seguida, se puede arrancar la aplicación, utilizando la IP que es mostrada por el script [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). Debido a la gran cantidad de información que muestra la ejecución del script (se muestra mucha información acerca de la máquina virtual creada), solamente se mostrará el final de dicho procedimiento, donde se puede apreciar cómo se detecta la IP(40.89.191.234) y el provisionamiento para dicho host.
 
   <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_acopio_provisionamiento.png" /></p>
 
-  Si ahora accedemos por SSH a dicha IP y arrancamos la aplicación, podemos ver cómo funciona de la forma correcta. Como detalle, podemos ver que se ha creado un fichero de log, con la conexión del mismo a la base de datos (ya que no hemos hecho nada hasta ahora).
-  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_ComprobacionAcopioFunciona.png" /></p>
+  Si ahora accedemos por SSH a dicha IP y arrancamos la aplicación, podemos ver cómo funciona de la forma correcta.
+  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_ComprobacionAcopio_Funciona.png" /></p>
 
 
 <!--
