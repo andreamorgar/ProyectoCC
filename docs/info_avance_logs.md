@@ -38,6 +38,9 @@ A continuación podemos ver un ejemplo de cómo podría verse el contenido del f
 <p align="center"><img alt="Regiones con el nombre France" width="900px" src="./images/hito4_avance1.png" /></p>
 
 ### Material interesante para la realización de este avance
-- Tutorial de iniciación a *Logging* al que se puede acceder [aquí](https://realpython.com/python-logging/).
+
+- [Documentación oficial para gestionar logs en Python](https://docs.python.org/3.1/library/logging.html#configuring-logging)
+
+- [Tutorial de iniciación a *Logging*](https://realpython.com/python-logging/).
 
 <!--Podríamos guardar los logs en una nueva colección de la base de datos, como viene indicado [aquí](https://stackoverflow.com/questions/8103864/logging-to-mongodb-from-python)-->
