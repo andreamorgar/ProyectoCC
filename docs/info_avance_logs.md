@@ -4,7 +4,7 @@ Para este hito, vamos a realizar un avance en el proyecto, que consiste en añad
 
 Los logs son uno los aspectos más importantes en las arquitecturas software. De hecho, tal y como hemos visto en la asignatura, existen arquitecturas totalmente orientadas al trabajo con logs, y ya es algo indispensable en las arquitecturas modernas.
 
-Para poder añadir un sistema de Logs a este proyecto, vamos a utilizar la librería **logging** de Python, que nos permitirá poder gestionar los distintos mensajes que se deban enviar en nuestra aplicación. Principalmente queremos manejar mensajes de logs para dos aspectos diferentes:
+Para poder añadir la gestión de logs a este proyecto, vamos a utilizar la librería **logging** de Python, que nos permitirá poder gestionar los distintos mensajes que se deban enviar en nuestra aplicación. Principalmente queremos manejar mensajes de logs para dos aspectos diferentes:
 
 1. En primer lugar, **todos aquellos que provienen de nuestra aplicación** realizada con Flask. Aquí tendremos en cuenta tanto el arranque de la aplicación, las distintas peticiones que se llevan a cabo, y todos los mensajes de Logs generados por la aplicación en sí.
 
