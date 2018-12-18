@@ -2,8 +2,16 @@
 # Automatización de la creación de máquinas virtuales desde línea de órdenes
 
 
+
 ## 1. Instalación del CLI de Azure
-El primer paso que tenemos que llevar a cabo es instalar el cliente de Azure, para poder trabajar con las máquinas virtuales desde línea de órdenes. Para su instalación, podemos seguir los pasos en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest). En mi caso, como ya utilicé la CLI de Azure en el hito anterior, ya tengo la instalación necesaria en mi sistema, pero bastaría con ejecutar la siguiente orden
+El primer paso que tenemos que llevar a cabo es instalar el cliente de Azure, para poder trabajar con las máquinas virtuales desde línea de órdenes. La elección de Azure se debe principalmente a dos razones:
+
+  - Ya se utilizó para el hito anterior, también mediante línea de órdenes, por lo que se ha completado y mejorado lo que había anteriormente.
+
+  - Se intentó utilizar *Amazon Web Service*, pero sigo esperando el correo con el código. Para el siguiente hito, se intentará cambiar a un sistema cloud diferente.
+
+
+Para su instalación, podemos seguir los pasos en la documentación oficial, que se puede consultar [aquí](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest). En mi caso, como ya utilicé la CLI de Azure en el hito anterior, ya tengo la instalación necesaria en mi sistema, pero bastaría con ejecutar la siguiente orden:
 ~~~
 $ sudo apt-get install azure-cli
 ~~~
@@ -12,19 +20,19 @@ $ sudo apt-get install azure-cli
 
 ## 2. Creación de una máquina virtual en la nube
 
-Antes de proceder a la creación de una máquina virtual hay varias decisiones que se deben tener en cuenta, a la hora de determinar las características de la máquina que posteriormente provisionaremos para poder desplegar nuestra aplicación en ella. Entre estas decisiones, se encuentran la **elección de la imagen de sistema operativo a utilizar**, o **cuestiones hardware** contemplados para dicha máquina.
+Antes de proceder a la creación de una máquina virtual hay varias decisiones que se deben tener en cuenta, a la hora de determinar las características de la máquina que posteriormente provisionaremos para poder desplegar nuestra aplicación en ella. Entre estas decisiones, se encuentran la **elección de la imagen de sistema operativo a utilizar**, o **cuestiones hardware** contempladas para dicha máquina.
 
 ### Escoger la imagen
 El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
 
 
 #### Elección del sistema operativo
-En cuanto a la elección del sistema operativo, la aplicación, realmente, podría desplegarse en cualquiera de los sistemas operativos principales. Esto incluye la de distribuciones de *Linux, Windows* y *OS X*. Como para nuestra aplicación no nos hace falta utilizar ningún sistema operativo de escritorio, podríamos descartar las dos segundas opciones mencionadas. En base a este argumento, podríamos elegir Linux o incluso un sistema operativo BSD, decisión que se tomará fundamentalmente por preferencia propia del que desarrolle.
+En cuanto a la elección del sistema operativo, la aplicación, realmente, podría desplegarse en cualquiera de los sistemas operativos principales. Esto incluye las distribuciones de *Linux, Windows* y *OS X*. Como para nuestra aplicación no nos hace falta utilizar ningún sistema operativo de escritorio, podríamos descartar las dos segundas opciones mencionadas. En base a este argumento, podríamos elegir Linux o incluso un sistema operativo BSD, decisión que se tomará fundamentalmente por preferencia propia del que desarrolle.
 
 En general, el más recomendado para el tipo de aplicaciones que estamos tratando, es Linux, no sólo por popularidad, sino porque también, es el utilizado como referencia en la documentación oficial de las herramientas que estamos usando, véase por ejemplo el caso de Azure [aquí](https://docs.microsoft.com/es-es/azure/app-service/containers/how-to-configure-python). Además, como ya sabemos, para el desarrollo de la aplicación se ha utilizado Python y el usar Linux, nos proporciona otras ventajas, como que viene instalado por defecto, nos permite el uso de variables de entorno y soporta todas las librerías y paquetes de los que pueda depender (algunos paquetes de Python podrían no funcionar para todos los sistemas operativos, como Windows).
 
 En cuanto a la distribución de Linux a utilizar, estos sistemas operativos suelen están construidos para realizar tareas específicas como la administración de redes o desarrollo web. Como se suele usar Ubuntu para fines de desarrollo, (además de ser la más popular) se escogerá esta distribución.
-Por otra parte, nuestra aplicación está implementada en la versión 3.5 de Python (aunque se ha testeado que funciona de forma correcta para otras versiones de Python, como Python 3.6), se escogerá una imagen de Ubuntu 16.04 LTS, ya que trae dicha versión de Python por defecto.  Además, es una versión Long Term Support, lo cuál es recomendable en vistas a utilizarla para desarrollo.
+Por otra parte, nuestra aplicación está implementada en la versión 3.5 de Python (aunque se ha testeado que funciona de forma correcta para otras versiones de Python, como Python 3.6), se escogerá una imagen de Ubuntu 16.04 LTS, ya que trae dicha versión de Python por defecto.  Además, es una versión *Long Term Support*, lo cuál es recomendable en vistas a utilizarla para desarrollo.
 
 
 
@@ -55,7 +63,7 @@ https://www.quora.com/What-is-the-best-OS-for-python-programming elegir python c
 
 Sin embargo, la creación de una máquina virtual no solo se limita a la especificación de la imagen a utilizar, sino que además, se debe indicar el hardware del que queremos disponer en dicha máquina virtual.
 
-En la documentación de Azure, hay una [sección](https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs), dedicada a este aspecto, en la cuál podemos ver que se facilitan distintos tamaños estándar que se pueden elegir a la hora de crear una máquina virtual. De hecho, desde el panel de control podemos consultar los distintos tamaños que existen, en caso de querer modificar alguno de los que ya tenemos. En la siguiente imagen podemos ver algunos tamaños estándar para máquinas virtuales en forma de tabla (que se pueden ver las especificaciones de una manera más clara); en este caso se ha filtrado la vista para que aparezcan los más básicos.
+En la documentación de Azure, hay una [sección](https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs), dedicada a este aspecto, en la cuál podemos ver que se facilitan distintos tamaños estándar que se pueden elegir a la hora de crear una máquina virtual. De hecho, desde el panel de control podemos consultar los distintos tamaños que existen, en caso de querer modificar alguno de los que ya tenemos. En la siguiente imagen podemos ver algunos tamaños estándar para máquinas virtuales en forma de tabla (que se pueden ver las especificaciones de una manera más clara); en este caso se ha filtrado la vista para que aparezcan los más básicos al principio.
 
 
 <p align="center"><img alt="Tamaños máquinas virtuales" width="900px" src="./images/hito4_planes.png" /></p>
@@ -66,7 +74,7 @@ Como veremos en la siguiente sección, la región por la que nos hemos decantado
 
 <p align="center"><img alt="Tamaños máquinas virtuales" width="900px" src="./images/hito4_filtradoPlanes.png" /></p>
 
-Finalmente nos decantamos por el tamaño *Basic_A0*, que como se puede ver en las dos imágenes anteriores, es la que tiene menos prestaciones y aún así sigue siendo más que suficiente para lo que necesita nuestra aplicación.
+Finalmente nos decantamos por el tamaño *Basic_A0*, que como se puede ver en las dos imágenes anteriores, es la que tiene menos prestaciones y aún así sigue siendo más que suficiente para lo que necesita nuestra aplicación. En otras palabras, en este punto del desarrollo, no tiene sentido escoger una máquina con altas prestaciones si estas no van a ser aprovechadas, por lo que elegimos una opción ligera.
 
 ### Escoger la localización
 Azure tiene una gran cantidad de regiones globales, manteniendo así la resistencia de sus datos. Se entiende por región a un conjunto de centros de datos, que se encuentran dentro de una zona perimetrada (caracterizada por la latencia). Estos centros de datos, se conectan a través de una red a nivel de región, la cuál es de baja latencia.  En la siguiente imagen, obtenida de la [documentación oficial de Azure](https://azure.microsoft.com/es-es/global-infrastructure/regions/), se puede consultar toda esta información.
@@ -100,35 +108,6 @@ De esta forma, obtenemos los nombres que debemos utilizar para hacer referencia 
 * **Sur de Francia**: francesouth
 * **Oeste de UK**: ukwest
 
-<!--
-* **Norte de Europa**:
-  * nombre: northeurope
-  * latitud: 53.3478
-  * longitud: -6.2597
-
-
-* **Oeste de Europa**
-  * nombre: westeurope
-  * latitud: "52.3667"
-  * longitud: "4.9"
-
-
-* **Centro de Francia**:
-  * nombre: francecentral,
-  * latitud: "46.3772"
-  * longitud: "2.3730"
-
-
-* **Sur de Francia**:
-  * nombre: francesouth
-  * latitud:"43.8345"
-  * longitud: "2.1972"
-
-
-* **Oeste de UK**:
-  * nombre: ukwest
-  * latitud:"53.427"
-  * longitud: "-3.084" -->
 
 
 #### Medición de las latencias
@@ -161,7 +140,7 @@ $ ab -g results.tsv -n 100 -c 20 http://137.117.174.154/
 Es una herramienta sencilla, utilizada para medir el rendimiento de servidores web.
 Se ha elegido esta herramienta, por su facilidad y rapidez de uso, ya que podemos usarla de forma rápida y simple para medir la latencia de nuestra aplicación, simplemente con la orden **ab**.
 
-Para realizar una medición, bastaría con ejecutar la siguiente orden, donde *<numero_peticiones>* son el número de peticiones totales que se llevan a cabo, *<numero_peticiones_concurrentes>* el número de peticiones que se realizan de forma concurrente y <URL> la URL que vamos a testear, que en este caso coincidirá con http://IP/, donde la IP coincidirá con la de la máquina virtual que hemos creado por línea de órdenes. Podemos consultar más información acerca de cómo realizar una petición con Apache Bench [aquí](https://blog.diacode.com/testeando-el-rendimiento-de-tu-aplicacion-con-apache-bench).
+Para realizar una medición, bastaría con ejecutar la siguiente orden, donde *<numero_peticiones>* son el número de peticiones totales que se llevan a cabo, *<numero_peticiones_concurrentes>* es el número de peticiones que se realizan de forma concurrente y <URL> la URL que vamos a testear, que en este caso coincidirá con http://IP/, donde la IP coincidirá con la de la máquina virtual que hemos creado por línea de órdenes. Podemos consultar más información acerca de cómo realizar una petición con Apache Bench [aquí](https://blog.diacode.com/testeando-el-rendimiento-de-tu-aplicacion-con-apache-bench).
 
 ~~~
 $ ab -n <numero_peticiones> -c <numero_peticiones_concurrentes> <URL>
@@ -179,12 +158,31 @@ A continuación, vamos a utilizar esta herramienta para testear la URL correspon
 Como el proceso es muy repetitivo, voy a mencionar en este documento los pasos que se deben seguir para ello, aunque la información de todo el proceso para medir en cada una de las regiones se puede consultar [aquí]().
 
 1. Creamos un grupo de recursos localizado en la región en la que queramos realizar la medición. Para ello usamos la siguiente orden:
+~~~
+$ az group create --name <nombre-grupo-recurso> --location <region>
+~~~
+
 
 2. Creamos una máquina virtual, asociada a dicho grupo de recursos.
+~~~
+$ az vm create --resource-group <nombre-grupo-recurso> --admin-username andreamg \
+--name <nombre-maquina> --image UbuntuLTS --size Basic_A0 --generate-ssh-keys \
+--public-ip-address-allocation static
+~~~
+
+  Además, activamos el puerto 80, que como sabemos es necesario para poder arrancar el servicio:
+  ~~~
+  $ az vm open-port --resource-group resourceGroupAndrea --name vmAndrea --port 80
+  ~~~
 
 3. Provisionamos la máquina de la forma que venimos haciendo desde el hito 3, y arrancamos nuestra aplicación para poder realizar peticiones.
+~~~
+$ ansible-playbook -i ansible_hosts -b playbook.yml
+~~~
 
-4. Ejecutamos la orden de Apache Bench previamente comentada, especificando un número de peticiones y la concurrencia de las mismas. Para una mayor robusted de los resultados, se ha ejecutado la misma orden en distintos instantes de tiempo, y posteriormente, se ha calculado el resultado medio de dichas peticiones.
+
+
+4. Ejecutamos la orden de Apache Bench previamente comentada, especificando un número de peticiones y la concurrencia de las mismas. Para una mayor robustez de los resultados, se ha ejecutado la misma orden en distintos instantes de tiempo, y posteriormente, se ha calculado el resultado medio de dichas peticiones.
 
 En la siguiente tabla, podemos ver los resultados obtenidos para la medición del tiempo medio de respuesta de las peticiones.  
 
