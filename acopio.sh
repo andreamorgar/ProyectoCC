@@ -13,8 +13,8 @@ az vm open-port --resource-group resourceGroupAndrea --name vmAndrea --port 80
 
 # Faltaría provisionar, pero hay que pasarle el nombre del host al playbook
 
-# La IP podemos obtenerla con la siguiente orden, que, aunque es lenta, permite
-# obtener la IP pública de la máquina, entre otros valores
+# La IP podemos obtenerla con la siguiente orden, que permite obtener la IP
+# pública de la máquina, entre otros valores
 mv_ip=$(az vm show -d --resource-group resourceGroupAndrea --name vmAndrea | jq -r '.publicIps')
 
 echo $mv_ip
