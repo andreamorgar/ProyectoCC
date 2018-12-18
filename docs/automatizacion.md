@@ -12,42 +12,68 @@ $ sudo apt-get install azure-cli
 
 ## 2. Creación de una máquina virtual en la nube
 
-<!--
-### Elección del sistema operativo
-Aquí descarta OS y Windows, quedandose con linux por popularidad, y despues por ubuntu por popularidad otra vez [aqui](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux). Ubuntu, trae SSH ya instalado, ventajas
-https://docs.microsoft.com/es-es/azure/app-service/containers/how-to-configure-python aqui, documentacion de azure, flask viene recomendado de instalar con linux
-En vistas a elegir una imagen, suelen coger ubuntus con 3.6, en vistas a tener dockers https://medium.freecodecamp.org/docker-development-workflow-a-guide-with-flask-and-postgres-db1a1843044a
-Aqui otra recomendación para elegir sistema operativo, empezar por leerla: https://www.fullstackpython.com/operating-systems.html
-
-Una vez realizada la instalación, ya podemos crear una máquina virtual en la nube. Lo primero que tenemos que realizar, es la elección de la imagen que queramos utilizar, la cual contendrá, tanto el sistema operativo, como cualquier otra utilidad con la que queramos trabajar.
+Antes de proceder a la creación de una máquina virtual hay varias decisiones que se deben tener en cuenta, a la hora de determinar las características de la máquina que posteriormente provisionaremos para poder desplegar nuestra aplicación en ella. Entre estas decisiones, se encuentran la **elección de la imagen de sistema operativo a utilizar**, o **cuestiones hardware** contemplados para dicha máquina.
 
 ### Escoger la imagen
 El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
-https://markheath.net/post/create-configure-vm-azure-cli aqui podemos ver como hacer lo de la nueva asignación
-https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs aqui podemos ver la info de los distintos tipos a elegir -->
 
 
 
-~~~
-$ az vm image list
-~~~
+#### Elección del sistema operativo
+En cuanto a la elección del sistema operativo, la aplicación, realmente, podría desplegarse en cualquiera de los sistemas operativos principales. Esto incluye la de distribuciones de *Linux, Windows* y *OS X*. Como para nuestra aplicación no nos hace falta utilizar ningún sistema operativo de escritorio, podríamos descartar las dos segundas opciones mencionadas. En base a este argumento, podríamos elegir Linux o incluso un sistema operativo BSD, decisión que se tomará fundamentalmente por preferencia propia del que desarrolle.
 
-Si nos interesa por ejemplo, conocer únicamente las distribuciones de Ubuntu disponibles, podemos filtrar esta lista para ello, mediante la orden que se muestra a continuación
+En general, el más recomendado para el tipo de aplicaciones que estamos tratando, es Linux, no sólo por popularidad, sino porque también, es el utilizado como referencia en la documentación oficial de las herramientas que estamos usando, véase por ejemplo el caso de Azure [aquí](https://docs.microsoft.com/es-es/azure/app-service/containers/how-to-configure-python). Además, como ya sabemos, para el desarrollo de la aplicación se ha utilizado Python y el usar Linux, nos proporciona otras ventajas, como que viene instalado por defecto, nos permite el uso de variables de entorno y soporta todas las librerías y paquetes de los que pueda depender (algunos paquetes de Python podrían no funcionar para todos los sistemas operativos, como Windows).
 
-~~~
-$ az vm image list | jq '.[] | select( .offer | contains("buntu"))'
-~~~
-
-Si ejecutamos dicha línea, se obtiene como salida lo siguiente.
-<p align="center"><img alt="Salida de la lista filtrada de imágenes" width="900px" src="./images/hito4_listar_imagenes.png" /></p>
+En cuanto a la distribución de Linux a utilizar, estos sistemas operativos suelen están construidos para realizar tareas específicas como la administración de redes o desarrollo web. Como se suele usar Ubuntu para fines de desarrollo, (además de ser la más popular) se escogerá esta distribución.
+Por otra parte, nuestra aplicación está implementada en la versión 3.5 de Python (aunque se ha testeado que funciona de forma correcta para otras versiones de Python, como Python 3.6), se escogerá una imagen de Ubuntu 16.04 LTS, ya que trae dicha versión de Python por defecto.  Además, es una versión Long Term Support, lo cuál es recomendable en vistas a utilizarla para desarrollo.
 
 
 
+<!-- En cuanto a la distribución de Linux a utilizar, estos sistemas operativos suelen están construidos para realizar tareas específicas como la administración de redes o desarrollo web. Como se suele usar Ubuntu para fines de desarrollo, (además de ser la más popular) se escogerá esta distribución.
+Por otra parte, nuestra aplicación está implementada en la versión 3.5 de Python (aunque se ha testeado que funciona de forma correcta para otras versiones de Python, como Python 3.6).
+Ubuntu 16.04 trae por defecto Python 3.5, y Ubuntu 18.04 trae Python 3.6, por lo que nos quedaremos con ésta última, por traer una versión posterior y más sólida de Python 3.
+
+Concretamente, se escogerá una imagen de **Ubuntu 18.04 LTS**, ya que trae dicha versión de Python por defecto. Además, es una versión *Long Term Support*, lo cual es recomendable en vistas a utilizarla para desarrollo. -->
+
+
+Para esta decisión, se han seguido algunas recomendaciones mencionadas [aquí](https://www.quora.com/What-is-the-best-OS-for-python-programming), [aquí](https://www.fullstackpython.com/operating-systems.html) y [aquí](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux).
+
+
+<!--
+Aquí descarta OS y Windows, quedandose con linux por popularidad, y despues por ubuntu por popularidad otra vez [aqui](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux). Ubuntu, trae SSH ya instalado, ventajas
+
+https://docs.microsoft.com/es-es/azure/app-service/containers/how-to-configure-pythonaqui, documentacion de azure, flask viene recomendado de instalar con linux
+
+Una vez realizada la instalación, ya podemos crear una máquina virtual en la nube. Lo primero que tenemos que realizar, es la elección de la imagen que queramos utilizar, la cual contendrá, tanto el sistema operativo, como cualquier otra utilidad con la que queramos trabajar.
+
+
+En vistas a elegir una imagen, suelen coger ubuntus con 3.6, en vistas a tener dockers https://medium.freecodecamp.org/docker-development-workflow-a-guide-with-flask-and-postgres-db1a1843044a
+Aqui otra recomendación para elegir sistema operativo, empezar por leerla: https://www.fullstackpython.com/operating-systems.html
+
+https://www.quora.com/What-is-the-best-OS-for-python-programming elegir python como lenguaje
+-->
+#### Elección del hardware para la máquina virtual
+
+Sin embargo, la creación de una máquina virtual no solo se limita a la especificación de la imagen a utilizar, sino que además, se debe indicar el hardware del que queremos disponer en dicha máquina virtual.
+
+En la documentación de Azure, hay una [sección](https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs), dedicada a este aspecto, en la cuál podemos ver que se facilitan distintos tamaños estándar que se pueden elegir a la hora de crear una máquina virtual. De hecho, desde el panel de control podemos consultar los distintos tamaños que existen, en caso de querer modificar alguno de los que ya tenemos. En la siguiente imagen podemos ver algunos tamaños estándar para máquinas virtuales en forma de tabla (que se pueden ver las especificaciones de una manera más clara); en este caso se ha filtrado la vista para que aparezcan los más básicos.
+
+
+<p align="center"><img alt="Tamaños máquinas virtuales" width="900px" src="./images/hito4_planes.png" /></p>
+
+Sin embargo, a la hora de decantarnos por un tamaño u otro, debemos de tener en cuenta que, a pesar de soler estar estandarizados, no tienen por qué estar disponibles en todas las regiones. Por ello, es preferible realizar un filtrado previo que nos permita saber si el tamaño que queremos elegir está disponible.
+
+Como veremos en la siguiente sección, la región por la que nos hemos decantado en este hito es la del centro de Francia (francecentral), por lo que buscaremos qué tamaños básicos hay en dicha región. Podemos ver la salida de este filtrado en la siguiente imagen. Para obtenerlas, mostramos la lista total de tamaños permitidos para la región en concreto, y filtramos por el nombre de las que hemos podido ver que nos pueden interesar.
+
+<p align="center"><img alt="Tamaños máquinas virtuales" width="900px" src="./images/hito4_filtradoPlanes.png" /></p>
+
+Finalmente nos decantamos por el tamaño *Basic_A0*, que como se puede ver en las dos imágenes anteriores, es la que tiene menos prestaciones y aún así sigue siendo más que suficiente para lo que necesita nuestra aplicación.
 
 ### Escoger la localización
 Azure tiene una gran cantidad de regiones globales, manteniendo así la resistencia de sus datos. Se entiende por región a un conjunto de centros de datos, que se encuentran dentro de una zona perimetrada (caracterizada por la latencia). Estos centros de datos, se conectan a través de una red a nivel de región, la cuál es de baja latencia.  En la siguiente imagen, obtenida de la [documentación oficial de Azure](https://azure.microsoft.com/es-es/global-infrastructure/regions/), se puede consultar toda esta información.
 
-<p align="center"><img alt="Regiones globales en Azure" width="900px" src="./images/hito4_vistaregiones.png" /></p>
+<p align="center"><img alt="Filtrado de los tamaños" width="900px" src="./images/hito4_vistaregiones.png" /></p>
+
 
 A la hora de decantarnos por una localización concreta, tenemos que tener en cuenta aspectos como puede ser la latencia que pueda existir, condicionada a la localización que escojamos. Por ello, vamos a elegir una serie de localizaciones cercanas a la zona geográfica en la que nos encontramos, y realizaremos mediciones para así poder ver qué región es la más adecuada para ubicar la máquina virtual en la que desplegar el servicio.
 
