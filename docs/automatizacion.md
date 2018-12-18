@@ -274,13 +274,11 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
   Si ahora accedemos por SSH a dicha IP y arrancamos la aplicación, podemos ver cómo funciona de la forma correcta.
   <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_ComprobacionAcopio_Funciona.png" /></p>
 
-
 <!--
 Necesitamos saber la IP, para pasarsela al playbook de ansible ** Para ello, podemos usar [esto](https://github.com/Azure/azure-cli/issues/2677), y
 además tenemos que filtrar la búsqueda en función del nombre de usuario que le ponemos a nuestra
 máquina. Podemos usar jq, tal y como viene [aquí](https://stedolan.github.io/jq/manual/#Basicfilters)
 4. Ya faltaría ejecutar el playbook de ansible pasándole los parámetros y tal.
-
 
 
 
