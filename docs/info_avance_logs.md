@@ -37,6 +37,11 @@ A continuación podemos ver un ejemplo de cómo podría verse el contenido del f
 
 <p align="center"><img alt="Regiones con el nombre France" width="600px" src="./images/hito4_avance1.png" /></p>
 
+
+---
+
+
+
 ### Material interesante para la realización de este avance
 
 - [Documentación oficial para gestionar logs en Python](https://docs.python.org/3.1/library/logging.html#configuring-logging)
