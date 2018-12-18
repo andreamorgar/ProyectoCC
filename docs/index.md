@@ -790,7 +790,7 @@ Para poder realizar las mediciones para una localización concreta, debemos segu
 4. Utilizar una herramienta que nos permita realizar la medición, lanzando peticiones a nuestro recurso. Para ello se ha hecho uso de la herramienta [Apache Bench](https://httpd.apache.org/docs/2.4/programs/ab.html) (AB).
 
 
-<u> **Apache Bench** </u>
+<u>Apache Bench</u>
 
 <!--
 ## 3. Realizar peticiones con Apache Bench (AB)
