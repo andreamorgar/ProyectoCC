@@ -8,7 +8,7 @@ El primer paso que tenemos que llevar a cabo es instalar el cliente de Azure, pa
 
   - Ya se utilizó para el hito anterior, también mediante línea de órdenes, por lo que se ha completado y mejorado lo que había anteriormente.
 
-  - Para la gran cantidad de funcionalidad y posibilidades que ofrece, es sencillo de utilizar por línea de comandos, y la documentación es fácil de entender y bastante completa. 
+  - Para la gran cantidad de funcionalidad y posibilidades que ofrece, es sencillo de utilizar por línea de comandos, y la documentación es fácil de entender y bastante completa.
 
   - Se intentó utilizar *Amazon Web Service*, pero sigo esperando el correo con el código. Para el siguiente hito, se intentará cambiar a un sistema cloud diferente.
 
@@ -26,6 +26,7 @@ Antes de proceder a la creación de una máquina virtual hay varias decisiones q
 
 ### Escoger la imagen
 El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
+
 
 
 #### Elección del sistema operativo
