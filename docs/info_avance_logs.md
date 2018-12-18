@@ -24,7 +24,7 @@ Para ello, hay que destacar los siguientes aspectos:
 
 - Por otra parte, tenemos que especificar de alguna manera el origen o nombre de donde proviene el mensaje de log, ya que nos permitirá identificar su procedencia. Para ello, podemos utilizar una función llamada *getLogger(<nombre>)*, en la cual indicaremos el nombre con el que queremos identificar la procedencia de ese log. Posteriormente, podremos generar mensajes de logs, asociados a dicho identificador.
 
-- En cuanto al fichero en el que se almacenan todos los mensajes de logs, hay que mencionar que no hay uno solo, sino que se generará un fichero distinto por cada día en el que se generen nuevos mensajes de logs. De esta forma, podemos gestionarla memoria asociada a los ficheros que almacenan mensajes de logs de una manera rápida y sencilla  (y de camino, organizar los mensajes que se generen).
+- En cuanto al fichero en el que se almacenan todos los mensajes de logs, hay que mencionar que no hay uno solo, sino que se generará un fichero distinto por cada día en el que se generen nuevos mensajes de logs. De esta forma, podemos gestionar la memoria asociada a los ficheros que almacenan mensajes de logs de una manera rápida y sencilla  (y de camino, organizar los mensajes que se generen).
 
 
 En la siguiente imagen, podemos ver el código necesario para llevar a cabo los puntos comentados. Podemos ver, en ella, una pequeña fracción de código correspondiente a la implementación de toda la funcionalidad anterior, en este caso, para el caso de la base de datos.
