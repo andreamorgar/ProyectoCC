@@ -1,15 +1,18 @@
 from pymongo import *
+
 import logging
 import datetime
 log_filename = str(datetime.datetime.now().strftime('%d-%m-%Y')) + '.log'
 print(log_filename)
+
 # We put a name to identify the origin of the log
 logger = logging.getLogger('mongodb')
 logging.basicConfig(filename=log_filename, filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+logger.info("Trying to connect to database")
+
 # Include URI of mLab
 # client = MongoClient(MONGODB_URI, connectTimeoutMS=30000)
-logger.info("Trying to connect to database")
 MONGODB_URI = "mongodb://test:test_password1@ds123584.mlab.com:23584/predictions"
 logger.info("Succesfully connected to database")
 
