@@ -123,7 +123,11 @@ Por supuesto, se han añadido todos los tests necesarios para asegurar el funcio
 
 ### Automatización de la creación de máquinas virtuales desde línea de órdenes <a name="id10"></a>
 
-Se puede acceder a la documentación en [este fichero](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).
+Se ha desarrollado un script de aprovisionamiento y creación de máquinas virtuales, con el objetivo de automatizar esta tarea. Para ello, se ha utilizado el cliente de Azure para poder crear la máquina virtual desde línea de órdenes y ansible para el posterior provisionamiento.
+
+Por otra parte, se han contemplado y justificado distintas posibilidades a la hora de elegir algunos parámetros clave en la creación de máquinas virtuales en Azure, como puede ser la región, la imagen o el tamaño de la propia máquina virtual.
+
+Se puede acceder a la información detallada en [este fichero](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).
 
 #### Últimos avances en el proyecto  <a name="id11"></a>
 
