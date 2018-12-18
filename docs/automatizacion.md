@@ -61,7 +61,7 @@ En la documentación de Azure, hay una [sección](https://docs.microsoft.com/en-
 
 <p align="center"><img alt="Tamaños máquinas virtuales" width="900px" src="./images/hito4_planes.png" /></p>
 
-Sin embargo, a la hora de decantarnos por un tamaño u otro, debemos de tener en cuenta que, a pesar de soler estar estandarizados, no tienen por qué estar disponibles en todas las regiones. Por ello, es preferible realizar un filtrado previo que nos permita saber si el tamaño que queremos elegir está disponible.
+Sin embargo, a la hora de decantarnos por un tamaño u otro, debemos de tener en cuenta que, a pesar de que suelen estar estandarizados, no tienen por qué estar disponibles en todas las regiones (ver [aquí](https://www.danielstechblog.io/azure-vm-sizes/)). Por ello, es preferible realizar un filtrado previo que nos permita saber si el tamaño que queremos elegir está disponible.
 
 Como veremos en la siguiente sección, la región por la que nos hemos decantado en este hito es la del centro de Francia (francecentral), por lo que buscaremos qué tamaños básicos hay en dicha región. Podemos ver la salida de este filtrado en la siguiente imagen. Para obtenerlas, mostramos la lista total de tamaños permitidos para la región en concreto, y filtramos por el nombre de las que hemos podido ver que nos pueden interesar.
 
@@ -206,8 +206,8 @@ Como se puede observar en la tabla, **la región con la que se tiene menor laten
 
 
 
-Para conocer la IP, que tiene que ir en el script de ansible:
-https://github.com/Azure/azure-cli/issues/2677
+<!--Para conocer la IP, que tiene que ir en el script de ansible:
+https://github.com/Azure/azure-cli/issues/2677-->
 
 
 
@@ -224,7 +224,7 @@ $ az group create --name <nombre-grupo-recursos> --location francecentral
 
 2. **Crear la máquina virtual con ese grupo de recursos**, con un usuario y con acceso a ssh, de la misma forma que se ha explicado a lo largo del documento. Además, se establecerá la IP estática por defecto (ya que se establecerá de forma dinámica cada vez que encendamos la máquina si no lo especificamos).
 ~~~
-$ az vm create --resource-group <nombre-grupo-recursos> --admin-username <usuario> --name <nombre-maquina> --image <imagen> --generate-ssh-keys --public-ip-address-allocation static
+$ az vm create --resource-group <nombre-grupo-recursos> --admin-username <usuario> --name <nombre-maquina> --image <imagen> --size Basic_A0 --generate-ssh-keys --public-ip-address-allocation static
 ~~~
 
 3. Como ya sabemos, debemos **abrir el puerto 80 para poder ejecutar nuestra aplicación en dicho puerto**, ya que esta acción no se lleva a cabo por defecto.
@@ -270,9 +270,12 @@ $ az vm open-port --resource-group <nombre-grupo-recursos> --name <nombre-maquin
   $ ansible-playbook -i "$mv_ip," -b playbook.yml --user <usuario>
   ~~~
 
-  Por último, tal y como se puede ver en la fotografía, se lleva a cabo el provisionamiento, y de manera seguida, se puede arrancar la aplicación, utilizando la IP que es mostrada por el script [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). Debido a la gran cantidad de información que muestra el provisionamiento, solamente se mostrará el final de dicho procedimiento.
+  Por último, tal y como se puede ver en la fotografía, se lleva a cabo el provisionamiento, y de manera seguida, se puede arrancar la aplicación, utilizando la IP que es mostrada por el script [acopio.sh](https://github.com/andreamorgar/ProyectoCC/blob/master/acopio.sh). Debido a la gran cantidad de información que muestra la ejecución del script (se muestra mucha información acerca de la máquina virtual creada), solamente se mostrará el final de dicho procedimiento, donde se puede apreciar cómo se detecta la IP(40.89.191.234) y el provisionamiento para dicho host
 
-  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito_4_acopio.png" /></p>
+  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_acopio_provisionamiento.png" /></p>
+
+  Si ahora accedemos por SSH a dicha IP y arrancamos la aplicación, podemos ver cómo funciona de la forma correcta. Como detalle, podemos ver que se ha creado un fichero de log, con la conexión del mismo a la base de datos (ya que no hemos hecho nada hasta ahora).
+  <p align="center"><img alt="Regiones con el nombre UK" width="900px" src="./images/hito4_ComprobacionAcopioFunciona.png" /></p>
 
 
 <!--

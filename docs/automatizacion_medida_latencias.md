@@ -4,10 +4,29 @@
 Para cada una de las regiones, hay que llevar a cabo los siguientes pasos.
 
 1. *Creamos un grupo de recursos localizado en la región* en la que queramos realizar la medición. Para ello usamos la siguiente orden:
+~~~
+$ az group create --name <nombre-grupo-recurso> --location <region>
+~~~
 
-2. *Creamos una máquina virtual*, asociada a dicho grupo de recursos.
+2. *Creamos una máquina virtual*, asociada a dicho grupo de recursos. Para ello, usamos la siguiente orden:
+~~~
+$ az vm create --resource-group <nombre-grupo-recurso> --admin-username andreamg \
+--name <nombre-maquina> --image UbuntuLTS --size Basic_A0 --generate-ssh-keys \
+--public-ip-address-allocation static
+~~~
+
+  Además, activamos el puerto 80, que como sabemos es necesario para poder arrancar el servicio:
+  ~~~
+  $ az vm open-port --resource-group resourceGroupAndrea --name vmAndrea --port 80
+  ~~~
 
 3. *Provisionamos la máquina* de la forma que venimos haciendo desde el hito 3, y arrancamos nuestra aplicación para poder realizar peticiones.
+
+  ~~~
+  $ ansible-playbook -i ansible_hosts -b playbook.yml
+  ~~~
+
+
 
 4. Realizamos la medición de la URL asociada a nuestro servicio.
 
