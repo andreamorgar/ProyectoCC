@@ -122,6 +122,7 @@ Por supuesto, se han añadido todos los tests necesarios para asegurar el funcio
 
 
 ### Automatización de la creación de máquinas virtuales desde línea de órdenes <a name="id10"></a>
+MV2: 40.89.191.234
 
 Se ha desarrollado un script de aprovisionamiento y creación de máquinas virtuales, con el objetivo de automatizar esta tarea. Para ello, se ha utilizado el cliente de Azure para poder crear la máquina virtual desde línea de órdenes y ansible para el posterior provisionamiento.
 
