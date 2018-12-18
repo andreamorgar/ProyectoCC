@@ -12,10 +12,21 @@ $ sudo apt-get install azure-cli
 
 ## 2. Creación de una máquina virtual en la nube
 
+<!--
+### Elección del sistema operativo
+Aquí descarta OS y Windows, quedandose con linux por popularidad, y despues por ubuntu por popularidad otra vez [aqui](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux). Ubuntu, trae SSH ya instalado, ventajas
+https://docs.microsoft.com/es-es/azure/app-service/containers/how-to-configure-python aqui, documentacion de azure, flask viene recomendado de instalar con linux
+En vistas a elegir una imagen, suelen coger ubuntus con 3.6, en vistas a tener dockers https://medium.freecodecamp.org/docker-development-workflow-a-guide-with-flask-and-postgres-db1a1843044a
+Aqui otra recomendación para elegir sistema operativo, empezar por leerla: https://www.fullstackpython.com/operating-systems.html
+
 Una vez realizada la instalación, ya podemos crear una máquina virtual en la nube. Lo primero que tenemos que realizar, es la elección de la imagen que queramos utilizar, la cual contendrá, tanto el sistema operativo, como cualquier otra utilidad con la que queramos trabajar.
 
 ### Escoger la imagen
 El primer paso es **escoger la imagen**. Para ello, usamos la siguiente orden, que nos permite ver un listado de las imágenes disponibles.
+https://markheath.net/post/create-configure-vm-azure-cli aqui podemos ver como hacer lo de la nueva asignación
+https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs aqui podemos ver la info de los distintos tipos a elegir -->
+
+
 
 ~~~
 $ az vm image list
