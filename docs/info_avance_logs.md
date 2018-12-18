@@ -35,7 +35,7 @@ En la siguiente imagen, podemos ver el código necesario para llevar a cabo los 
 
 A continuación podemos ver un ejemplo de cómo podría verse el contenido del fichero de logs para un día concreto en el cuál arrancamos la aplicación.
 
-<p align="center"><img alt="Regiones con el nombre France" width="900px" src="./images/hito4_avance1.png" /></p>
+<p align="center"><img alt="Regiones con el nombre France" width="600px" src="./images/hito4_avance1.png" /></p>
 
 ### Material interesante para la realización de este avance
 
