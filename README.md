@@ -19,7 +19,9 @@ Estudio de las condiciones meteorológicas en Granada a través de la informaci�
   - [Comprobación del provisionamiento de otro compañero en mi máquina](#id8)
   - [Avance en el proyecto](#id9)
 - [Automatización de la creación de máquinas virtuales](#id10)  
-  - [Últimos avances en el proyecto](#id11)
+  - [Avance en el proyecto](#id11)
+- [Orquestación de máquinas virtuales](#id13)  
+  - [Últimos avances en el proyecto](#id14)
 - [Licencia](#id12)
 
 
@@ -130,11 +132,20 @@ Por otra parte, se han contemplado y justificado distintas posibilidades a la ho
 
 Se puede acceder a la información detallada en [este fichero](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).
 
-#### Últimos avances en el proyecto  <a name="id11"></a>
+#### Avance en el proyecto  <a name="id11"></a>
 
 Para este hito, vamos a realizar un avance en el proyecto, que consiste en añadir la utilidad de logs a nuestra aplicación.
 
 Para ello, vamos a utilizar la librería **logging** de Python, que nos permitirá poder gestionar los distintos mensajes que se deban enviar en nuestra aplicación. Se puede consultar más información acerca del avance [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/info_avance_logs.md).
+
+
+---
+
+### Orquestación de máquinas virtuales <a name="id13"></a>
+
+[Más información](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/orquestacion_mv.md)
+
+#### Últimos avances en el proyecto  <a name="id14"></a>
 
 ---
 
