@@ -2,7 +2,7 @@
 
 Autor: Alejandro Campoy Nieves (@AlejandroCN7)
 
-Para: Andrea Morales Garzón (@andramorgar)
+Para: Andrea Morales Garzón (@andreamorgar)
 
 ---
 
