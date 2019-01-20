@@ -2,15 +2,12 @@
 - name: Deploy MongoDB and configure the database
   hosts: all
   become: yes
-  # roles:
-  #   - ansible-role-mongodb
 
   tasks:
     - name: Install mongodb package
       apt: pkg=mongodb state=latest
 
     - name: Allow remote connections
-      become: true
       lineinfile:
         dest: /etc/mongodb.conf
         regexp: "^\\s*bind_ip.*"
@@ -19,4 +16,3 @@
 
     - name: Restart mongodb service
       service: name=mongodb state=restarted
-      sudo: yes
