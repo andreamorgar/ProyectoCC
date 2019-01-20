@@ -4,6 +4,8 @@ python:
 - '3.6'
 services:
   - mongodb
+env:
+- IP='127.0.0.1'
 install:
 - pip install -r requirements.txt
 script:

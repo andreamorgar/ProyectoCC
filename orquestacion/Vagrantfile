@@ -35,6 +35,10 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "playbook.yml"
     end
 
+    # Añadido para tener la variable de entorno que buscamos en la máquina, y así no tener que meterla nosotros manualmente
+    # maquina1.vm.provision "shell", inline: "echo "export IP='10.0.0.4'" >> .bashrc", run: "always"
+
+
   end
 
   config.vm.define "maquina2" do |maquina2|

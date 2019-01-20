@@ -1,5 +1,5 @@
 ---
-- name: deploy MongoDB and configure the database
+- name: Deploy MongoDB and configure the database
   hosts: all
   become: yes
   # roles:
@@ -14,7 +14,7 @@
       lineinfile:
         dest: /etc/mongodb.conf
         regexp: "^\\s*bind_ip.*"
-        line: "bind_ip: [127.0.0.1 10.0.0.4]"
+        line: "bind_ip = [127.0.0.1 10.0.0.4]"
         state: present
 
     - name: Restart mongodb service
