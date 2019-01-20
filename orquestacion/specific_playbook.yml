@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: Clone repo
+      git:
+        repo: https://github.com/andreamorgar/ProyectoCC.git
+        clone: yes
+        dest: ProyectoCC
+
+    - name: Install requirements
+      pip:
+        state: latest
+        requirements: /home/vagrant/ProyectoCC/requirements.txt
+        executable: pip3
