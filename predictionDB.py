@@ -1,5 +1,5 @@
 from pymongo import *
-
+import os
 import logging
 import datetime
 log_filename = str(datetime.datetime.now().strftime('%d-%m-%Y')) + '.log'
@@ -12,7 +12,8 @@ logging.basicConfig(filename=log_filename, filemode='a', format='%(asctime)s - %
 logger.info("Trying to connect to database")
 
 # Include URI of MongoDB in localhost
-direccion = string(os.environ.get("IP", "127.0.0.1"))
+direccion = str(os.environ.get("IP", "127.0.0.1"))
+print(direccion)
 logger.info("IP of MongoDB database established")
 MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
 
