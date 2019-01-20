@@ -12,7 +12,7 @@ logging.basicConfig(filename=log_filename, filemode='a', format='%(asctime)s - %
 logger.info("Trying to connect to database")
 
 # Include URI of MongoDB in localhost
-direccion = str(os.environ.get("IP", "10.0.0.4"))
+direccion = str(os.environ.get("IP", "10.0.0.5"))
 print(direccion)
 logger.info("IP of MongoDB database established")
 MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
