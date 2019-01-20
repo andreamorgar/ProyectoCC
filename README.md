@@ -147,14 +147,14 @@ Para ello, vamos a utilizar la librería **logging** de Python, que nos permitir
 
 En este hito, se ha realizado la orquestación de dos máquinas virtuales en Azure, donde una de las máquinas alojará la base de datos, y la otra, el servicio REST que estamos desarrollando (el cuál hace uso de dicha base de datos, ya que es de donde adquiere la información). Para ello, haremos uso de [Vagrant](https://www.vagrantup.com/), una herramienta para la creación y configuración de entornos de desarrollo.
 
-Se puede acceder a la documentación de todo lo llevado a cabo [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/orquestacion_mv.md)
+Se puede acceder a la documentación de todo lo llevado a cabo [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/orquestacion_mv.md).
 
 #### Comprobación de mi provisionamiento en otra máquina <a name="id15"></a>
 
-Realizado por @AlejandroCN7, puede consultarse en [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/Prueba-Orquestaci%C3%B3n-%20Alejandro_Campoy_Nieves.md)
+Realizado por @AlejandroCN7, puede consultarse en [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/Prueba-Orquestaci%C3%B3n-%20Alejandro_Campoy_Nieves.md).
 
 #### Comprobación del provisionamiento de otro compañero en mi máquina <a name="id16"></a>
-Se ha comprobado que el provisionamiento realizado por @AlejandroCN7 funciona de manera correcta. Puede consultarse [en este enlace](https://github.com/AlejandroCN7/Proyecto-Cloud-Computing/blob/master/docs/comprobacionOrquestacion.md)
+Se ha comprobado que el provisionamiento realizado por @AlejandroCN7 funciona de manera correcta. Puede consultarse [en este enlace](https://github.com/AlejandroCN7/Proyecto-Cloud-Computing/blob/master/docs/comprobacionOrquestacion.md).
 
 #### Últimos avances en el proyecto  <a name="id14"></a>
 
