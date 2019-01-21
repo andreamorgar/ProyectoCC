@@ -20,6 +20,8 @@ Estudio de las condiciones meteorológicas en Granada a través de la informaci�
 - [Avance en el proyecto: MongoDB](#id9)
 - [Automatización por línea de órdenes](#id13)
 - [Último avance en el proyecto (logs)](#id14)
+- [Orquestación de máquinas virtuales](#id15)
+
 - [Licencia](#id10)
 
 
@@ -1036,5 +1038,387 @@ A continuación podemos ver un ejemplo de cómo podría verse el contenido del f
 
 
 ---
+
+### Orquestación de máquinas virtuales <a name="id15"></a>
+
+
+En este hito, vamos a realizar la orquestación de dos máquinas virtuales en Azure, donde una de las máquinas alojará la base de datos, y la otra, el servicio REST que estamos desarrollando (el cuál hace uso de dicha base de datos, ya que es de donde adquiere la información). Para ello, haremos uso de [Vagrant](https://www.vagrantup.com/), una herramienta para la creación y configuración de entornos de desarrollo.
+
+En esta documentación veremos varias cuestiones principales:
+1.  Cómo empezar a trabajar desde Vagrant con Azure
+
+2. Cómo podemos crear, desde VagrantFile, dos máquinas virtuales en Azure con la misma red interna, de forma que podamos realizar una conexión entre ellas a nivel de red interna.
+
+3. Provisionar una máquina virtual con MongoDB, de forma que escuche las peticiones de la otra máquina orquestada (avance realizado debido a que es necesario para realizar la orquestación que llevaremos a cabo entre las dos máquinas).
+
+
+
+#### Primeros pasos con Vagrant
+
+En primer lugar, tenemos que empezar por la instalación de Vagrant en nuestro ordenador, de forma que podamos utilizar dicha herramienta , y así poder trabajar directamente con el Vagrantfile y la especificación concreta de las máquinas que queramos utilizar.
+
+Sin embargo, como ya utilicé Vagrant en el **Hito 3** para realizar el provisionamiento de máquinas virtuales en local, los pasos para empezar a trabajar con Vagrant desde local se pueden consultar en [la documentación del hito mencionado](https://github.com/andreamorgar/ProyectoCC/blob/master/provision/README.md). **En este documento, se puede ver detalladamente cómo hacer la instalación de Vagrant, y la creación y provisionamiento de una máquina virtual en local (mediante VirtualBox).**
+
+
+#### Vagrant con Azure
+
+Como ya se ha comentado en la introducción de la documentación, se pretende usar Vagrant para crear dos máquinas virtuales en Azure:
+
+- La primera máquina, a la que nos referiremos como `maquinaservicio`, **se encargará de alojar el servicio REST**. Por tanto, la provisión de esta máquina se corresponderá, con la que hemos llevado a cabo hasta ahora, ya que necesitaremos que la máquina disponga de todos los paquetes necesarios para poder ejecutar el proyecto (como puede ser el caso de *Flask*, o *Python3* en el caso de que no estuviera instalado por defecto).
+
+- La segunda máquina, a la que nos referiremos como `maquinamongo`  será la que tenga alojado un servicio de MongoDB. De esta forma, cada vez que se realice al servicio REST una petición  que necesite información almacenada a la base de datos, se accederá a la información que contiene la base de de datos de `maquinamongo`.
+
+Para llevar a cabo todo el desarrollo necesario, se ha realizado desde el directorio [`ProyectoCC/orquestacion`](https://github.com/andreamorgar/ProyectoCC/tree/master/orquestacion) del repositorio del proyecto. En este directorio, ejecutamos la siguiente orden para poder crear el fichero Vagrantfile y comenzar a trabajar con *Vagrant*.
+~~~
+$ vagrant init
+~~~
+
+##### <u>Configuración para una máquina en Azure<u/>
+Tras ejecutar la orden anterior en el directorio en el que queramos trabajar con Vagrant, se nos creará el fichero *Vagrantfile*. Al realizar dicha orden, se nos crea un contenido por defecto, pero en este caso, lo borraremos y lo sustituiremos por uno apropiado para poder trabajar con Azure.
+
+
+
+Lo primero es descargar el plugin de Azure, y así poder configurar todo para poder trabajar con Vagrant en Azure. Siguiendo los pasos vistos en [el Github de Azure](https://github.com/Azure/vagrant-azure), podemos obtener este plugin con las siguientes órdenes:
+
+~~~
+$ vagrant box add azure https://github.com/azure/vagrant-azure/raw/v2.0/dummy.box --provider azure
+$ vagrant plugin install vagrant-azure
+~~~
+
+A continuación, creamos el fichero Vagrantfile tal y como viene especificado  
+
+Para empezar, vamos a configurar un Vagrantfile partiendo del básico que se nos facilita en la [documentación oficial](https://github.com/Azure/vagrant-azure), añadiendole una configuración adicional de forma que podamos crear una máquina virtual de acuerdo a lo que necesitemos. De esta forma podremos crear una máquina virtual que cumpla con las mismas especificaciones que las máquinas de Azure que creamos con el CLI de Azure en el hito anterior. El resultado, sería el que se muestra a continuación.
+
+~~~
+require 'vagrant-azure'
+Vagrant.configure('2') do |config|
+  config.vm.box = 'azure'
+
+  # Usamos una clave ssh local para conectar al box de vagrant remoto
+  config.ssh.private_key_path = '~/.ssh/id_rsa'
+  config.vm.provider :azure do |az|
+
+    # Cada uno de los valores siguientes se deben declarar en variables de entorno con el nombre que se especifica.
+    az.tenant_id = ENV['AZURE_TENANT_ID']
+    az.client_id = ENV['AZURE_CLIENT_ID']
+    az.client_secret = ENV['AZURE_CLIENT_SECRET']
+    az.subscription_id = ENV['AZURE_SUBSCRIPTION_ID']
+
+    az.vm_image_urn = 'Canonical:UbuntuServer:16.04-LTS:latest'
+    az.vm_name = 'maquinaservicio'
+    az.vm_size = 'Basic_A0'
+    az.resource_group_name = 'resourcegrouphito5'
+    az.location = 'francecentral'
+    az.tcp_endpoints = 80
+  end
+end
+~~~
+
+Respecto al contenido del Vagrantfile anterior, debemos destacar algunas cuestiones, que se mencionarán posteriormente:
+- El uso de **variables de entorno** que deberán estar declaradas en nuestra máquina.
+- **Otros parámetros (adicionales) para personalizar la máquina virtual** a las necesidades del proyecto
+- Especificación del **provider de Azure**
+
+###### Uso de variables de entorno
+
+Nos podemos ver con un "problema" inicial, y es que se están haciendo uso de variables de entorno que no tenemos declaradas en nuestro sistema para asignar el valor de los campos obligatorios que deberemos especificar para Azure. Por tanto, previamente, nosotros debemos exportar como variables de entorno esos valores, porque sino no se van a detectar. Como podemos ver en este [otro tutorial secundario](https://blog.scottlowe.org/2017/12/11/using-vagrant-with-azure/), en concreto, deberemos especificar el valor de los siguientes parámetros, relacionados con los ID de Tenant (*inquilino*), cliente y subscripción de Azure: `az.tenant_id`, `az.client_id`, `az.client_secret ` y  `az.subscription_id `.
+
+Los tres primeros parámetros (*tenant_id*, *client_id*, *client_secret*), podemos obtenerlos de la salida que nos proporciona la siguiente orden:
+~~~
+$ az ad sp create-for-rbac
+~~~
+
+
+Respecto al último de los parámetros, el cuál se corresponde con el ID de la suscripción en Azure, podemos obtenerlo ejecutando la siguiente orden con el cliente de Azure por línea de órdenes:
+~~~
+$ az account list --query '[?isDefault].id' -o tsv
+~~~
+
+Una vez tenemos los valores correspondientes, nos basta con crearnos variables de entorno con el mismo nombre de las utilizadas en el VagrantFile anterior de la siguiente forma:
+~~~
+$ export AZURE_TENANT_ID=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+$ export AZURE_CLIENT_ID=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+$ export AZURE_CLIENT_SECRET=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+$ export AZURE_SUBSCRIPTION_ID=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+~~~
+
+###### Otros parámetros adicionales en Vagrantfile
+Además, le podemos añadir una serie de líneas que nos permitan especificar aspectos concretos de la máquina virtual que queremos crear, como puede ser el nombre de la máquina, el grupo de recursos asociado, o la región a utilizar. Concretamente, especificaremos todos los parámetros con los que hemos ido trabajando hasta ahora:
+- Imagen de Ubuntu Server con la versión 16.04.5 (LTS) (con `vm_image_urn` ).
+- Grupo de recursos en la región **Francia Central**, ya que como vimos en el hito anterior, fue con la que obtuvimos mejores resultados (con `location`).
+- Tamaño de la máquina virtual **Basic_AO** (con `vm_size`).
+- Abrimos el **puerto 80**, que es desde el que ejecutamos la aplicación (con `tcp_endpoints`).
+
+Con estos añadidos, se crearía una máquina con las mismas características que la del hito anterior.
+
+###### Uso del provider de Azure
+
+Para especificar que estamos trabajando con Azure podemos hacerlo de dos formas diferentes:
+
+1. Indicándolo por línea de órdenes al hacer `vagrant up`, de la siguiente forma:
+~~~
+$ vagrant up --provider=azure
+~~~
+
+
+2. Indicándolo al inicio del fichero Vagrantfile, con `require`, y el plugin del proveedor de Azure que nos descargamos previamente de la siguiente forma: `require 'vagrant-azure'`.
+
+En este caso, me he decantado por la segunda opción y se ha definido dentro del Vagrantfile. Esto se debe a que, tal y como se comentó en clase, de esta manera podremos hacer `require` de todo lo que necesitemos, y hacer así la orquestación dentro del fichero Vagrant de todas las máquinas virtuales que queramos.
+
+
+##### <u>Orquestación de máquinas virtuales<u/>
+Una vez sabemos lo básico de cómo crear desde Vagrant una máquina en Azure, deberemos realizar el proceso para crear dos máquinas, el cuál es el que se ha definido en el Vagrantfile. Para ello, partiendo del Vagrantfile de ejemplo que he mostrado en la sección anterior, se han definido dos máquinas virtuales, cada una con su nombre y sus especificaciones necesarias. Como ayuda para la creación de más de una máquina, se ha consultado [este enlace](https://www.rubydoc.info/gems/vagrant-azure/1.3.0) comentado en clase.
+
+**Desde [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/Vagrantfile) podemos acceder al contenido del Vagrantfile resultante**. De dicho fichero, los aspectos más relevantes y que se deben destacar para cada una de las máquinas especificadas en el Vagrantfile  son los siguientes:
+
+- Ambas máquinas pertenecen al **mismo grupo de recursos**. Para ello hemos utilizado el parámetro `resource_group_name`. Para indicar la localización del grupo de recursos se hace uso de `location`. Se ha especificado la misma localización que se utilizó para el hito anterior, ya que se hicieron las distintas comprobaciones que nos permitieron dar con la más adecuada para el proyecto. Para mayor detalle, se puede consultar en el apartado 2 de [la documentación del Hito 4](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).  
+
+- Cada una de las máquinas tendrá un nombre asignado, mediante `vm_name`. Además, cada una tendrá especificado la imagen y tamaño de la máquina con `vm_image_urn` y `vm_size` respectivamente. Para determinar la imagen y tamaño escogidos, se han seguido los mismos criterios ya justificados en el hito anterior, a los cuáles se puede acceder en el apartado número dos de [la documentación del Hito 4](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).  
+
+- Para cada una de las máquinas, **se ha realizado su provisionamiento** con el playbook correspondiente. En el caso de la máquina `maquinaservicio`, se realizará el aprovisionamiento como lo hemos realizado hasta ahora, y en el caso de la máquina `maquinamongo`, utilizaremos un nuevo playbook que se encarga de provisionar la máquina virtual con mongo, además de configurar y reiniciar el servicio. Podemos realizarlo indicando `provision` y el playbook asociado, como veremos en secciones posteriores de este documento.
+
+- **Se han abierto los puertos correspondientes** para que se pueda ejecutar la aplicación. Para ello, haremos uso del atributo `tcp_endpoints`.
+  - El puerto 80 para acceder al servicio REST
+  - El puerto 27017 que el que utiliza *MongoDB* por defecto.
+
+
+- **Se ha definido una red interna** llamada `andreanetwork` que permitirá poder comunicar las máquinas mediante la red interna. De esta forma, la primera máquina en crearse (en este caso `maquinaservicio`, se le asignará la IP **10.0.0.4**, y a la segunda máquina (`maquinamongo`) le corresponderá la dirección **10.0.0.5**). Para ello, hemos utilizado el parámetro `virtual_network_name`.
+
+**De esta forma, tan solo con ejecutar la orden `vagrant up --no-parallel`, podremos crear y provisionar dos máquinas en azure, con los requisitos  y configuración necesaria para el proyecto**. Es necesario añadir la opción mencionada (`--no-parallel`), ya que de otra forma, al intentar crear las máquinas en paralelo, al estar usando el mismo grupo de recursos, se producen errores relacionados con la asignación de direcciones. De hecho, si se consulta la [documentación oficial](https://www.vagrantup.com/docs/cli/up.html), podemos ver que esta opción debe ser utilizada siempre y cuando el provider en cuestión no permita la creación paralela de las máquinas virtuales, como resulta ser el caso en cuestión.
+
+
+
+
+##### <u>Aprovisionamiento de las máquinas virtuales<u/>
+Por último, para finalizar con la documentación del fichero [Vagrantfile](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/Vagrantfile), faltaría ver la provisión de las máquinas que se realiza directamente desde Vagrant, después de la creación de cada una de las máquinas.
+
+###### Aprovisionamiento de la máquina que aloja el servicio rest
+
+###### Copiar ficheros en la máquina virtual desde Vagrant
+En primer lugar, mencionar que, tal y como se recomendó en clase, uno de los cambios realizados en este hito consiste en copiar en la máquina únicamente aquellos ficheros que hagan falta para ejecutar la aplicación (y no todo el contenido que tenemos en el repositorio de Github, como pueden ser los ficheros de documentación o las imágenes utilizadas en dichas documentaciones).
+Esto podemos llevarlo a cabo con `file`, tal y como podemos ver en la [documentación oficial](https://www.vagrantup.com/docs/provisioning/file.html).
+
+En nuestro caso, pondremos en el fichero Ansiblefile la siguiente línea (siendo <fichero> el fichero en cuestión que queremos copiar en la máquina):
+~~~
+maquina1.vm.provision "file", source: "../<fichero>", destination: "/home/vagrant/ProyectoCC/<fichero>"
+~~~
+
+Concretamente, indicamos `maquina1` porque es la máquina que queremos provisionar con dichos ficheros (en este caso concreto).
+
+
+###### Provisionamiento con el playbook.yml
+Para terminar el provisionamiento desde Vagrant, una vez que se ha creado la máquina virtual `maquina1` (la cual alojará el servicio REST) realizamos lo siguiente, siendo [playbook.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook.yml) el playbook que provisiona el servicio REST.
+
+~~~
+maquina1.vm.provision "ansible" do |ansible|
+  ansible.playbook = "playbook.yml"
+end
+~~~
+
+Este [playbook.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook.yml), previamente mencionado, está basado en el realizado para el Hito 3, excepto por dos modificaciones:
+1. Ya proporcionamos, en el Vagrantfile, los ficheros necesarios para ejecutar el proyecto con `file`, por lo que no necesitamos ni instalar git ni por tanto, clonar el repositorio en cuestión.
+
+2. Por problemas, al parecer, de sincronización, no me funcionaba la instalación con apt de varios paquetes en la misma tarea, por lo que se ha desglosado en distintas tareas dentro del mismo playbook (con igual funcionalidad).
+
+
+#### Aprovisionamiento de la máquina que aloja la base de datos
+
+Para poder realizar la orquestación de dos máquinas, se ha avanzado el proyecto de forma que podamos provisionar una máquina con MongoDB en local (hasta ahora utilizábamos *mLab*).
+
+Para provisionar la máquina virtual con MongoDB se ha llevado a cabo la realización de un *playbook* al que hemos denominado [playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml). La información completa acerca de cómo se lleva a cabo la provisión se encuentra en [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/provisionamiento_mongo.md).
+
+
+Por tanto, para provisionar desde Vagrant, una vez que se ha creado la máquina virtual `maquina2` realizamos lo siguiente:
+~~~
+maquina2.vm.provision "ansible" do |ansible|
+  ansible.playbook = "playbook-mongodb.yml"
+end
+~~~
+
+
+#### Funcionamiento  y despliegue del Proyecto
+Por último, se va a mostrar que, simplemente con lo proporcionado en el fichero Vagrantfile y los playbook de provisionamiento, podemos desplegar en la nube las máquinas virtuales con correcto y total funcionamiento.
+
+Para ello, nos situamos en primer lugar en el directorio `orquestacion` de este repositorio, y ejecutamos la orden `vagrant up --no-parallel` como ya ha sido comentado en secciones anteriores de este documento. Para ello, se han tenido que especificar las variables de entorno relacionadas con la suscripción y cliente de Azure, tal y como ya se comentó previamente.
+
+En la siguiente imagen se puede ver, cómo efectivamente, comienza la creación de las dos máquinas. Al haber especificado explícitamente que queremos que no se lleve a cabo una creación en paralelo de ambas máquinas, primero se va a crear y provisionar la primera de ellas (que en este caso se corresponde con la que aloja el servicio, la cual se llama **maquinaservicio**) yen segundo lugar se creará y provisionará la que alojará la base de datos (llamada **maquinamongo**).
+
+
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/1_creacion_maquinas.png" /></p>
+
+Una vez finalice la creación y despliegue de la primera de las máquinas, se procederá al provisionamiento de la misma, que, tal y como se puede ver en la imagen que se muestra a continuación, finaliza de forma correcta.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/2_provisionamiento1.png" /></p>
+
+
+Del mismo modo que se ha llevado a cabo para la primera de las máquinas, se procede a la creación y provisionamiento de la segunda máquina (**maquinamongo**), que, tal y como se muestra en la siguiente imagen, también se crea y se provisiona de manera correcta.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/3_provisionamiento2.png" /></p>
+
+
+Una vez finalizado este proceso, accedemos mediante ssh a la primera de las máquinas. Al hacer `cd Proyecto`, y posteriormente `ls`, podemos ver cómo únicamente se han copiado los archivos necesarios, y no el proyecto de Github al completo, tal y como habíamos especificado en la sección de provisionamiento de esta máquina. Al ejecutar el servicio, podemos ver en la siguiente imagen, que arranca sin problemas.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/4_ejecutoFlask.png" /></p>
+
+
+Hacemos un paso homólogo para la máquina que tiene mongo, y consultamos el estado del servicio correspondiente a la base de datos. Tal y como se ve en la imagen que se encuentra a continuación, el servicio está funcionando sin problema.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/5_mongo_activado.png" /></p>
+
+
+Ahora, una vez comprobado el funcionamiento de ambas máquinas, abrimos una nueva terminal, y accedemos a la ruta raiz del servicio, y tal y como se puede ver, devuelve `status:OK`.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+
+
+Sin embargo, con esta petición no estariamos accediendo a la base de datos, y por tanto no estamos comprobando que realmente funcione la conexión con la misma. Por ello, accedemos a una ruta que sí que sabemos que se conecta a la base de datos: la que muestra las peticiones. A continuación podemos ver cómo accede (aunque como no hay predicciones almancenadas, no tiene contenido).
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+
+Para ver que realmente funciona, podemos irnos a la máquina `maquinamongo`,y consultar los últimos logs registrados en el fichero de logs de Mongo, el cuál se encuentra en la ruta `/var/log/mongodb/mongodb.log`. Tal y como se puede ver en la siguiente imagen, realmente estamos accediendo al servicio desde la IP `10.0.0.4`
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/7_logs.png" /></p>
+
+Para asegurarnos, vamos a comprobar que esta IP se corresponda con la de la máquina que ejecuta el servicio. Como se muestra en la siguiente imagen, podemos ver que efectivamente es así, por lo cuál se está realizando la petición de la manera correcta y esperada.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/10_ip_m1.png" /></p>
+
+
+Por último, desde la terminal de mi ordenador personal, desde donde estamos realizando las consultas, vamos a realizar un PUT de una predicción, tal y como se muestra a continuación. Podemos ver en la siguiente imagen, que el PUT se realiza de manera correcta, y que al acceder a la ruta que muestra las predicciones, ésta predicción se muestra.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/8_add_conPUT.png" /></p>
+
+
+Si además, accedemos a la base de datos de Mongo en la máquina virtual `maquinamongo`, podemos ver que efectivamente está almacenada dicha predicción.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/9_esta_en_la_bd.png" /></p>
+
+
+**Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta.**
+
+
+### Avance del proyecto <a name="id18"></a>
+
+
+#### Máquina con MongoDB local
+
+Hasta ahora, habíamos trabajado con MongoDB a través de mLab, de manera que no habíamos necesitado alojar la base de datos en una máquina virtual adicional ( o incluso en una máquina virtual que alojara tanto el servicio REST implementado hasta el momento como la base de datos).
+
+
+En este hito, vamos a prescindir de mLab y utilizar una nueva máquina virtual, de forma que la provisionaremos con todo lo necesario para poder alojar MongoDB en ella. Para ello, lo principal es modificar la forma en la que realizamos la conexión con el cliente de MongoDB, ya que donde antes nos conectábamos con mLab, a partir de este momento podremos realizarlo de la siguiente manera:
+~~~
+client = MongoClient("mongodb://<direccion> :27017/predictions")
+~~~
+De esta forma, podremos conectarnos con la base de datos en la máquina cuya IP se corresponda con el valor en `<direccion>` a través del puerto 27017(que es el puerto por defecto para MongoDB), y usar una base de datos llamada *predictions* (que se crearía automáticamente en el caso de que no existiese).
+
+##### Conectar con la base de datos en una máquina diferente de la del servicio REST.
+En nuestro caso, tenemos dos máquinas:
+- Una máquina `maquinaservicio` con el servicio rest (IP: 10.0.0.4)
+- Una máquina `maquinamongo` con MongoDB (IP: 10.0.0.5)
+
+Por tanto, queremos que la máquina con el servicio rest (`maquinaservicio`) se conecte a la base de datos alojada en la máquina `maquinamongo` a través de la red interna a la que ambas pertenecen.
+
+De esta forma, la máquina con la IP 10.0.0.4 accederá a la información de la base de datos de la máquina con dirección IP 10.0.0.5, (ésta segunda escuchará a la dirección de la primera máquina (permitiendo escuchar peticiones de 10.0.0.4).
+
+
+###### Conectar a la base de datos de la máquina con IP interna 10.0.0.5
+Esta cuestión es sencilla, ya que simplemente indicamos, cuando creamos el cliente, dicha dirección.
+
+
+El único "problema" que podríamos tener, sería a la hora de pasar los test de travis, ya que en ese momento, no tendremos una máquina con la IP 10.0.0.5 a la que conectarnos. Tenemos, así de primeras, dos posibles soluciones:
+
+1. Utilizar **variables de entorno**, que permitan en Travis escuchar en *localhost*, yen nuestro servicio en la IP que queramos establecer en dicha variable de entorno (o valor por defecto, de no estar declarada dicha variable)
+
+2. Modificar desde Ansible o Vagrant la línea del fichero que establece la conexión con la base de datos, cambiando la dirección a la que nos interese.
+
+Por simplicidad, **se ha elegido la primera opción, por lo que declaramos en Travis una variable de entorno, que será la que contenga el valor de la IP a utilizar.**
+
+Además, se ha declarado en Python, que a la hora de coger el valor de la variable de entorno, si esta no está definida, coja un valor por defecto  para todos aquellos casos en los que la variable de entorno no exista. Este valor por defecto, he especificado que sea `10.0.0.5`, de forma que, cuando ejecutemos el proyecto en la máquina virtual de Azure, coja directamente el valor por defecto y  nos ahorremos tener que declarar variables de entorno en la máquina virtual.
+
+A continuación podemos ver el código en Python asociado a este cambio.
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/11_mongoClient.png" /></p>
+
+###### Fichero *.travis.yml*
+Además de establecer el valor para la variable de entorno `IP` previamente comentada,  para la correcta ejecución del proyecto, tendremos que instalar también un [servicio de MongoDB en Travis](https://docs.travis-ci.com/user/database-setup/#mongodb), de forma que pueda ejecutar la aplicación y testearla. A continuación se puede ver el contenido del fichero [.travis.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/.travis.yml) tras los cambios comentados.
+
+~~~
+language: python
+python:
+- '3.5'
+- '3.6'
+services:
+  - mongodb
+env:
+- IP='127.0.0.1'
+install:
+- pip install -r requirements.txt
+script:
+- python -m unittest discover test/
+~~~
+
+
+##### Configurar MongoDB en una máquina virtual
+
+Por último, quedaría por provisionar una máquina con todo lo necesario para poder ejecutar el servicio de base de datos. Para ello, se ha utilizado un playbook de ansible, que se encarga de descargar MongoDB, y configurarlo para que permita escuchar únicamente de las IPs que nos interesan.
+
+
+
+#### Provisionamiento de una máquina virtual para MongoDB
+
+Para aprovisionar la máquina virtual con MongoDB se ha llevado a cabo la realización de un *playbook* al que hemos denominado [playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml).
+
+Inicialmente se realizaba el provisionamiento con un [rol de ansible para MongoDB](https://github.com/UnderGreen/ansible-role-mongodb). Sin embargo, a pesar del buen funcionamiento que se obtenía con dicho rol, se decidió descartar esta forma de provisionar por diversas razones:
+
+1. El rol en cuestión provisionaba más cosas de las necesarias para el funcionamiento de la aplicación.
+
+2. Este rol realiza una configuración extra sobre el/los servicio/s a utilizar, que impedía la correcta ejecución de nuestro proyecto, y que requería deshacer muchas de las acciones que llevaba a cabo de por sí en la provisión con dicho playbook.
+
+
+
+Además, consultando la [información existente acerca de las buenas prácticas en Ansible](https://www.ncora.com/blog/como-se-usan-los-roles-y-playbooks-en-ansible/),  en muchos casos recomiendan usar configurar sin roles de este tipo si el playbook es para un único despliegue o la configuración que buscamos realizar es demasiado simple (y en casos complejos  utilizar roles, donde podremos adaptar las configuraciones ya predefinidas).
+
+Por ello, finalmente me decanté por instalarlo manualmente desde ansible, con el gestor de paquetes  **apt**, y así realizar la simple y única configuración que necesito para mi proyecto, sin necesidad de realizar y deshacer configuraciones que realmente no son necesarias.
+
+##### Fichero *playbook-mongodb.yml*
+El playbook resultante ([playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml)) se puede ver a continuación:
+~~~
+---
+- name: Deploy MongoDB and configure the database
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install mongodb package
+      apt: pkg=mongodb state=latest
+
+    - name: Allow remote connections
+      lineinfile:
+        dest: /etc/mongodb.conf
+        regexp: "^\\s*bind_ip.*"
+        line: "bind_ip = [127.0.0.1 10.0.0.4]"
+        state: present
+
+    - name: Restart mongodb service
+      service: name=mongodb state=restarted
+
+~~~
+
+###### Aspectos a destacar del contenido del playbook
+- En primer lugar, usamos apt para descargar la última versión que tenga disponible de *MongoDB*. Para ello, he partido de los ejemplos vistos [aquí](https://cloudmesh.github.io/introduction_to_cloud_computing/class/lesson/ansible_playbook.html).
+
+- Por defecto, MongoDB tiene configurado que la única dirección IP desde la cuál escucha es **localhost**. Esta configuración es necesario modificarla, ya que queremos que escuche también desde la otra máquina en nuestra red interna. Para ello, necesitamos modificar el parámetro `bind_ip` del fichero de configuración de Mongo, que se encuentra en `/etc/mongodb.conf`.
+
+  Sin embargo, no basta con modificar dicho valor a la IP que necesitemos, ya que también debe permitir escuchar desde localhost, ya que debe ejecutar el servicio. Para ello, hay dos opciones principales:
+
+  - **Permitir escuchar desde localhost y desde la IP que queramos (en nuestro caso sería la IP interna de la otra máquina, que se corresponde con 10.0.0.4)**
+
+  - Permitir escuchar desde todos los puertos (estableciendo `bind_ip = 0.0.0.0`) y configurar de alguna forma que solo se permita el acceso a la IP de la máquina que queremos(por ejemplo, mediante `iptables`)
+
+  Me decanté por la primera opción, ya que es más sencilla y evita tener que modificar más configuraciones de la máquina. Para ello, indicaremos que pueda escuchar de esas dos direcciones estableciendo **bind_ip = [127.0.0.1 10.0.0.4]**, lo cuál podemos hacer desde Ansible, modificando la línea que contiene "bind_ip", como se puede ver en los [ficheros de Ansible](https://github.com/Ilyes512/ansible-role-mongodb/blob/master/tasks/main.yml) que utiliza uno de los roles que he encontrado en Github.
+
+  - Por último, como se han realizado cambios en la configuración, hay que reiniciar el servicio, lo cuál también podemos llevarlo a cabo desde ansible como podemos ver [aquí](https://github.com/ansible/ansible/issues/5712).
+
+##### Problemas encontrados:
+Tal y como he podido ver intentando solucionar el error que obtenía al intentar escuchar desde dos IPs únicamente (comentado en el apartado de arriba), la documentación de MongoDB no proporciona una solución válida única, sino que, además de fallar en una gran cantidad de casos, cada una de las posibles soluciones que encontré era distinta y no funcionaba bien. Mi solución realmente la encontré como mezcla de otras que formas que vi que habían sido la solución en otros casos, pero no la he encontrado documentada ni comentada en ninguna parte.
+
+**Dado que sin ver las soluciones de otros, nunca habría dado con la mía, he añadido mi solución en stackoverflow, como se puede ver en [esta duda de stackoverflow](https://stackoverflow.com/questions/30884021/mongodb-bind-ip-wont-work-unless-set-to-0-0-0-0/54281850#54281850).**
+
+
+
+---
+
+
+
+
 ### Licencia <a name="id10"></a>
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
