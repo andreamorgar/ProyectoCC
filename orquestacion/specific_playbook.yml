@@ -1,11 +1,11 @@
 ---
 - hosts: all
   tasks:
-    - name: Clone repo
-      git:
-        repo: https://github.com/andreamorgar/ProyectoCC.git
-        clone: yes
-        dest: ProyectoCC
+    # - name: Clone repo
+    #   git:
+    #     repo: https://github.com/andreamorgar/ProyectoCC.git
+    #     clone: yes
+    #     dest: ProyectoCC
 
     - name: Install requirements
       pip:

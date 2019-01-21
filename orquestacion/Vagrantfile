@@ -7,9 +7,7 @@ Vagrant.configure("2") do |config|
 
   # Configuramos las diferentes maquinas
   config.vm.define "maquina1" do |maquina1|
-    # maquina1.vm.network "public_network", ip: "192.168.0.17"
     maquina1.vm.hostname = "maquinaservicio"
-    # maquina1.vm.network "private_network", ip: "192.168.76.10"
 
     maquina1.vm.provider "azure" do |az|  # Parametros para AZURE
       # Variables de entorno
@@ -19,7 +17,6 @@ Vagrant.configure("2") do |config|
       az.subscription_id = ENV['AZURE_SUBSCRIPTION_ID']
 
       # Datos para la MV
-      # az.vm.network "private_network", ip: "192.168.0.10" #https://www.vagrantup.com/docs/networking/private_network.html
       az.vm_image_urn = 'Canonical:UbuntuServer:16.04-LTS:latest'
       az.vm_name = 'maquinaservicio'
       az.admin_username = "andreamg"
@@ -29,6 +26,13 @@ Vagrant.configure("2") do |config|
       az.tcp_endpoints = [80,27017]
       az.virtual_network_name = "andreanetwork"
     end
+
+    # Copiamos en la máquina solo los ficheros que nos hacen falta para ejecutar la app
+    maquina1.vm.provision "file", source: "../app_flask.py", destination: "/home/vagrant/ProyectoCC/app_flask.py"
+    maquina1.vm.provision "file", source: "../predictionDB.py", destination: "/home/vagrant/ProyectoCC/predictionDB.py"
+    maquina1.vm.provision "file", source: "../weather_class.py", destination: "/home/vagrant/ProyectoCC/weather_class.py"
+    maquina1.vm.provision "file", source: "../requirements.txt", destination: "/home/vagrant/ProyectoCC/requirements.txt"
+
 
     maquina1.vm.provision "ansible" do |ansible|
       # ansible.verbose = "vvvv"
@@ -42,8 +46,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "maquina2" do |maquina2|
-    # maquina2.vm.network "public_network", ip: "192.168.0.19"
-    # maquina2.vm.network "private_network", ip: "192.168.0.11" #https://www.vagrantup.com/docs/networking/private_network.html
 
     maquina2.vm.hostname = "maquinamongo"
     maquina2.vm.provider "azure" do |az|  # Parametros para AZURE
