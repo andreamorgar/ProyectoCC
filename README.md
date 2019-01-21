@@ -158,6 +158,13 @@ Se ha comprobado que el provisionamiento realizado por @AlejandroCN7 funciona de
 
 #### Últimos avances en el proyecto  <a name="id14"></a>
 
+Se ha llevado a cabo el provisionamiento de una máquina para poder disponer de MongoBD en local:
+- Hasta ahora se utilizaba MongoDB desde mLab, por lo que se ha adaptado para poder ejecutarlo desde cualquier IP, ya sea localhost, o una que nosotros establezcamos.
+
+- También se ha realizado el provisionamiento con ansible correspondiente, junto con la configuración del servicio asociado, para que, una vez finalizado el provisionamiento, tengamos el servicio correctamente configurado y lanzado.
+
+A la documentación correspondiente a este avance se puede acceder desde [aquí](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/avance_mongoDbLocal.md).
+
 ---
 
 
