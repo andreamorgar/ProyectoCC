@@ -7,7 +7,7 @@ En este hito, vamos a prescindir de mLab y utilizar una nueva máquina virtual, 
 ~~~
 client = MongoClient("mongodb://<direccion> :27017/predictions")
 ~~~
-De esta forma, podremos conectarnos con la base de datos en la máquina cuya IP se corresponda con <direccion>, a través del puerto 27017(que es el puerto por defecto para MongoDB), y usar una base de datos llamada *predictions* (que se crearía automáticamente en el caso de que no existiese).
+De esta forma, podremos conectarnos con la base de datos en la máquina cuya IP se corresponda con el valor en `<direccion>` a través del puerto 27017(que es el puerto por defecto para MongoDB), y usar una base de datos llamada *predictions* (que se crearía automáticamente en el caso de que no existiese).
 
 ### Conectar con la base de datos en una máquina diferente de la del servicio REST.
 En nuestro caso, tenemos dos máquinas:
