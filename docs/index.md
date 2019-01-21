@@ -1507,8 +1507,5 @@ Tal y como he podido ver intentando solucionar el error que obtenía al intentar
 
 ---
 
-
-
-
 ### Licencia <a name="id10"></a>
 Este software se desarrollará bajo la licencia GNU General Public License v3.0
