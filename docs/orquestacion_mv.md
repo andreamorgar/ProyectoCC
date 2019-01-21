@@ -151,18 +151,9 @@ Una vez sabemos lo básico de cómo crear desde Vagrant una máquina en Azure, d
 
 
 #### Aprovisionamiento de la máquina que aloja el servicio rest
-Para provisionar desde Vagrant, una vez que se ha creado la máquina virtual `maquina1` (la cual alojará el servicio REST) realizamos lo siguiente, siendo [playbook.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook.yml) el playbook que provisiona el servicio REST.
-
-~~~
-maquina1.vm.provision "ansible" do |ansible|
-  ansible.playbook = "playbook.yml"
-end
-~~~
-
-Este playbook, está basado en el realizado para el Hito 3, pero con algunos cambios a los que se puede acceder [aquí](./playbook-hito5.md).
 
 ###### Copiar ficheros en la máquina virtual desde Vagrant
-Por último, mencionar que, tal y como se recomendó en clase, uno de los cambios realizados en este hito consiste en copiar en la máquina únicamente aquellos ficheros que hagan falta para ejecutar la aplicación (y no todo el contenido que tenemos en el repositorio de Github, como pueden ser los ficheros de documentación o las imágenes utilizadas en dichas documentaciones).
+En primer lugar, mencionar que, tal y como se recomendó en clase, uno de los cambios realizados en este hito consiste en copiar en la máquina únicamente aquellos ficheros que hagan falta para ejecutar la aplicación (y no todo el contenido que tenemos en el repositorio de Github, como pueden ser los ficheros de documentación o las imágenes utilizadas en dichas documentaciones).
 Esto podemos llevarlo a cabo con `file`, tal y como podemos ver en la [documentación oficial](https://www.vagrantup.com/docs/provisioning/file.html).
 
 En nuestro caso, pondremos en el fichero Ansiblefile la siguiente línea (siendo <fichero> el fichero en cuestión que queremos copiar en la máquina):
@@ -172,11 +163,27 @@ maquina1.vm.provision "file", source: "../<fichero>", destination: "/home/vagran
 
 Concretamente, indicamos `maquina1` porque es la máquina que queremos provisionar con dichos ficheros (en este caso concreto).
 
+
+###### Provisionamiento con el playbook.yml
+Para terminar el provisionamiento desde Vagrant, una vez que se ha creado la máquina virtual `maquina1` (la cual alojará el servicio REST) realizamos lo siguiente, siendo [playbook.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook.yml) el playbook que provisiona el servicio REST.
+
+~~~
+maquina1.vm.provision "ansible" do |ansible|
+  ansible.playbook = "playbook.yml"
+end
+~~~
+
+Este [playbook.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook.yml), previamente mencionado, está basado en el realizado para el Hito 3, excepto por dos modificaciones:
+1. Ya proporcionamos, en el Vagrantfile, los ficheros necesarios para ejecutar el proyecto con `file`, por lo que no necesitamos ni instalar git ni por tanto, clonar el repositorio en cuestión.
+
+2. Por problemas, al parecer, de sincronización, no me funcionaba la instalación con apt de varios paquetes en la misma tarea, por lo que se ha desglosado en distintas tareas dentro del mismo playbook (con igual funcionalidad).
+
+
 #### Aprovisionamiento de la máquina que aloja la base de datos
 
-Para poder realizar la orquestación de dos máquinas, se ha avanzado el proyecto de forma que se podamos aprovisionar una máquina con MongoDB en local (hasta ahora utilizábamos *mLab*).
+Para poder realizar la orquestación de dos máquinas, se ha avanzado el proyecto de forma que podamos provisionar una máquina con MongoDB en local (hasta ahora utilizábamos *mLab*).
 
-Para provisionar la máquina virtual con MongoDB se ha llevado a cabo la realización de un *playbook* al que hemos denominado [playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml). La información completa acerca de cómo se lleva a cabo la provisión se encuentra en [este enlace](./provisionamiento_mongodb.md).
+Para provisionar la máquina virtual con MongoDB se ha llevado a cabo la realización de un *playbook* al que hemos denominado [playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml). La información completa acerca de cómo se lleva a cabo la provisión se encuentra en [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/provisionamiento_mongo.md).
 
 
 Por tanto, para provisionar desde Vagrant, una vez que se ha creado la máquina virtual `maquina2` realizamos lo siguiente:
@@ -187,4 +194,52 @@ end
 ~~~
 
 
-### <u>Funcionamiento del servicio<u/>
+## Funcionamiento del Proyecto
+Por último, se va a mostrar que, simplemente con lo proporcionado en el fichero Vagrantfile y los playbook de provisionamiento, podemos desplegar en la nube las máquinas virtuales con correcto y total funcionamiento.
+
+Para ello, nos situamos en primer lugar en el directorio `orquestacion` de este repositorio, y ejecutamos la orden `vagrant up --no-parallel` como ya ha sido comentado en secciones anteriores de este documento. Para ello, se han tenido que especificar las variables de entorno relacionadas con la suscripción y cliente de Azure, tal y como ya se comentó previamente.
+
+En la siguiente imagen se puede ver, cómo efectivamente, comienza la creación de las dos máquinas. Al haber especificado explícitamente que queremos que no se lleve a cabo una creación en paralelo de ambas máquinas, primero se va a crear y provisionar la primera de ellas (que en este caso se corresponde con la que aloja el servicio, la cual se llama **maquinaservicio**) yen segundo lugar se creará y provisionará la que alojará la base de datos (llamada **maquinamongo**).
+
+
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/1_creacion_maquinas.png" /></p>
+
+Una vez finalice la creación y despliegue de la primera de las máquinas, se procederá al provisionamiento de la misma, que, tal y como se puede ver en la imagen que se muestra a continuación, finaliza de forma correcta.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/2_provisionamiento1.png" /></p>
+
+
+Del mismo modo que se ha llevado a cabo para la primera de las máquinas, se procede a la creación y provisionamiento de la segunda máquina (**maquinamongo**), que, tal y como se muestra en la siguiente imagen, también se crea y se provisiona de manera correcta.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/3_provisionamiento2.png" /></p>
+
+
+Una vez finalizado este proceso, accedemos mediante ssh a la primera de las máquinas. Al hacer `cd Proyecto`, y posteriormente `ls`, podemos ver cómo únicamente se han copiado los archivos necesarios, y no el proyecto de Github al completo, tal y como habíamos especificado en la sección de provisionamiento de esta máquina. Al ejecutar el servicio, podemos ver en la siguiente imagen, que arranca sin problemas.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/4_ejecutoFlask.png" /></p>
+
+
+Hacemos un paso homólogo para la máquina que tiene mongo, y consultamos el estado del servicio correspondiente a la base de datos. Tal y como se ve en la imagen que se encuentra a continuación, el servicio está funcionando sin problema.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/5_mongo_activado.png" /></p>
+
+
+Ahora, una vez comprobado el funcionamiento de ambas máquinas, abrimos una nueva terminal, y accedemos a la ruta raiz del servicio, y tal y como se puede ver, devuelve `status:OK`.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+
+
+Sin embargo, con esta petición no estariamos accediendo a la base de datos, y por tanto no estamos comprobando que realmente funcione la conexión con la misma. Por ello, accedemos a una ruta que sí que sabemos que se conecta a la base de datos: la que muestra las peticiones. A continuación podemos ver cómo accede (aunque como no hay predicciones almancenadas, no tiene contenido).
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+
+Para ver que realmente funciona, podemos irnos a la máquina `maquinamongo`,y consultar los últimos logs registrados en el fichero de logs de Mongo, el cuál se encuentra en la ruta `/var/log/mongodb/mongodb.log`. Tal y como se puede ver en la siguiente imagen, realmente estamos accediendo al servicio desde la IP `10.0.0.4`
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/7_logs.png" /></p>
+
+Para asegurarnos, vamos a comprobar que esta IP se corresponda con la de la máquina que ejecuta el servicio. Como se muestra en la siguiente imagen, podemos ver que efectivamente es así, por lo cuál se está realizando la petición de la manera correcta y esperada.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/10_ip_m1.png" /></p>
+
+
+Por último, desde la terminal de mi ordenador personal, desde donde estamos realizando las consultas, vamos a realizar un PUT de una predicción, tal y como se muestra a continuación. Podemos ver en la siguiente imagen, que el PUT se realiza de manera correcta, y que al acceder a la ruta que muestra las predicciones, ésta predicción se muestra.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/8_add_conPUT.png" /></p>
+
+
+Si además, accedemos a la base de datos de Mongo en la máquina virtual `maquinamongo`, podemos ver que efectivamente está almacenada dicha predicción.
+<p align="center"><img alt="Image" width="500px" src="./images/hito5/9_esta_en_la_bd.png" /></p>
+
+
+Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta. 

@@ -1,4 +1,4 @@
-#Provisionamiento de una máquina virtual para MongoDB
+# Provisionamiento de una máquina virtual para MongoDB
 
 Para aprovisionar la máquina virtual con MongoDB se ha llevado a cabo la realización de un *playbook* al que hemos denominado [playbook-mongodb.yml](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/playbook-mongodb.yml).
 
@@ -51,10 +51,9 @@ El playbook resultante ([playbook-mongodb.yml](https://github.com/andreamorgar/P
 
   Me decanté por la primera opción, ya que es más sencilla y evita tener que modificar más configuraciones de la máquina. Para ello, indicaremos que pueda escuchar de esas dos direcciones estableciendo **bind_ip = [127.0.0.1 10.0.0.4]**, lo cuál podemos hacer desde Ansible, modificando la línea que contiene "bind_ip", como se puede ver en los [ficheros de Ansible](https://github.com/Ilyes512/ansible-role-mongodb/blob/master/tasks/main.yml) que utiliza uno de los roles que he encontrado en Github.
 
-  ##### Problemas encontrados:
-  Tal y como he podido ver intentando solucionar el error que obtenía al intentar escuchar desde dos IPs únicamente, la documentación de MongoDB no proporciona una solución válida única, sino que, además de fallar en una gran cantidad de casos, cada una de las posibles soluciones que encontré era distinta y no funcionaba bien. Mi solución realmente la encontré como mezcla de otras que formas que vi que habían sido la solución en otros casos, pero no la he encontrado documentada ni comentada en ninguna parte.
-
-  **Dado que sin ver las soluciones de otros, nunca habría dado con la mía, he añadido mi solución en stackoverflow, como se puede ver en [esta duda de stackoverflow](https://stackoverflow.com/questions/30884021/mongodb-bind-ip-wont-work-unless-set-to-0-0-0-0/54281850#54281850).**
-
-
   - Por último, como se han realizado cambios en la configuración, hay que reiniciar el servicio, lo cuál también podemos llevarlo a cabo desde ansible como podemos ver [aquí](https://github.com/ansible/ansible/issues/5712).
+
+##### Problemas encontrados:
+Tal y como he podido ver intentando solucionar el error que obtenía al intentar escuchar desde dos IPs únicamente (comentado en el apartado de arriba), la documentación de MongoDB no proporciona una solución válida única, sino que, además de fallar en una gran cantidad de casos, cada una de las posibles soluciones que encontré era distinta y no funcionaba bien. Mi solución realmente la encontré como mezcla de otras que formas que vi que habían sido la solución en otros casos, pero no la he encontrado documentada ni comentada en ninguna parte.
+
+**Dado que sin ver las soluciones de otros, nunca habría dado con la mía, he añadido mi solución en stackoverflow, como se puede ver en [esta duda de stackoverflow](https://stackoverflow.com/questions/30884021/mongodb-bind-ip-wont-work-unless-set-to-0-0-0-0/54281850#54281850).**
