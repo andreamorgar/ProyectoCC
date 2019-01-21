@@ -202,44 +202,44 @@ Para ello, nos situamos en primer lugar en el directorio `orquestacion` de este 
 En la siguiente imagen se puede ver, cómo efectivamente, comienza la creación de las dos máquinas. Al haber especificado explícitamente que queremos que no se lleve a cabo una creación en paralelo de ambas máquinas, primero se va a crear y provisionar la primera de ellas (que en este caso se corresponde con la que aloja el servicio, la cual se llama **maquinaservicio**) yen segundo lugar se creará y provisionará la que alojará la base de datos (llamada **maquinamongo**).
 
 
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/1_creacion_maquinas.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/1_creacion_maquinas.png" /></p>
 
 Una vez finalice la creación y despliegue de la primera de las máquinas, se procederá al provisionamiento de la misma, que, tal y como se puede ver en la imagen que se muestra a continuación, finaliza de forma correcta.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/2_provisionamiento1.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/2_provisionamiento1.png" /></p>
 
 
 Del mismo modo que se ha llevado a cabo para la primera de las máquinas, se procede a la creación y provisionamiento de la segunda máquina (**maquinamongo**), que, tal y como se muestra en la siguiente imagen, también se crea y se provisiona de manera correcta.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/3_provisionamiento2.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/3_provisionamiento2.png" /></p>
 
 
 Una vez finalizado este proceso, accedemos mediante ssh a la primera de las máquinas. Al hacer `cd Proyecto`, y posteriormente `ls`, podemos ver cómo únicamente se han copiado los archivos necesarios, y no el proyecto de Github al completo, tal y como habíamos especificado en la sección de provisionamiento de esta máquina. Al ejecutar el servicio, podemos ver en la siguiente imagen, que arranca sin problemas.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/4_ejecutoFlask.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/4_ejecutoFlask.png" /></p>
 
 
 Hacemos un paso homólogo para la máquina que tiene mongo, y consultamos el estado del servicio correspondiente a la base de datos. Tal y como se ve en la imagen que se encuentra a continuación, el servicio está funcionando sin problema.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/5_mongo_activado.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/5_mongo_activado.png" /></p>
 
 
 Ahora, una vez comprobado el funcionamiento de ambas máquinas, abrimos una nueva terminal, y accedemos a la ruta raiz del servicio, y tal y como se puede ver, devuelve `status:OK`.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
 
 
 Sin embargo, con esta petición no estariamos accediendo a la base de datos, y por tanto no estamos comprobando que realmente funcione la conexión con la misma. Por ello, accedemos a una ruta que sí que sabemos que se conecta a la base de datos: la que muestra las peticiones. A continuación podemos ver cómo accede (aunque como no hay predicciones almancenadas, no tiene contenido).
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/6_funcionaProyecto_yBd.png" /></p>
 
 Para ver que realmente funciona, podemos irnos a la máquina `maquinamongo`,y consultar los últimos logs registrados en el fichero de logs de Mongo, el cuál se encuentra en la ruta `/var/log/mongodb/mongodb.log`. Tal y como se puede ver en la siguiente imagen, realmente estamos accediendo al servicio desde la IP `10.0.0.4`
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/7_logs.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/7_logs.png" /></p>
 
 Para asegurarnos, vamos a comprobar que esta IP se corresponda con la de la máquina que ejecuta el servicio. Como se muestra en la siguiente imagen, podemos ver que efectivamente es así, por lo cuál se está realizando la petición de la manera correcta y esperada.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/10_ip_m1.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/10_ip_m1.png" /></p>
 
 
 Por último, desde la terminal de mi ordenador personal, desde donde estamos realizando las consultas, vamos a realizar un PUT de una predicción, tal y como se muestra a continuación. Podemos ver en la siguiente imagen, que el PUT se realiza de manera correcta, y que al acceder a la ruta que muestra las predicciones, ésta predicción se muestra.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/8_add_conPUT.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/8_add_conPUT.png" /></p>
 
 
 Si además, accedemos a la base de datos de Mongo en la máquina virtual `maquinamongo`, podemos ver que efectivamente está almacenada dicha predicción.
-<p align="center"><img alt="Image" width="500px" src="./images/hito5/9_esta_en_la_bd.png" /></p>
+<p align="center"><img alt="Image" width="1000px" src="./images/hito5/9_esta_en_la_bd.png" /></p>
 
 
-Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta. 
+Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta.
