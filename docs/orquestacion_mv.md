@@ -2,10 +2,12 @@
 
 En este hito, vamos a realizar la orquestación de dos máquinas virtuales en Azure, donde una de las máquinas alojará la base de datos, y la otra, el servicio REST que estamos desarrollando (el cuál hace uso de dicha base de datos, ya que es de donde adquiere la información). Para ello, haremos uso de [Vagrant](https://www.vagrantup.com/), una herramienta para la creación y configuración de entornos de desarrollo.
 
-En esta documentación veremos dos cuestiones principales:
-1.  Cómo empezar a trabajar desde Vagrant con Azure, y cómo podemos, desde VagrantFile, crear dos máquinas virtuales en Azure con la misma red interna, de forma que podamos realizar una conexión entre ellas a nivel de red interna.
+En esta documentación veremos varias cuestiones principales:
+1.  Cómo empezar a trabajar desde Vagrant con Azure
 
-2. Provisionar una máquina virtual con MongoDB, de forma que escuche las peticiones de la otra máquina orquestada.
+2. Cómo podemos crear, desde VagrantFile, dos máquinas virtuales en Azure con la misma red interna, de forma que podamos realizar una conexión entre ellas a nivel de red interna.
+
+3. Provisionar una máquina virtual con MongoDB, de forma que escuche las peticiones de la otra máquina orquestada (avance realizado debido a que es necesario para realizar la orquestación que llevaremos a cabo entre las dos máquinas).
 
 
 
@@ -62,7 +64,7 @@ Vagrant.configure('2') do |config|
 
     az.vm_image_urn = 'Canonical:UbuntuServer:16.04-LTS:latest'
     az.vm_name = 'maquinaservicio'
-    az.vm_size = 'Standard_B1s'
+    az.vm_size = 'Basic_A0'
     az.resource_group_name = 'resourcegrouphito5'
     az.location = 'francecentral'
     az.tcp_endpoints = 80
@@ -77,11 +79,7 @@ Respecto al contenido del Vagrantfile anterior, debemos destacar algunas cuestio
 
 ##### Uso de variables de entorno
 
-Nos podemos ver con un "problema" inicial, y es que se están haciendo uso de variables de entorno que no tenemos declaradas en nuestro sistema. Por tanto, previamente, nosotros debemos exportar como variables de entorno esos valores, porque sino no se van a detectar. Como podemos ver en este [otro tutorial secundario](https://blog.scottlowe.org/2017/12/11/using-vagrant-with-azure/), en concreto, deberemos especificar el valor de los siguientes parámetros:
-- `az.tenant_id`
-- `az.client_id`
-- `az.client_secret `
-- `az.subscription_id `
+Nos podemos ver con un "problema" inicial, y es que se están haciendo uso de variables de entorno que no tenemos declaradas en nuestro sistema para asignar el valor de los campos obligatorios que deberemos especificar para Azure. Por tanto, previamente, nosotros debemos exportar como variables de entorno esos valores, porque sino no se van a detectar. Como podemos ver en este [otro tutorial secundario](https://blog.scottlowe.org/2017/12/11/using-vagrant-with-azure/), en concreto, deberemos especificar el valor de los siguientes parámetros, relacionados con los ID de Tenant (*inquilino*), cliente y subscripción de Azure: `az.tenant_id`, `az.client_id`, `az.client_secret ` y  `az.subscription_id `.
 
 Los tres primeros parámetros (*tenant_id*, *client_id*, *client_secret*), podemos obtenerlos de la salida que nos proporciona la siguiente orden:
 ~~~
@@ -104,10 +102,10 @@ $ export AZURE_SUBSCRIPTION_ID=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 ##### Otros parámetros adicionales en Vagrantfile
 Además, le podemos añadir una serie de líneas que nos permitan especificar aspectos concretos de la máquina virtual que queremos crear, como puede ser el nombre de la máquina, el grupo de recursos asociado, o la región a utilizar. Concretamente, especificaremos todos los parámetros con los que hemos ido trabajando hasta ahora:
-- Imagen de Ubuntu Server con la versión 16.04.5 (LTS).
-- Grupo de recursos en la región **Francia Central**, ya que como vimos en el hito anterior, fue con la que obtuvimos mejores resultados.
-- Tamaño de la máquina virtual **Standard_B1s**.
-- Abrimos el **puerto 80**, que es desde el que ejecutamos la aplicación.
+- Imagen de Ubuntu Server con la versión 16.04.5 (LTS) (con `vm_image_urn` ).
+- Grupo de recursos en la región **Francia Central**, ya que como vimos en el hito anterior, fue con la que obtuvimos mejores resultados (con `location`).
+- Tamaño de la máquina virtual **Basic_AO** (con `vm_size`).
+- Abrimos el **puerto 80**, que es desde el que ejecutamos la aplicación (con `tcp_endpoints`).
 
 Con estos añadidos, se crearía una máquina con las mismas características que la del hito anterior.
 
@@ -129,18 +127,20 @@ En este caso, me he decantado por la segunda opción y se ha definido dentro del
 ### <u>Orquestación de máquinas virtuales<u/>
 Una vez sabemos lo básico de cómo crear desde Vagrant una máquina en Azure, deberemos realizar el proceso para crear dos máquinas, el cuál es el que se ha definido en el Vagrantfile. Para ello, partiendo del Vagrantfile de ejemplo que he mostrado en la sección anterior, se han definido dos máquinas virtuales, cada una con su nombre y sus especificaciones necesarias. Como ayuda para la creación de más de una máquina, se ha consultado [este enlace](https://www.rubydoc.info/gems/vagrant-azure/1.3.0) comentado en clase.
 
-**Desde [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/Vagrantfile) podemos acceder al contenido del Vagrantfile resultante**. De dicho fichero, los aspectos más relevantes y que se deben destacar son los siguientes:
+**Desde [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/Vagrantfile) podemos acceder al contenido del Vagrantfile resultante**. De dicho fichero, los aspectos más relevantes y que se deben destacar para cada una de las máquinas especificadas en el Vagrantfile  son los siguientes:
 
-- Ambas máquinas pertenecen al **mismo grupo de recursos**.
+- Ambas máquinas pertenecen al **mismo grupo de recursos**. Para ello hemos utilizado el parámetro `resource_group_name`. Para indicar la localización del grupo de recursos se hace uso de `location`. Se ha especificado la misma localización que se utilizó para el hito anterior, ya que se hicieron las distintas comprobaciones que nos permitieron dar con la más adecuada para el proyecto. Para mayor detalle, se puede consultar en el apartado 2 de [la documentación del Hito 4](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).  
 
-- Para cada una de las máquinas, **se ha realizado su provisionamiento** con el playbook correspondiente. En el caso de la máquina `maquinaservicio`, se realizará el aprovisionamiento como lo hemos realizado hasta ahora, y en el caso de la máquina `maquinamongo`, utilizaremos un nuevo playbook que se encarga de provisionar la máquina virtual con mongo, además de configurar y reiniciar el servicio.
+- Cada una de las máquinas tendrá un nombre asignado, mediante `vm_name`. Además, cada una tendrá especificado la imagen y tamaño de la máquina con `vm_image_urn` y `vm_size` respectivamente. Para determinar la imagen y tamaño escogidos, se han seguido los mismos criterios ya justificados en el hito anterior, a los cuáles se puede acceder en el apartado número dos de [la documentación del Hito 4](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/automatizacion.md).  
 
-- **Se han abierto los puertos correspondientes** para que se pueda ejecutar la aplicación.
+- Para cada una de las máquinas, **se ha realizado su provisionamiento** con el playbook correspondiente. En el caso de la máquina `maquinaservicio`, se realizará el aprovisionamiento como lo hemos realizado hasta ahora, y en el caso de la máquina `maquinamongo`, utilizaremos un nuevo playbook que se encarga de provisionar la máquina virtual con mongo, además de configurar y reiniciar el servicio. Podemos realizarlo indicando `provision` y el playbook asociado, como veremos en secciones posteriores de este documento.
+
+- **Se han abierto los puertos correspondientes** para que se pueda ejecutar la aplicación. Para ello, haremos uso del atributo `tcp_endpoints`.
   - El puerto 80 para acceder al servicio REST
   - El puerto 27017 que el que utiliza *MongoDB* por defecto.
 
 
-- **Se ha definido una red interna** llamada `andreanetwork` que permitirá poder comunicar las máquinas mediante la red interna.
+- **Se ha definido una red interna** llamada `andreanetwork` que permitirá poder comunicar las máquinas mediante la red interna. De esta forma, la primera máquina en crearse (en este caso `maquinaservicio`, se le asignará la IP **10.0.0.4**, y a la segunda máquina (`maquinamongo`) le corresponderá la dirección **10.0.0.5**). Para ello, hemos utilizado el parámetro `virtual_network_name`.
 
 **De esta forma, tan solo con ejecutar la orden `vagrant up --no-parallel`, podremos crear y provisionar dos máquinas en azure, con los requisitos  y configuración necesaria para el proyecto**. Es necesario añadir la opción mencionada (`--no-parallel`), ya que de otra forma, al intentar crear las máquinas en paralelo, al estar usando el mismo grupo de recursos, se producen errores relacionados con la asignación de direcciones. De hecho, si se consulta la [documentación oficial](https://www.vagrantup.com/docs/cli/up.html), podemos ver que esta opción debe ser utilizada siempre y cuando el provider en cuestión no permita la creación paralela de las máquinas virtuales, como resulta ser el caso en cuestión.
 
@@ -148,7 +148,7 @@ Una vez sabemos lo básico de cómo crear desde Vagrant una máquina en Azure, d
 
 
 ### <u>Aprovisionamiento de las máquinas virtuales<u/>
-
+Por último, para finalizar con la documentación del fichero [Vagrantfile](https://github.com/andreamorgar/ProyectoCC/blob/master/orquestacion/Vagrantfile), faltaría ver la provisión de las máquinas que se realiza directamente desde Vagrant, después de la creación de cada una de las máquinas.
 
 #### Aprovisionamiento de la máquina que aloja el servicio rest
 
@@ -194,7 +194,7 @@ end
 ~~~
 
 
-## Funcionamiento del Proyecto
+## Funcionamiento  y despliegue del Proyecto
 Por último, se va a mostrar que, simplemente con lo proporcionado en el fichero Vagrantfile y los playbook de provisionamiento, podemos desplegar en la nube las máquinas virtuales con correcto y total funcionamiento.
 
 Para ello, nos situamos en primer lugar en el directorio `orquestacion` de este repositorio, y ejecutamos la orden `vagrant up --no-parallel` como ya ha sido comentado en secciones anteriores de este documento. Para ello, se han tenido que especificar las variables de entorno relacionadas con la suscripción y cliente de Azure, tal y como ya se comentó previamente.
