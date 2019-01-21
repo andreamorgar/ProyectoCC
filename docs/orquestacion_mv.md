@@ -242,4 +242,4 @@ Si además, accedemos a la base de datos de Mongo en la máquina virtual `maquin
 <p align="center"><img alt="Image" width="1000px" src="./images/hito5/9_esta_en_la_bd.png" /></p>
 
 
-Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta.
+**Por tanto, tanto la creación, como el provisionamento y el funcionamiento de la máquina se llevan a cabo de manera correcta.**
