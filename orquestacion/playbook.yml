@@ -3,15 +3,15 @@
   become: yes
   gather_facts: False
   tasks:
-    - name: Install git package
-      apt:
-        name: git
-        state: present
-        update_cache: yes
-      tags:
-        - packages
-      async: 120
-      poll: 60
+    # - name: Install git package
+    #   apt:
+    #     name: git
+    #     state: present
+    #     update_cache: yes
+    #   tags:
+    #     - packages
+    #   async: 120
+    #   poll: 60
 
     - name: Install python-pip package
       apt:
