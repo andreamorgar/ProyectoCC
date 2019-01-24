@@ -31,10 +31,10 @@ predictions_objects = []
 def get_home():
     return jsonify(status='OK')
 
-@app.route('/status')
-def get_home():
-    return jsonify(status='OK')
 
+@app.route('/status')
+def get_status():
+    return jsonify(status='OK')
  # ------------------------------------------------------------------------------
 
 # Now let's write the second version of the GET method for our predictions resource.
