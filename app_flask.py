@@ -31,7 +31,9 @@ predictions_objects = []
 def get_home():
     return jsonify(status='OK')
 
-
+@app.route('/status')
+def get_home():
+    return jsonify(status='OK')
 
  # ------------------------------------------------------------------------------
 
