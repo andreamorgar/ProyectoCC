@@ -15,13 +15,16 @@ mlab_or_mongo = str(os.environ.get("MLAB_OR_MONGO", "mongo"))
 
 # Depending on the enviroment variable, we will run or application with a local
 # MongoDB database or mLab
+MONGODB_URI = ""
 if mlab_or_mongo == "mongo":
     direccion = str(os.environ.get("IP", "10.0.0.5"))
     logger.info("IP of MongoDB database established")
     MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
 else:
-    MONGODB_URI = "mongodb://test:test_password1@ds123584.mlab.com:23584/predictions"
+    print("¡Estamos conectados a mLab!")
+    MONGODB_URI = "mongodb://andrea:andrea_pass1@ds123584.mlab.com:23584/predictions"
 
+print("Conectado al URI: " + MONGODB_URI)
 logger.info("Succesfully connected to database")
 
 client = MongoClient(MONGODB_URI, connectTimeoutMS=30000)
