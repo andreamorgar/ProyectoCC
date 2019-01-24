@@ -24,10 +24,8 @@ else:
     print("¡Estamos conectados a mLab!")
     user = str(os.environ.get("USER"))
     passw = str(os.environ.get("PASS"))
-    # MONGODB_URI = "mongodb://test:test_password1@ds123584.mlab.com:23584/predictions"
     MONGODB_URI = "mongodb://" + user + ":" + passw + "@ds123584.mlab.com:23584/predictions"
 
-print("Conectado al URI: " + MONGODB_URI)
 logger.info("Succesfully connected to database")
 
 client = MongoClient(MONGODB_URI, connectTimeoutMS=30000)
