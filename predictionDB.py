@@ -11,11 +11,16 @@ logging.basicConfig(filename=log_filename, filemode='a', format='%(asctime)s - %
 
 logger.info("Trying to connect to database")
 
-# Include URI of MongoDB in localhost
-direccion = str(os.environ.get("IP", "10.0.0.5"))
-print(direccion)
-logger.info("IP of MongoDB database established")
-MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
+mlab_or_mongo = str(os.environ.get("MLAB_OR_MONGO", "mongo"))
+
+# Depending on the enviroment variable, we will run or application with a local
+# MongoDB database or mLab
+if mlab_or_mongo == "mongo":
+    direccion = str(os.environ.get("IP", "10.0.0.5"))
+    logger.info("IP of MongoDB database established")
+    MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
+else:
+    MONGODB_URI = "mongodb://test:test_password1@ds123584.mlab.com:23584/predictions"
 
 logger.info("Succesfully connected to database")
 
