@@ -22,8 +22,8 @@ if mlab_or_mongo == "mongo":
     MONGODB_URI = "mongodb://"+ direccion + ":27017/predictions"
 else:
     print("¡Estamos conectados a mLab!")
-    user = str(os.environ.get("USER")
-    passw = str(os.environ.get("PASS")
+    user = str(os.environ.get("USER"))
+    passw = str(os.environ.get("PASS"))
     # MONGODB_URI = "mongodb://test:test_password1@ds123584.mlab.com:23584/predictions"
     MONGODB_URI = "mongodb://" + user + ":" + passw + "@ds123584.mlab.com:23584/predictions"
 
