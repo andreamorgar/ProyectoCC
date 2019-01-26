@@ -1,23 +1,23 @@
-# Use an official Python runtime as a parent image
+# Utilizamos la imagen elegida
 FROM frolvlad/alpine-python3:latest
 
-# Set the working directory to /ProyectoCC
+# Establecemos directorio de trabajo to /ProyectoCC
 WORKDIR /ProyectoCC
 
-# Install any needed packages specified in requirements.txt
+# Instalamos los paquetes necesarios en requirements.txt
 COPY requirements.txt /tmp/
 RUN pip3 install --requirement /tmp/requirements.txt
 
-# Copy the files into the container at /ProyectoCC
-COPY app_flask.py predictionDB.py weather_class.py ./ 
+# Copiamos los ficheros al container en la ruta /ProyectoCC
+COPY app_flask.py predictionDB.py weather_class.py ./
 #/ProyectoCC/
 
-# Make port 80 available to the world outside this container
+# Permitimos que el puerto 80 esté disponible
 EXPOSE 80
 
 # Definimos variable de entorno necesaria para que al iniciar nuestra app se
 # conecte a mLab y no a una base de datos local
 ENV MLAB_OR_MONGO mlab
 
-# Run app.py when the container launches
+# Establecemos que el servicio arranque cuando se lance el contenedor
 CMD ["python3", "app_flask.py"]
