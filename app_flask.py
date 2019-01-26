@@ -31,7 +31,7 @@ predictions_objects = []
 def get_home():
     return jsonify(status='OK')
 
-
+# Ruta status (devolverá OK)
 @app.route('/status')
 def get_status():
     return jsonify(status='OK')
@@ -44,7 +44,6 @@ def get_status():
 def get_prediction(prediction_id):
     if request.method == 'GET':
         # We want to find in the collection the document with the ID equal to
-
 
 
 
