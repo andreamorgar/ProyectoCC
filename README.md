@@ -173,6 +173,7 @@ A la documentación correspondiente a este avance se puede acceder desde [aquí]
 
 ### Dockers <a name="id17"></a>
 Contenedor: http://51.145.6.41/
+Docker Hub: https://hub.docker.com/r/andreamorgar/proyecto
 
 En este hito, se ha desplegado el proyecto en un contenedor, utilizando para ello **Dockers** y **Azure**. En [este enlace](https://github.com/andreamorgar/ProyectoCC/blob/master/docs/dockers.md), podemos acceder a la documentación asociada y a los pasos seguidos para ello.
 
